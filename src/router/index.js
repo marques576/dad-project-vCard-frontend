@@ -5,12 +5,10 @@ import Login from "../components/auth/Login.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
 import Tasks from "../components/tasks/Tasks.vue"
 import Task from "../components/tasks/Task.vue"
-import Projects from "../components/projects/Projects.vue"
-import Project from "../components/projects/Project.vue"
+import Transactions from "../components/transactions/Transactions.vue"
+import Project from "../components/transactions/Project.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
-import ProjectTasks from "../components/projects/ProjectTasks.vue"
-
 
 const routes = [
   {
@@ -60,24 +58,18 @@ const routes = [
     })
   },
   {
-    path: '/projects',
-    name: 'Projects',
-    component: Projects,
+    path: '/transactions',
+    name: 'Transactions',
+    component: Transactions,
   },
   {
-    path: '/projects/:id/tasks',
-    name: 'ProjectTasks',
-    component: ProjectTasks,
-    props: route => ({ id: parseInt(route.params.id) })
-  },
-  {
-    path: '/projects/:id',
+    path: '/transactions/:id',
     name: 'Project',
     component: Project,
     props: route => ({ id: parseInt(route.params.id) })
   },
   {
-    path: '/projects/new',
+    path: '/transactions/new',
     name: 'NewProject',
     component: Project,
     props: () => ({ id: null })

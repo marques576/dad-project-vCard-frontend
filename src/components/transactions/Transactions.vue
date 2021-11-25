@@ -66,7 +66,7 @@
 import ProjectTable from "./ProjectTable.vue"
 
 export default {
-  name: 'Projects',
+  name: 'Transactions',
   components: {
     ProjectTable
   },

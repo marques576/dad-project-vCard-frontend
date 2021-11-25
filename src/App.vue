@@ -27,7 +27,10 @@
 
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
-          <li class="nav-item">
+          <li
+            class="nav-item"
+            v-show="!user"
+          >
             <a
               class="nav-link"
               href="#"
@@ -35,7 +38,10 @@
               Register
             </a>
           </li>
-          <li class="nav-item">
+          <li
+            class="nav-item"
+            v-show="!user"
+          >
             <router-link
               class="nav-link"
               :class="{active: $route.name === 'Login'}"
@@ -44,7 +50,10 @@
               Login
             </router-link>
           </li>
-          <li class="nav-item dropdown">
+          <li
+            class="nav-item dropdown"
+            v-show="user"
+          >
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -54,11 +63,11 @@
               aria-expanded="false"
             >
               <img
-                src="./assets/img/avatar-exemplo-1.jpg"
+                :src="userPhotoUrl"
                 class="rounded-circle z-depth-0 avatar-img"
                 alt="avatar image"
               >
-              <span class="avatar-text">User Name</span>
+              <span class="avatar-text">{{ userName }}</span>
             </a>
             <ul
               class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
@@ -67,8 +76,8 @@
               <li>
                 <router-link
                   class="dropdown-item"
-                  :class="{active: $route.name == 'User' && $route.params.id == $userId}"
-                  :to="{ name: 'User', params: { id: $userId }}"
+                  :class="{active: $route.name == 'User' && $route.params.id == userId}"
+                  :to="{ name: 'User', params: { id: userId }}"
                 ><i class="bi bi-person-square"></i>Profile
                 </router-link>
               </li>
@@ -84,11 +93,24 @@
               <li>
                 <hr class="dropdown-divider">
               </li>
-              <li><a
+              <li>
+                <a
                   class="dropdown-item"
-                  href="#"
-                ><i class="bi bi-arrow-right"></i>Logout</a></li>
+                  @click.prevent="logout"
+                ><i class="bi bi-arrow-right"></i>Logout</a>
+              </li>
             </ul>
+          </li>
+          <li
+            class="nav-item"
+            v-show="user"
+          >
+            <a
+              class="nav-link"
+              @click.prevent="refresh"
+            >
+              <i class="bi bi-arrow-clockwise"></i>
+            </a>
           </li>
         </ul>
       </div>
@@ -102,7 +124,10 @@
         class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
       >
         <div class="position-sticky pt-3">
-          <ul class="nav flex-column">
+          <ul
+            class="nav flex-column"
+            v-show="user"
+          >
             <li class="nav-item">
               <router-link
                 class="nav-link"
@@ -142,11 +167,11 @@
             <li class="nav-item">
               <router-link
                 class="nav-link w-100 me-3"
-                :class="{active: $route.name === 'Projects'}"
-                :to="{ name: 'Projects'}"
+                :class="{active: $route.name === 'Transactions'}"
+                :to="{ name: 'Transactions'}"
               >
                 <i class="bi bi-files"></i>
-                Projects
+                Transactions
               </router-link>
             </li>
 
@@ -160,18 +185,13 @@
                 Team Members
               </router-link>
             </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="#"
-              >
-                <i class="bi bi-bar-chart-line"></i>
-                Reports
-              </a>
-            </li>
           </ul>
 
-          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <h6
+            class="sidebar-heading justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
+            :class="{'d-flex': user}"
+            v-show="user"
+          >
             <span>My Projects</span>
             <router-link
               class="link-secondary"
@@ -180,7 +200,10 @@
             ><i class="bi bi-xs bi-plus-circle"></i>
             </router-link>
           </h6>
-          <ul class="nav flex-column mb-2">
+          <ul
+            class="nav flex-column mb-2"
+            v-show="user"
+          >
             <li
               class="nav-item"
               v-for="prj in workInProgressProjects"
@@ -202,7 +225,10 @@
               <span>User</span>
             </h6>
             <ul class="nav flex-column mb-2">
-              <li class="nav-item">
+              <li
+                class="nav-item"
+                v-show="!user"
+              >
                 <a
                   class="nav-link"
                   href="#"
@@ -210,7 +236,10 @@
                   Register
                 </a>
               </li>
-              <li class="nav-item">
+              <li
+                class="nav-item"
+                v-show="!user"
+              >
                 <router-link
                   class="nav-link"
                   :class="{active: $route.name === 'Login'}"
@@ -219,7 +248,22 @@
                   Login
                 </router-link>
               </li>
-              <li class="nav-item dropdown">
+              <li
+                class="nav-item"
+                v-show="user"
+              >
+                <a
+                  class="nav-link"
+                  @click.prevent="refresh"
+                >
+                  <i class="bi bi-arrow-clockwise"></i>
+                  Refresh
+                </a>
+              </li>
+              <li
+                class="nav-item dropdown"
+                v-show="user"
+              >
                 <a
                   class="nav-link dropdown-toggle"
                   href="#"
@@ -229,11 +273,11 @@
                   aria-expanded="false"
                 >
                   <img
-                    src="./assets/img/avatar-exemplo-1.jpg"
+                    :src="userPhotoUrl"
                     class="rounded-circle z-depth-0 avatar-img"
                     alt="avatar image"
                   >
-                  <span class="avatar-text">User Name</span>
+                  <span class="avatar-text">{{ userName }}</span>
                 </a>
                 <ul
                   class="dropdown-menu"
@@ -242,8 +286,8 @@
                   <li>
                     <router-link
                       class="dropdown-item"
-                      :class="{active: $route.name == 'User' && $route.params.id == $userId}"
-                      :to="{ name: 'User', params: { id: $userId }}"
+                      :class="{active: $route.name == 'User' && $route.params.id == userId}"
+                      :to="{ name: 'User', params: { id: userId }}"
                     ><i class="bi bi-person-square"></i>Profile
                     </router-link>
                   </li>
@@ -257,15 +301,16 @@
                   <li>
                     <hr class="dropdown-divider">
                   </li>
-                  <li><a
+                  <li>
+                    <a
                       class="dropdown-item"
-                      href="#"
-                    ><i class="bi bi-arrow-right"></i>Logout</a></li>
+                      @click.prevent="logout"
+                    ><i class="bi bi-arrow-right"></i>Logout</a>
+                  </li>
                 </ul>
               </li>
             </ul>
           </div>
-
         </div>
       </nav>
 
@@ -277,21 +322,51 @@
 </template>
 
 <script>
-
 export default {
   name: 'RootComponent',
-  data () {
-    return {
-      workInProgressProjects: []
+  computed: {
+    workInProgressProjects () {
+      return this.$store.getters.myInProgressProjects
+    },
+    user () {
+      return this.$store.state.user
+    },
+    userId () {
+      return this.$store.state.user ? this.$store.state.user.id : -1
+    },
+    userName () {
+      return this.$store.state.user ? this.$store.state.user.name : ''
+    },
+    userPhotoUrl () {
+      let urlPhoto = this.$store.state.user
+        ? this.$store.state.user.photo_url
+        : null
+      return urlPhoto
+        ? this.$serverUrl + '/storage/fotos/' + urlPhoto
+        : 'img/avatar-none.png'
+    }
+  },
+  methods: {
+    refresh () {
+      this.$store.dispatch('refresh')
+    },
+    logout () {
+      this.$store.dispatch('logout')
+        .then(() => {
+          this.$toast.success('User has logged out of the application.')
+          this.$router.push({ name: 'Home' })
+        })
+        .catch(() => {
+          this.$toast.error('There was a problem logging out of the application!')
+        })
     }
   },
   mounted () {
-    this.$axios.get('users/' + this.$userId + '/projects/inprogress')
-      .then((response) => {
-        this.workInProgressProjects = response.data.data
-      })
-      .catch((error) => {
-        console.log(error)
+    this.$store.dispatch('restoreToken')
+      .then((token) => {
+        if (token) {
+          this.$store.dispatch('refresh')
+        }
       })
   }
 }
@@ -323,5 +398,4 @@ export default {
 #sidebarMenu {
   overflow-y: auto;
 }
-
 </style>
