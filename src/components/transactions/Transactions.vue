@@ -1,48 +1,26 @@
 <template>
   <div class="d-flex justify-content-between">
     <div class="mx-2">
-      <h3 class="mt-4">Projects</h3>
+      <h3 class="mt-4">Transactions</h3>
     </div>
     <div class="mx-2 total-filtro">
-      <h5 class="mt-4">Total: {{ totalProjects }}</h5>
+      <h5 class="mt-4">Total: {{ totalTransactions }}</h5>
     </div>
   </div>
-  <hr>
+  <hr />
   <div class="mb-3 d-flex justify-content-between flex-wrap">
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
-      <label
-        for="selectStatus"
-        class="form-label"
-      >Filter by status:</label>
-      <select
-        class="form-select"
-        id="selectStatus"
-        v-model="filterByStatus"
-      >
+      <label for="selectStatus" class="form-label">Filter by type:</label>
+      <select class="form-select" id="selectType" v-model="filterByType">
         <option :value="null"></option>
-        <option value="P">Pending</option>
-        <option value="W">Work In Progress</option>
-        <option value="C">Completed</option>
-        <option value="I">Interrupted</option>
-        <option value="D">Discarded</option>
+        <option value="D">Deposits</option>
+        <option value="C">Credits</option>
       </select>
     </div>
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
-      <label
-        for="selectOwner"
-        class="form-label"
-      >Filter by owner:</label>
-      <select
-        class="form-select"
-        id="selectOwner"
-        v-model="filterByResponsibleId"
-      >
+      <label for="selectCategory" class="form-label">Filter by category:</label>
+      <select class="form-select" id="selectOwner" v-model="filterByCategory">
         <option :value="null"></option>
-        <option
-          v-for="user in users"
-          :key="user.id"
-          :value="user.id"
-        >{{user.name}}</option>
       </select>
     </div>
     <div class="mx-2 mt-2">
@@ -50,82 +28,52 @@
         type="button"
         class="btn btn-success px-4 btn-addprj"
         @click="addProject"
-      ><i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Project</button>
+      >
+        <i class="bi bi-xs bi-plus-circle"></i>&nbsp; New Transaction
+      </button>
     </div>
   </div>
-  <project-table
-    :projects="filteredProjects"
+  <transaction-table
+    :transactions="filteredTransactions"
     :showId="true"
     :showDates="true"
     @edit="editProject"
     @delete="deleteProject"
-  ></project-table>
+  ></transaction-table>
 </template>
 
 <script>
-import ProjectTable from "./ProjectTable.vue"
+import TransactionTable from "./TransactionTable.vue"
 
 export default {
-  name: 'Transactions',
+  name: "Transactions",
   components: {
-    ProjectTable
+    TransactionTable,
   },
-  data () {
+  data() {
     return {
-      projects: [],
-      users: [],
-      filterByResponsibleId: null,
-      filterByStatus: 'W',
+      filterByType: null,
+      filterByCategory: null,
     }
   },
   computed: {
-    filteredProjects () {
-      return this.projects.filter(p =>
-        (!this.filterByResponsibleId
-          || this.filterByResponsibleId == p.responsible_id
-        ) &&
-        (!this.filterByStatus
-          || this.filterByStatus == p.status
-        ))
+    filteredTransactions() {
+      return this.$store.getters.transactionsFilter(this.filterByType, this.filterByCategory);
     },
-    totalProjects () {
-      return this.projects.reduce((c, p) =>
-        (!this.filterByResponsibleId
-          || this.filterByResponsibleId == p.responsible_id
-        ) &&
-          (!this.filterByStatus
-            || this.filterByStatus == p.status
-          ) ? c + 1 : c, 0)
-    }
-
+    totalTransactions() {
+      return this.$store.getters.totalTransactionsFilter(this.filterByType, this.filterByCategory);
+    },
   },
   methods: {
-    loadProjects () {
-      this.$axios.get('projects')
-        .then((response) => {
-          this.projects = response.data.data
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+    addProject() {
+      this.$router.push({ name: "NewProject" })
     },
-    loadUsers () {
-      this.$axios.get('users')
-        .then((response) => {
-          this.users = response.data.data
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+    editProject(project) {
+      this.$router.push({ name: "Project", params: { id: project.id } })
     },
-    addProject () {
-      this.$router.push({ name: 'NewProject' })
-    },
-    editProject (project) {
-      this.$router.push({ name: 'Project', params: { id: project.id } })
-    },
-    deleteProject (project) {
-      this.$axios.delete('projects/' + project.id)
+    deleteProject(project) {
+      this.$axios
+        .delete("projects/" + project.id)
         .then((response) => {
           let deletedProject = response.data.data
           let idx = this.projects.findIndex((t) => t.id === deletedProject.id)
@@ -138,10 +86,6 @@ export default {
         })
     },
   },
-  mounted () {
-    this.loadUsers()
-    this.loadProjects()
-  }
 }
 </script>
 

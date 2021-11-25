@@ -170,7 +170,7 @@
                 :class="{active: $route.name === 'Transactions'}"
                 :to="{ name: 'Transactions'}"
               >
-                <i class="bi bi-files"></i>
+                <i class="bi bi-arrow-down-up"></i>
                 Transactions
               </router-link>
             </li>
