@@ -186,6 +186,17 @@
             <li class="nav-item">
               <router-link
                 class="nav-link w-100 me-3"
+                :class="{ active: $route.name === 'VCards' }"
+                :to="{ name: 'VCards' }"
+              >
+                <i class="bi bi-credit-card"></i>
+                VCards
+              </router-link>
+            </li>
+
+            <li class="nav-item">
+              <router-link
+                class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'Users' }"
                 :to="{ name: 'Users' }"
               >
