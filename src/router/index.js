@@ -9,12 +9,9 @@ import Transactions from "../components/transactions/Transactions.vue"
 import Project from "../components/transactions/Project.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
-<<<<<<< HEAD
 import Category from "../components/categories/Category.vue"
 import Categories from "../components/categories/Categories.vue"
-=======
 import VCards from "../components/vcards/VCards.vue"
->>>>>>> 123acfb590e5970ebb5541cdd849af27e916cd5e
 
 const routes = [
   {
@@ -81,6 +78,11 @@ const routes = [
     name: "NewProject",
     component: Project,
     props: () => ({ id: null }),
+  },
+  {
+    path: "/vcards",
+    name: "VCards",
+    component: VCards,
   },
   {
     path: "/users",
