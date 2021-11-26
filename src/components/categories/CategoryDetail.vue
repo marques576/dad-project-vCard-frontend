@@ -22,14 +22,14 @@
         id="inputVCard"
         v-model="editingCategory.vCard"
       >
-        <option :value="null">-- No VCard --</option>
-        <option
+        <option :value="vcard">{{ vcard }}</option>
+        <!-- <option
           v-for="vcard in vcards"
           :key="vcard.phone_number"
           :value="vcard.phone_number"
         >
           {{ vcard.phone_number }}
-        </option>
+        </option> -->
       </select>
     </div>
 
@@ -72,7 +72,7 @@ export default {
       type: String,
       default: "insert", // insert / update
     },
-    vcards: {
+    vcard: {
       type: Object,
     },
   },

@@ -2,7 +2,7 @@
   <category-detail
     :operationType="operation"
     :category="category"
-    :vcards="vcards"
+    :vcard="vcard"
     @save="save"
     @cancel="cancel"
   ></category-detail>
@@ -25,12 +25,15 @@ export default {
   data() {
     return {
       category: this.newCategory(),
-      vcards: [],
+      // vcard: null,
     }
   },
   computed: {
     operation() {
       return !this.id || this.id < 0 ? "insert" : "update"
+    },
+    vcard() {
+      return this.$store.state.user ? this.$store.state.user.username : ""
     },
   },
   watch: {
@@ -47,7 +50,7 @@ export default {
     newCategory() {
       return {
         id: null,
-        vcard: this.$store.user.username,
+        vcard: this.$store.state.user.username,
         type: "C",
         name: "",
       }
@@ -68,6 +71,8 @@ export default {
     },
     save() {
       if (this.operation == "insert") {
+        console.log(this.category)
+
         this.$axios
           .post("categories", this.category)
           .then((response) => {
@@ -124,7 +129,8 @@ export default {
     },
   },
   mounted() {
-    this.vcards = this.$store.user
+    // this.vcard = this.$store.user
+    // console.log(this.$store.state.user.username)
   },
 }
 </script>
