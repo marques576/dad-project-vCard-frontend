@@ -64,15 +64,15 @@ export default {
   },
   computed: {
     vCards() {
-      return this.$store.getters.vcards
+      return this.$store.state.vcards
     },
     totalVCards() {
-      return this.$store.getters.vcards.length
+      return this.$store.state.vcards.length
     },
   },
   methods: {
     addVCard() {
-      // this.$router.push({ name: "NewVCard" })
+      this.$router.push({ name: "NewVCard" })
     },
     editVCard(vcard) {
       console.log(vcard)

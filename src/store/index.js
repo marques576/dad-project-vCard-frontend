@@ -38,7 +38,7 @@ export default createStore({
     totalTransactionsFilter: (state, getters) => (type, category) => {
       return getters.transactionsFilter(type, category).length
     },
-    vcards: (state) => state.vcards,
+    // vcards: (state) => state.vcards,
   },
   actions: {
     async login(context, credentials) {
