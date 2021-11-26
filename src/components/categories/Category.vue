@@ -47,7 +47,7 @@ export default {
     newCategory() {
       return {
         id: null,
-        vcard: null,
+        vcard: this.$store.user.username,
         type: "C",
         name: "",
       }
@@ -124,16 +124,7 @@ export default {
     },
   },
   mounted() {
-    this.vcards = []
-    this.$axios
-      .get("vcards")
-      .then((response) => {
-        this.vcards = response.data.data
-        console.log(this.vcards)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    this.vcards = this.$store.user
   },
 }
 </script>
