@@ -95,7 +95,7 @@ export default {
     editCategory(category) {
       this.$router.push({ name: "Category", params: { id: category.id } })
     },
-    delete_category(category) {
+    deleteCategory(category) {
       this.$axios
         .delete("categories/" + category.id)
         .then((response) => {

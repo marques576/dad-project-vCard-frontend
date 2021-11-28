@@ -118,6 +118,12 @@ const routes = [
     component: Category,
     props: () => ({ id: null }),
   },
+  {
+    path: "/categories/:id",
+    name: "Category",
+    component: Category,
+    props: (route) => ({ id: parseInt(route.params.id) }),
+  },
 ]
 
 const router = createRouter({
