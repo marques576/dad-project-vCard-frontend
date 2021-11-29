@@ -1,5 +1,5 @@
 <template>
-  <h3 class="mt-5 mb-3">Team Members</h3>
+  <h3 class="mt-5 mb-3">Administrators</h3>
   <hr>
   <user-table
     :users="users"
@@ -30,7 +30,7 @@ export default {
     loadUsers () {
       this.$axios.get('users')
         .then((response) => {
-          this.users = response.data.data
+          this.users = response.data.data.filter(users => users.user_type === 'A')
         })
         .catch((error) => {
           console.log(error)

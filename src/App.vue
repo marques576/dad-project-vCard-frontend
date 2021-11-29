@@ -183,14 +183,28 @@
               </router-link>
             </li>
 
-            <li class="nav-item">
+              <li
+              class="
+                nav-item
+                d-flex
+                justify-content-between
+                align-items-center
+                pe-3
+              "
+            >
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'Users' }"
                 :to="{ name: 'Users' }"
               >
-                <i class="bi bi-people"></i>
-                Team Members
+                <i class="bi bi-list-check"></i>
+                Administrators
+              </router-link>
+              <router-link
+                class="link-secondary"
+                :to="{ name: 'Users' }"
+                aria-label="Add a new task"
+                ><i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
           </ul>

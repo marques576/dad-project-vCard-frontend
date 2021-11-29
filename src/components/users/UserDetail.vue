@@ -4,7 +4,7 @@
     novalidate
     @submit.prevent="save"
   >
-    <h3 class="mt-5 mb-3">User #{{ this.editingUser.id }}</h3>
+    <h3 class="mt-5 mb-3">User {{ this.editingUser.id }}</h3>
     <hr>
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
@@ -45,7 +45,7 @@
                 type="checkbox"
                 true-value="A"
                 false-value="M"
-                v-model="editingUser.type"
+                v-model="editingUser.user_type"
                 id="inputType"
               >
               <label
@@ -56,7 +56,7 @@
               </label>
             </div>
           </div>
-          <div class="mb-3 ms-xs-3 flex-grow-1">
+          <div class="mb-3 ms-xs-3 flex-grow-1" v-if="this.editingUser.user_type != 'A'">
             <div class="form-check  form-check-inline">
               <input
                 class="form-check-input"
@@ -89,7 +89,7 @@
           </div>
         </div>
       </div>
-      <div class="w-25">
+      <div class="w-25" v-if="this.editingUser.user_type != 'A'">
         <div class="mb-3">
           <label class="form-label">Photo</label>
           <div class="form-control text-center">
