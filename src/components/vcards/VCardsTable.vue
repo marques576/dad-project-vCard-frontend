@@ -85,8 +85,6 @@ export default {
   emits: ["edit", "delete"],
   methods: {
     editClick(vcard) {
-      console.log("INSIDE TABLE")
-      console.log(vcard)
       this.$emit("edit", vcard)
     },
     deleteClick(vcard) {

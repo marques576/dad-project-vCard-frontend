@@ -78,9 +78,6 @@ export default {
       this.$router.push({ name: "NewVCard" })
     },
     editVCard(vcard) {
-      // console.log("HERE START")
-      // console.log(this.defaultCategories)
-      // console.log("HERE END")
       this.$router.push({
         name: "VCard",
         params: {

@@ -90,7 +90,7 @@ const routes = [
     props: { operationType: "insert" },
   },
   {
-    path: "/vcards/:vcard",
+    path: "/vcards/:phone_number",
     name: "VCard",
     component: VCard,
     props: (route) => ({
