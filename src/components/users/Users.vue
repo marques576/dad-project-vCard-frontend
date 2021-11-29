@@ -28,9 +28,9 @@ export default {
   },
   methods: {
     loadUsers () {
-      this.$axios.get('users')
+      this.$axios.get('administrators')
         .then((response) => {
-          this.users = response.data.data.filter(users => users.user_type === 'A')
+          this.users = response.data.data
         })
         .catch((error) => {
           console.log(error)

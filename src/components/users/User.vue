@@ -41,7 +41,6 @@ export default {
         id: null,
         name: '',
         email: '',
-        gender: 'M',
         photo_url: null
       }
     },
@@ -49,7 +48,7 @@ export default {
       if (!id || (id < 0)) {
         this.user = this.newUser()
       } else {
-        this.$axios.get('users/' + id)
+        this.$axios.get('administrators/' + id)
           .then((response) => {
             this.user = response.data.data
           })
@@ -59,7 +58,7 @@ export default {
       }
     },
     save () {
-      this.$axios.put('users/' + this.id, this.user)
+      this.$axios.put('administrators/' + this.id, this.user)
         .then((response) => {
           this.$toast.success('User #' + response.data.data.id + ' was updated successfully.')
           this.$router.back()
