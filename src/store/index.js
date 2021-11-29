@@ -5,6 +5,7 @@ import axios from "axios"
 export default createStore({
   state: {
     user: null,
+    defaultCategories: [],
     transactions: [],
     vcards: [],
   },
@@ -26,6 +27,12 @@ export default createStore({
     },
     resetVCards(state) {
       state.vcards = null
+    },
+    setDefaultCategories(state, categories) {
+      state.defaultCategories = categories
+    },
+    resetDefaultCategories(state) {
+      state.defaultCategories = null
     },
   },
   getters: {
@@ -106,6 +113,16 @@ export default createStore({
         throw error
       }
     },
+    async loadDefaultCategories(context) {
+      try {
+        let response = await axios.get("defaultCategories")
+        context.commit("setDefaultCategories", response.data.data)
+        return response.data.data
+      } catch (error) {
+        context.commit("resetDefaultCategories", null)
+        throw error
+      }
+    },
     async refresh(context) {
       let userPromise = context.dispatch("loadLoggedInUser")
       await userPromise
@@ -115,6 +132,9 @@ export default createStore({
 
       let vcardsPromise = context.dispatch("loadVCards")
       await vcardsPromise
+
+      let defaultCategoriesPromise = context.dispatch("loadDefaultCategories")
+      await defaultCategoriesPromise
     },
   },
 })

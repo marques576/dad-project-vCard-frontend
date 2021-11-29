@@ -69,14 +69,25 @@ export default {
     totalVCards() {
       return this.$store.state.vcards.length
     },
+    defaultCategories() {
+      return this.$store.state.defaultCategories
+    },
   },
   methods: {
     addVCard() {
       this.$router.push({ name: "NewVCard" })
     },
     editVCard(vcard) {
-      console.log(vcard)
-      // this.$router.push({ name: "VCard", params: { phone_number: vcard.phone_number } })
+      // console.log("HERE START")
+      // console.log(this.defaultCategories)
+      // console.log("HERE END")
+      this.$router.push({
+        name: "VCard",
+        params: {
+          phone_number: vcard.phone_number,
+          defCategories: this.defaultCategories,
+        },
+      })
     },
     deleteVCard(vcard) {
       this.$axios

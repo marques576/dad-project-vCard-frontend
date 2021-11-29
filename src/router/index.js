@@ -94,7 +94,8 @@ const routes = [
     name: "VCard",
     component: VCard,
     props: (route) => ({
-      vcard: parseInt(route.params.vcard),
+      phone_number: parseInt(route.params.phone_number),
+      defCategories: route.params.defaultCategories,
       operationType: "update",
     }),
   },
