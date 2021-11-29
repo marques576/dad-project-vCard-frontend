@@ -1,19 +1,19 @@
 <template>
-  <category-detail
+  <default-category-detail
     :operationType="operation"
-    :category="category"
+    :defaultCategory="defaultCategory"
     @save="save"
     @cancel="cancel"
-  ></category-detail>
+  ></default-category-detail>
 </template>
 
 <script>
-import CategoryDetail from "./CategoryDetail.vue"
+import DefaultCategoryDetail from "./DefaultCategoryDetail.vue"
 
 export default {
   name: "Category",
   components: {
-    CategoryDetail,
+    DefaultCategoryDetail,
   },
   props: {
     id: {
@@ -23,16 +23,12 @@ export default {
   },
   data() {
     return {
-      category: this.newCategory(),
-      // vcard: null,
+      defaultCategory: this.newDefaultCategory(),
     }
   },
   computed: {
     operation() {
       return !this.id || this.id < 0 ? "insert" : "update"
-    },
-    vCard() {
-      return this.$store.state.user ? this.$store.state.user.username : ""
     },
   },
   watch: {
@@ -41,27 +37,26 @@ export default {
     id: {
       immediate: true,
       handler(newValue) {
-        this.loadCategory(newValue)
+        this.loadDefaultCategory(newValue)
       },
     },
   },
   methods: {
-    newCategory() {
+    newDefaultCategory() {
       return {
         id: null,
-        vcard: this.$store.state.user ? this.$store.state.user.username : "",
         type: "C",
         name: "",
       }
     },
-    loadCategory(id) {
+    loadDefaultCategory(id) {
       if (!id || id < 0) {
-        this.category = this.newCategory()
+        this.defaultCategory = this.newDefaultCategory()
       } else {
         this.$axios
-          .get("categories/" + id)
+          .get("defaultCategories/" + id)
           .then((response) => {
-            this.category = response.data.data
+            this.defaultCategory = response.data.data
           })
           .catch((error) => {
             console.log(error)
@@ -70,13 +65,13 @@ export default {
     },
     save() {
       if (this.operation == "insert") {
-        console.log(this.category)
+        console.log(this.defaultCategory)
 
         this.$axios
-          .post("categories", this.category)
+          .post("defaultCategories", this.defaultCategory)
           .then((response) => {
             this.$toast.success(
-              "Category #" +
+              "DefaultCategory #" +
                 response.data.data.id +
                 " was created successfully."
             )
@@ -85,20 +80,20 @@ export default {
           .catch((error) => {
             if (error.response.status == 422) {
               this.$toast.error(
-                "Category was not created due to validation errors!"
+                "Default Category was not created due to validation errors!"
               )
             } else {
               this.$toast.error(
-                "Category was not created due to unknown server error!"
+                "Default Category was not created due to unknown server error!"
               )
             }
           })
       } else {
         this.$axios
-          .put("categories/" + this.id, this.category)
+          .put("defaultCategories/" + this.id, this.defaultCategory)
           .then((response) => {
             this.$toast.success(
-              "Category #" +
+              "Default Category #" +
                 response.data.data.id +
                 " was updated successfully."
             )
@@ -107,13 +102,13 @@ export default {
           .catch((error) => {
             if (error.response.status == 422) {
               this.$toast.error(
-                "Category #" +
+                "Default Category #" +
                   this.id +
                   " was not updated due to validation errors!"
               )
             } else {
               this.$toast.error(
-                "Category #" +
+                "Default Category #" +
                   this.id +
                   " was not updated due to unknown server error!"
               )
@@ -128,7 +123,6 @@ export default {
     },
   },
   mounted() {
-    // this.vcard = this.$store.user
     // console.log(this.$store.state.user.username)
   },
 }

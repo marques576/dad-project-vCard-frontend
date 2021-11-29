@@ -12,6 +12,8 @@ import User from "../components/users/User.vue"
 import Category from "../components/categories/Category.vue"
 import Categories from "../components/categories/Categories.vue"
 import VCards from "../components/vcards/VCards.vue"
+import DefaultCategory from "../components/defaultCategories/DefaultCategory.vue"
+import DefaultCategories from "../components/defaultCategories/DefaultCategories.vue"
 
 const routes = [
   {
@@ -122,6 +124,24 @@ const routes = [
     path: "/categories/:id",
     name: "Category",
     component: Category,
+    props: (route) => ({ id: parseInt(route.params.id) }),
+  },
+
+  {
+    path: "/defaultCategories",
+    name: "DefaultCategories",
+    component: DefaultCategories,
+  },
+  {
+    path: "/defaultCategories/new",
+    name: "NewDefaultCategory",
+    component: DefaultCategory,
+    props: () => ({ id: null }),
+  },
+  {
+    path: "/defaultCategories/:id",
+    name: "DefaultCategory",
+    component: DefaultCategory,
     props: (route) => ({ id: parseInt(route.params.id) }),
   },
 ]

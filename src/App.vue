@@ -172,7 +172,18 @@
               </router-link>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item" v-if="userType == 'A'">
+              <router-link
+                class="nav-link w-100 me-3"
+                :class="{ active: $route.name === 'DefaultCategories' }"
+                :to="{ name: 'DefaultCategories' }"
+              >
+                <i class="bi bi-tag"></i>
+                Default Categories
+              </router-link>
+            </li>
+
+            <li class="nav-item" v-else>
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'Categories' }"
@@ -349,12 +360,20 @@
 <script>
 export default {
   name: "RootComponent",
+  data() {
+    return {
+      // user_type: null,
+    }
+  },
   computed: {
     workInProgressProjects() {
       return this.$store.getters.myInProgressProjects
     },
     user() {
       return this.$store.state.user
+    },
+    userType() {
+      return this.$store.state.user ? this.$store.state.user.user_type : ""
     },
     userId() {
       return this.$store.state.user ? this.$store.state.user.id : -1
@@ -395,6 +414,7 @@ export default {
         this.$store.dispatch("refresh")
       }
     })
+    // console.log(this.$store.state.user.user_type)
   },
 }
 </script>

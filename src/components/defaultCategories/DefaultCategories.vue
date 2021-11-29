@@ -1,10 +1,10 @@
 <template>
   <div class="d-flex justify-content-between">
     <div class="mx-2">
-      <h3 class="mt-4">Categories</h3>
+      <h3 class="mt-4">Default Categories</h3>
     </div>
     <div class="mx-2 total-filtro">
-      <h5 class="mt-4">Total: {{ totalCategories }}</h5>
+      <h5 class="mt-4">Total: {{ totalDefaultCategories }}</h5>
     </div>
   </div>
   <hr />
@@ -21,45 +21,44 @@
       <button
         type="button"
         class="btn btn-success px-4 btn-addprj"
-        @click="addCategory"
+        @click="addDefaultCategory"
       >
-        <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Category
+        <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Default Category
       </button>
     </div>
   </div>
-  <category-table
-    :categories="filteredCategories"
+  <default-category-table
+    :defaultCategories="filteredDefaultCategories"
     :showId="true"
-    :showDates="true"
-    @edit="editCategory"
-    @delete="deleteCategory"
-  ></category-table>
+    @edit="editDefaultCategory"
+    @delete="deleteDefaultCategory"
+  ></default-category-table>
 </template>
 
 <script>
-import CategoryTable from "./CategoryTable.vue"
+import DefaultCategoryTable from "./DefaultCategoryTable.vue"
 
 export default {
-  name: "Categories",
+  name: "DefaultCategories",
   components: {
-    CategoryTable,
+    DefaultCategoryTable,
   },
   data() {
     return {
-      categories: [],
+      defaultCategories: [],
       users: [],
       filterByVCard: null,
       filterByType: "",
     }
   },
   computed: {
-    filteredCategories() {
-      return this.categories.filter(
+    filteredDefaultCategories() {
+      return this.defaultCategories.filter(
         (c) => !this.filterByType || this.filterByType == c.type
       )
     },
-    totalCategories() {
-      return this.categories.reduce(
+    totalDefaultCategories() {
+      return this.defaultCategories.reduce(
         (counter, c) =>
           !this.filterByType || this.filterByType == c.type
             ? counter + 1
@@ -69,11 +68,11 @@ export default {
     },
   },
   methods: {
-    loadCategories() {
+    loadDefaultCategories() {
       this.$axios
-        .get("categories")
+        .get("defaultCategories")
         .then((response) => {
-          this.categories = response.data.data
+          this.defaultCategories = response.data.data
         })
         .catch((error) => {
           console.log(error)
@@ -89,22 +88,25 @@ export default {
           console.log(error)
         })
     },
-    addCategory() {
-      this.$router.push({ name: "NewCategory" })
+    addDefaultCategory() {
+      this.$router.push({ name: "NewDefaultCategory" })
     },
-    editCategory(category) {
-      this.$router.push({ name: "Category", params: { id: category.id } })
+    editDefaultCategory(defaultCategory) {
+      this.$router.push({
+        name: "DefaultCategory",
+        params: { id: defaultCategory.id },
+      })
     },
-    deleteCategory(category) {
+    deleteDefaultCategory(defaultCategory) {
       this.$axios
-        .delete("categories/" + category.id)
+        .delete("defaultCategories/" + defaultCategory.id)
         .then((response) => {
-          let deletedCategory = response.data.data
-          let idx = this.categories.findIndex(
-            (t) => t.id === deletedCategory.id
+          let deletedDefaultCategory = response.data.data
+          let idx = this.defaultCategories.findIndex(
+            (t) => t.id === deletedDefaultCategory.id
           )
           if (idx >= 0) {
-            this.categories.splice(idx, 1)
+            this.defaultCategories.splice(idx, 1)
           }
         })
         .catch((error) => {
@@ -114,7 +116,7 @@ export default {
   },
   mounted() {
     this.loadUsers()
-    this.loadCategories()
+    this.loadDefaultCategories()
   },
 }
 </script>
