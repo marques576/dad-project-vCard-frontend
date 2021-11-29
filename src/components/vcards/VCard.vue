@@ -93,8 +93,9 @@ export default {
           .catch((error) => {
             if (error.response.status == 422) {
               this.$toast.error(
-                "VCard was not created due to valphone_numberation errors!"
+                "VCard was not created due to validation errors!"
               )
+              console.log(error)
             } else {
               this.$toast.error(
                 "VCard was not created due to unknown server error!"

@@ -25,6 +25,41 @@
         v-model="editingVCard.email"
       />
     </div>
+    <div class="mb-3">
+      <label for="inputBalance" class="form-label">Balance</label>
+      <input
+        type="text"
+        class="form-control"
+        id="inputBalance"
+        placeholder="13230.74€"
+        required
+        v-model="editingVCard.balance"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="inputMaxDebit" class="form-label">Max Debit</label>
+      <input
+        type="text"
+        class="form-control"
+        id="inputMaxDebit"
+        placeholder="500.0€"
+        required
+        v-model="editingVCard.max_debit"
+      />
+    </div>
+    <div class="mb-3 checkBilled">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          v-model="editingVCard.blocked"
+          v-bind:true-value="1"
+          v-bind:false-value="0"
+          id="inputBlocked"
+        />
+        <label class="form-check-label" for="inputBlocked"> Blocked </label>
+      </div>
+    </div>
 
     <!-- <div class="mb-3 me-3 flex-grow-1">
       <label for="inputCategory" class="form-label">Category</label>
@@ -100,6 +135,9 @@ export default {
     cancel() {
       this.$emit("cancel", this.editingVCard)
     },
+  },
+  mounted() {
+    console.log(this.editingVCard)
   },
 }
 </script>

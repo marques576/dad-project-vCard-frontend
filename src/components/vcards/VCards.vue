@@ -91,14 +91,20 @@ export default {
         .delete("vcards/" + vcard.phone_number)
         .then((response) => {
           let deletedVCard = response.data.data
-          let phone_numberIndex = this.vcards.findIndex(
-            (t) => t.phone_number === deletedVCard.phone_number
+          let phone_numberIndex = this.vCards.findIndex(
+            (t) => t.phone_number == deletedVCard.phone_number
           )
           if (phone_numberIndex >= 0) {
-            this.vcards.splice(phone_numberIndex, 1)
+            this.vCards.splice(phone_numberIndex, 1)
+            this.$toast.success(
+              "VCard #" + vcard.phone_number + " was deleted successfully."
+            )
           }
         })
         .catch((error) => {
+          this.$toast.error(
+            "VCard #" + vcard.phone_number + " was deleted unsuccessfully."
+          )
           console.log(error)
         })
     },

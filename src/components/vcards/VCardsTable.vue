@@ -79,7 +79,7 @@ export default {
     },
     showDeleteButton: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   emits: ["edit", "delete"],
