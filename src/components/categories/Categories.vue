@@ -47,8 +47,6 @@ export default {
   data() {
     return {
       categories: [],
-      users: [],
-      filterByVCard: null,
       filterByType: "",
     }
   },
@@ -79,16 +77,6 @@ export default {
           console.log(error)
         })
     },
-    loadUsers() {
-      this.$axios
-        .get("users")
-        .then((response) => {
-          this.users = response.data.data
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
     addCategory() {
       this.$router.push({ name: "NewCategory" })
     },
@@ -113,7 +101,6 @@ export default {
     },
   },
   mounted() {
-    this.loadUsers()
     this.loadCategories()
   },
 }

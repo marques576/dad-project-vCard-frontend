@@ -1,5 +1,6 @@
 <template>
   <category-detail
+    v-if="!isLoading"
     :operationType="operation"
     :category="category"
     @save="save"
@@ -25,6 +26,7 @@ export default {
     return {
       category: this.newCategory(),
       // vcard: null,
+      isLoading: true,
     }
   },
   computed: {
@@ -57,12 +59,15 @@ export default {
     loadCategory(id) {
       if (!id || id < 0) {
         this.category = this.newCategory()
+        this.isLoading = false
+        console.log(this.isLoading)
       } else {
         this.$axios
           .get("categories/" + id)
           .then((response) => {
             this.category = response.data.data
           })
+          .then(() => (this.isLoading = false))
           .catch((error) => {
             console.log(error)
           })

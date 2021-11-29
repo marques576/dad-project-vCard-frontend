@@ -151,4 +151,63 @@ const router = createRouter({
   routes,
 })
 
+import store from "../store"
+
+router.beforeEach((to, from, next) => {
+  // if (to.name == "Login" || to.name == "Home") {
+  //   next()
+  //   return
+  // }
+  // if (!store.state.user) {
+  //   next({ name: "Login" })
+  //   return
+  // }
+  // if (to.name == "DefaultCategories") {
+  //   if (store.state.user.user_type != "A") {
+  //     next(false)
+  //     return
+  //   }
+  // }
+  // if (to.name == "NewDefaultCategory") {
+  //   if (store.state.user.user_type != "A") {
+  //     next(false)
+  //     return
+  //   }
+  // }
+  // if (to.name == "DefaultCategory") {
+  //   if (store.state.user.user_type != "A") {
+  //     next(false)
+  //     return
+  //   }
+  // }
+  // if (to.name == "Categories") {
+  //   if (store.state.user.user_type != "V") {
+  //     next(false)
+  //     return
+  //   }
+  // }
+  // if (to.name == "NewCategory") {
+  //   if (store.state.user.user_type != "V") {
+  //     next(false)
+  //     return
+  //   }
+  // }
+  // if (to.name == "Category") {
+  //   if (store.state.user.user_type != "V") {
+  //     next(false)
+  //     return
+  //   }
+  // }
+
+  if (to.name == "User") {
+    if (store.state.user.type == "A" || store.state.user.id == to.params.id) {
+      next()
+      return
+    }
+    next(false)
+    return
+  }
+  next()
+})
+
 export default router
