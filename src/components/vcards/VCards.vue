@@ -81,7 +81,7 @@ export default {
       this.$router.push({
         name: "VCard",
         params: {
-          phone_number: vcard.phone_number,
+          id: vcard.phone_number,
           defCategories: this.defaultCategories,
         },
       })

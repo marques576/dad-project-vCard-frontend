@@ -3,25 +3,45 @@
     <h3 class="mt-5 mb-3">{{ vcardTitle }}</h3>
     <hr />
 
-    <div class="d-flex flex-wrap justify-content-between">
-      <div class="mb-3 checkBilled">
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            v-model="editingVCard.blocked"
-            id="inputBlocked"
-          />
-          <label class="form-check-label" for="inputBlocked"
-            >{{ editingVCard.blocked ? "" : "NOT " }} BLOCKED
-          </label>
-          <field-error-message
-            :errors="errors"
-            fieldName="blocked"
-          ></field-error-message>
-        </div>
-      </div>
+    <div class="mb-3">
+      <label for="inputName" class="form-label">Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="inputName"
+        placeholder="Your Name"
+        required
+        v-model="editingVCard.name"
+      />
     </div>
+    <div class="mb-3">
+      <label for="inputEmail" class="form-label">Email</label>
+      <input
+        type="text"
+        class="form-control"
+        id="inputEmail"
+        placeholder="youremail@mail.pt"
+        required
+        v-model="editingVCard.email"
+      />
+    </div>
+
+    <!-- <div class="mb-3 me-3 flex-grow-1">
+      <label for="inputCategory" class="form-label">Category</label>
+      <select
+        class="form-select pe-2"
+        id="inputCategory"
+        v-model="editingVCard.category"
+      >
+        <option
+          v-for="category in defaultCategories"
+          :key="category.id"
+          :value="category.id"
+        >
+          {{ category.name }}
+        </option>
+      </select>
+    </div> -->
 
     <div class="mb-3 d-flex justify-content-end">
       <button type="button" class="btn btn-primary px-5" @click="save">
@@ -39,26 +59,22 @@ export default {
   name: "VCardDetail",
   components: {},
   props: {
-    phone_number: {
-      required: true,
-    },
+    // defaultCategories: {
+    //   type: Array,
+    //   required: true,
+    // },
     operationType: {
       type: String,
       default: "insert", // insert / update
     },
-    defCategories: {
-      type: Array,
-      required: true,
-    },
-    errors: {
+    vcard: {
       type: Object,
-      default: null,
+      required: true,
     },
   },
   emits: ["save", "cancel"],
   data() {
     return {
-      vcard: null,
       editingVCard: this.vcard,
     }
   },
@@ -84,19 +100,6 @@ export default {
     cancel() {
       this.$emit("cancel", this.editingVCard)
     },
-    async loadVCard() {
-      this.$axios
-        .get("vcards/" + this.phone_number)
-        .then((response) => {
-          this.vcard = response.data.data
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-  },
-  async beforeMount() {
-    await this.loadVCard()
   },
 }
 </script>

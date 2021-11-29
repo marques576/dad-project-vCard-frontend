@@ -10,7 +10,7 @@ import Project from "../components/transactions/Project.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
 import VCards from "../components/vcards/VCards.vue"
-import VCard from "../components/vcards/VCardDetail.vue"
+import VCard from "../components/vcards/VCard.vue"
 
 const routes = [
   {
@@ -90,13 +90,11 @@ const routes = [
     props: { operationType: "insert" },
   },
   {
-    path: "/vcards/:phone_number",
+    path: "/vcards/:id",
     name: "VCard",
     component: VCard,
     props: (route) => ({
-      phone_number: parseInt(route.params.phone_number),
-      defCategories: route.params.defaultCategories,
-      operationType: "update",
+      phone_number: parseInt(route.params.id),
     }),
   },
   {
