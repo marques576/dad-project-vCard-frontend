@@ -13,23 +13,10 @@ export default createStore({
     },
     setUser(state, loggedInUser) {
       state.user = loggedInUser
-    },
-    resetTransactions(state) {
-      state.transactions = null
-    },
-    setTransactions(state, transactions) {
-      state.transactions = transactions
-    },
+    }
   },
   getters: {
-    transactionsFilter: (state) => (type, category) => {
-      return state.transactions.filter(p =>
-        (!type || type == p.type) &&
-        (!category || category == p.category_id)
-      )
-    },
     totalTransactionsFilter: (state, getters) => (type, category) => {
-      return getters.transactionsFilter(type, category).length
     },
   },
   actions: {
@@ -76,22 +63,10 @@ export default createStore({
         throw error
       }
     },
-    async loadTransactions(context) {
-      try {
-        let response = await axios.get('vcards/' + context.state.user.username + '/transactions')
-        context.commit('setTransactions', response.data.data)
-        return response.data.data
-      } catch (error) {
-        context.commit('resetTransactions', null)
-        throw error
-      }
-    },
     async refresh(context) {
       let userPromise = context.dispatch('loadLoggedInUser')
-      await userPromise
 
-      let transactionsPromise = context.dispatch('loadTransactions')
-      await transactionsPromise
+      await userPromise
     },
   },
 })

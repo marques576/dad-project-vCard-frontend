@@ -314,7 +314,7 @@
         </div>
       </nav>
 
-      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <main v-if="!isLoading" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <router-view></router-view>
       </main>
     </div>
@@ -324,6 +324,11 @@
 <script>
 export default {
   name: 'RootComponent',
+  data() {
+    return {
+      isLoading: true
+    }
+  },
   computed: {
     workInProgressProjects () {
       return this.$store.getters.myInProgressProjects
@@ -365,9 +370,9 @@ export default {
     this.$store.dispatch('restoreToken')
       .then((token) => {
         if (token) {
-          this.$store.dispatch('refresh')
+          return this.$store.dispatch('refresh')
         }
-      })
+      }).then(() => this.isLoading = false)
   }
 }
 </script>

@@ -37,7 +37,7 @@
     :transactions="filteredTransactions"
     :showId="true"
     :showDates="true"
-    @edit="editProject"
+    @updateDescription="updateTransactionDescription"
     @delete="deleteProject"
   ></transaction-table>
 </template>
@@ -52,16 +52,21 @@ export default {
   },
   data() {
     return {
+      transactions: [],
       filterByType: null,
       filterByCategory: null,
     }
   },
   computed: {
     filteredTransactions() {
-      return this.$store.getters.transactionsFilter(this.filterByType, this.filterByCategory);
+      return this.transactions.filter(
+        (p) =>
+          (!this.filterByType || this.filterByType == p.type) &&
+          (!this.filterByCategory || this.filterByCategory == p.category_id)
+      )
     },
     totalTransactions() {
-      return this.$store.getters.totalTransactionsFilter(this.filterByType, this.filterByCategory);
+      return this.filteredTransactions.length
     },
   },
   methods: {
@@ -85,6 +90,29 @@ export default {
           console.log(error)
         })
     },
+    loadTransactions() {
+      this.$axios
+        .get("vcards/" + this.$store.state.user.id + "/transactions")
+        .then((response) => {
+          this.transactions = response.data.data
+        })
+        .catch(() => {
+          this.$toast.error("Error loading the transactions!")
+        })
+    },
+    updateTransactionDescription(id, description) {
+      this.$axios
+        .patch("transactions/" + id, {description: description})
+        .then(() => {
+          this.$toast.success("Edited transaction description with success!")
+        })
+        .catch((error) => {
+          this.$toast.error("Error editing transaction description! " + error.response.data.errors['description'][0])
+        })
+    },
+  },
+  mounted() {
+    this.loadTransactions()
   },
 }
 </script>

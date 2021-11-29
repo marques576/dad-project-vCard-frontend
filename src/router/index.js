@@ -102,4 +102,45 @@ const router = createRouter({
   routes
 })
 
+import store from '../store'
+
+function fixLogin(router, to, next) {
+  if (store.state.user) {
+    //router.push(to)
+    next()
+  } else {
+    setTimeout(() => {
+      //router.push({'name': to.name})
+      fixLogin(router, to, next)
+    }, 100)
+  }
+}
+
+router.beforeEach((to, from, next) => {
+  if ((to.name == 'Login') || (to.name == 'Home')) {
+    next()
+    return
+  }
+  if (!store.state.user) {
+    setTimeout(() => {
+      //router.push({'name': to.name})
+      fixLogin(router, to, next)
+    }, 100)
+    return
+  }
+  if (!store.state.user) {
+    next({ name: 'Login' })
+    return
+  }
+  if (to.name == 'User') {
+    if ((store.state.user.type == 'A') || (store.state.user.id == to.params.id)) {
+      next()
+      return
+    }
+    next(false)
+    return
+  }
+  next()
+})
+
 export default router
