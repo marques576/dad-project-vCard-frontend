@@ -51,8 +51,7 @@ export default {
     },
     deleteUser (user) {
       this.$axios.delete('administrators/' + user.id)
-        .then((response) => {
-          console.log(response)
+        .then(() => {
           this.loadUsers()
         })
         .catch((error) => {
