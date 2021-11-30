@@ -12,7 +12,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="vcard in vcards" :key="vcard.phone_number">
+      <tr
+        v-for="vcard in vcards"
+        :key="vcard.phone_number"
+        :class="isBlocked(vcard)"
+      >
         <td v-if="showPhoneNumber" class="text-primary">
           {{ vcard.phone_number }}
         </td>
@@ -107,6 +111,13 @@ export default {
   },
   emits: ["edit", "delete", "toggleBlock"],
   methods: {
+    isBlocked(vcard) {
+      if (!this.showBlocked) return ""
+      if (vcard.blocked) {
+        return "table-danger"
+      }
+      return ""
+    },
     toggleBlockClick(vcard) {
       this.$emit("toggleBlock", vcard)
     },
@@ -124,5 +135,9 @@ export default {
 button {
   margin-left: 3px;
   margin-right: 3px;
+}
+th,
+td {
+  vertical-align: middle;
 }
 </style>

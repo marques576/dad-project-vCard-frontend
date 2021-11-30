@@ -16,37 +16,43 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        v-for="transaction in transactions"
-        :key="transaction.id"
-      >
+      <tr v-for="transaction in transactions" :key="transaction.id">
         <td v-if="showId" class="text-primary">{{ transaction.id }}</td>
         <td v-if="showDateTime">{{ transaction.datetime }}</td>
         <td v-if="showType">{{ transaction.type }}</td>
         <td v-if="showOldBalance">{{ transaction.old_balance + "€" }}</td>
         <td v-if="showNewBalance">{{ transaction.new_balance + "€" }}</td>
-        <td v-if="showPaymentType" class="text-info">{{ transaction.payment_type }}</td>
+        <td v-if="showPaymentType" class="text-info">
+          {{ transaction.payment_type }}
+        </td>
         <td v-if="showPaymentReference">{{ transaction.payment_reference }}</td>
         <td v-if="showCategory">{{ transaction.category_id }}</td>
         <td v-if="showDescription">{{ transaction.description }}</td>
-        <td v-if="showValue" :class="{'text-success': transaction.type == 'C', 'text-danger': transaction.type == 'D'}">{{ (transaction.type == 'C' ? '+' : '-') + transaction.value + "€"}}</td>
         <td
-          class="text-end"
-          v-if="showEditButton || showDeleteButton"
+          v-if="showValue"
+          :class="{
+            'text-success': transaction.type == 'C',
+            'text-danger': transaction.type == 'D',
+          }"
         >
+          {{ (transaction.type == "C" ? "+" : "-") + transaction.value + "€" }}
+        </td>
+        <td class="text-end" v-if="showEditButton || showDeleteButton">
           <div class="d-flex justify-content-end">
             <button
               class="btn btn-xs btn-light"
               @click="editClick(project)"
               v-if="showEditButton"
-            ><i class="bi bi-xs bi-pencil"></i>
+            >
+              <i class="bi bi-xs bi-pencil"></i>
             </button>
 
             <button
               class="btn btn-xs btn-light"
               @click="deleteClick(project)"
               v-if="showDeleteButton"
-            ><i class="bi bi-xs bi-x-square-fill"></i>
+            >
+              <i class="bi bi-xs bi-x-square-fill"></i>
             </button>
           </div>
         </td>
@@ -57,7 +63,6 @@
 
 <script>
 export default {
-
   name: "TransactionsTable",
   props: {
     transactions: {
@@ -113,18 +118,15 @@ export default {
       default: false,
     },
   },
-  emits: [
-    'edit',
-    'delete',
-  ],
+  emits: ["edit", "delete"],
   methods: {
-    editClick (project) {
-      this.$emit('edit', project)
+    editClick(project) {
+      this.$emit("edit", project)
     },
-    deleteClick (project) {
-      this.$emit('delete', project)
+    deleteClick(project) {
+      this.$emit("delete", project)
     },
-  }
+  },
 }
 </script>
 
