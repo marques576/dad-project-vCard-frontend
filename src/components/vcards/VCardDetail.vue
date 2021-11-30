@@ -61,23 +61,6 @@
       </div>
     </div>
 
-    <!-- <div class="mb-3 me-3 flex-grow-1">
-      <label for="inputCategory" class="form-label">Category</label>
-      <select
-        class="form-select pe-2"
-        id="inputCategory"
-        v-model="editingVCard.category"
-      >
-        <option
-          v-for="category in defaultCategories"
-          :key="category.id"
-          :value="category.id"
-        >
-          {{ category.name }}
-        </option>
-      </select>
-    </div> -->
-
     <div class="mb-3 d-flex justify-content-end">
       <button type="button" class="btn btn-primary px-5" @click="save">
         Save
@@ -94,10 +77,6 @@ export default {
   name: "VCardDetail",
   components: {},
   props: {
-    // defaultCategories: {
-    //   type: Array,
-    //   required: true,
-    // },
     operationType: {
       type: String,
       default: "insert", // insert / update

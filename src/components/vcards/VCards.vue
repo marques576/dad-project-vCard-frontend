@@ -9,7 +9,7 @@
   </div>
   <hr />
   <div class="mb-3 d-flex justify-content-between flex-wrap">
-    <div class="mx-2 mt-2 flex-grow-1 filter-div">
+    <!-- <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectStatus" class="form-label">Filter by type:</label>
       <select
         class="form-select"
@@ -17,8 +17,8 @@
         v-model="filterByType"
       >
         <option :value="null"></option>
-        <!-- <option value="D">Deposits</option>
-        <option value="C">Credits</option> -->
+        <option value="D">Deposits</option>
+        <option value="C">Credits</option>
       </select>
     </div>
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
@@ -30,7 +30,7 @@
       >
         <option :value="null"></option>
       </select>
-    </div>
+    </div> -->
     <div class="mx-2 mt-2">
       <button
         type="button"
@@ -43,6 +43,7 @@
   </div>
   <VCardsTable
     :vcards="vCards"
+    @toggleBlock="toggleBlockVCard"
     @edit="editVCard"
     @delete="deleteVCard"
   ></VCardsTable>
@@ -58,31 +59,68 @@ export default {
   },
   data() {
     return {
-      filterByType: null,
-      filterByCategory: null,
+      // filterByType: null,
+      // filterByCategory: null,
+      vCards: [],
     }
   },
   computed: {
-    vCards() {
-      return this.$store.state.vcards
-    },
     totalVCards() {
-      return this.$store.state.vcards.length
-    },
-    defaultCategories() {
-      return this.$store.state.defaultCategories
+      return this.vCards.length
     },
   },
   methods: {
+    loadVCards() {
+      this.$axios
+        .get("vcards/")
+        .then((response) => {
+          this.vCards = response.data.data
+        })
+        .catch((error) => {
+          console.log(error)
+          this.vCards = []
+        })
+    },
     addVCard() {
       this.$router.push({ name: "NewVCard" })
+    },
+    toggleBlockVCard(vcard) {
+      this.$axios
+        .patch("vcards/" + vcard.phone_number + "/blocked", {
+          blocked: vcard.blocked ? 0 : 1,
+        })
+        .then((response) => {
+          let receivedVCard = response.data.data
+          let phone_numberIndex = this.vCards.findIndex(
+            (t) => t.phone_number == receivedVCard.phone_number
+          )
+          if (phone_numberIndex >= 0) {
+            this.vCards[phone_numberIndex].blocked = receivedVCard.blocked
+            this.$toast.success(
+              "VCard #" +
+                vcard.phone_number +
+                " was " +
+                (receivedVCard.blocked ? "locked" : "unlocked") +
+                " successfully."
+            )
+          }
+        })
+        .catch((error) => {
+          this.$toast.error(
+            "VCard #" +
+              vcard.phone_number +
+              " was " +
+              (vcard.blocked ? "unlocked" : "locked") +
+              " unsuccessfully."
+          )
+          console.log(error)
+        })
     },
     editVCard(vcard) {
       this.$router.push({
         name: "VCard",
         params: {
           id: vcard.phone_number,
-          defCategories: this.defaultCategories,
         },
       })
     },
@@ -108,6 +146,9 @@ export default {
           console.log(error)
         })
     },
+  },
+  mounted() {
+    this.loadVCards()
   },
 }
 </script>

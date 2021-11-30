@@ -7,6 +7,7 @@
         <th v-if="showEmail">Email</th>
         <th v-if="showBalance">Balance</th>
         <th v-if="showMaxDebit">Max Debit</th>
+        <th v-if="showMaxDebit">Locked</th>
         <th v-if="showEditButton || showDeleteButton"></th>
       </tr>
     </thead>
@@ -21,8 +22,25 @@
         <td v-if="showMaxDebit" class="text-danger">
           {{ vcard.max_debit }}
         </td>
-        <td class="text-end" v-if="showEditButton || showDeleteButton">
+        <td v-if="showBlocked">{{ vcard.blocked ? "Yes" : "No" }}</td>
+        <td
+          class="text-end"
+          v-if="showEditButton || showDeleteButton || showBlocked"
+        >
           <div class="d-flex justify-content-end">
+            <button
+              class="btn btn-xs btn-light"
+              @click="toggleBlockClick(vcard)"
+              v-if="vcard.blocked"
+            >
+              <i class="bi bi-xs bi-key"></i></button
+            ><button
+              class="btn btn-xs btn-light"
+              @click="toggleBlockClick(vcard)"
+              v-if="!vcard.blocked"
+            >
+              <i class="bi bi-xs bi-shield-lock"></i>
+            </button>
             <button
               class="btn btn-xs btn-light"
               @click="editClick(vcard)"
@@ -73,17 +91,25 @@ export default {
       type: Boolean,
       default: true,
     },
+    showBlocked: {
+      type: Boolean,
+      default: true,
+    },
     showEditButton: {
       type: Boolean,
       default: true,
     },
+
     showDeleteButton: {
       type: Boolean,
       default: true,
     },
   },
-  emits: ["edit", "delete"],
+  emits: ["edit", "delete", "toggleBlock"],
   methods: {
+    toggleBlockClick(vcard) {
+      this.$emit("toggleBlock", vcard)
+    },
     editClick(vcard) {
       this.$emit("edit", vcard)
     },
