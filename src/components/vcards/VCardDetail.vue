@@ -116,7 +116,7 @@ export default {
     },
   },
   mounted() {
-    console.log(this.editingVCard)
+    // console.log(this.editingVCard)
   },
 }
 </script>

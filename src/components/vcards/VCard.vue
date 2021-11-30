@@ -23,43 +23,20 @@ export default {
   },
   data() {
     return {
-      vcard: this.loadVCard(this.phone_number),
+      // vcard: this.loadVCard(this.phone_number),
+      vcard: this.newVCard(),
     }
   },
   computed: {
     operation() {
       return !this.phone_number || this.phone_number < 0 ? "insert" : "update"
     },
-    // vcard() {
-    //   return this.$store.state.user ? this.$store.state.user.username : ""
-    // },
-  },
-  watch: {
-    // beforeRouteUpdate was not fired correctly
-    // Used this watcher instead to update the ID
-    // vcard: {
-    //   immediate: true,
-    //   handler(newValue) {
-    //     this.loadVCard(newValue)
-    //   },
-    // },
   },
   methods: {
-    // loadDefaultCategories() {
-    //   this.$axios
-    //     .get("defaultCategories/")
-    //     .then((response) => {
-    //       this.defaultCategories = response.data.data
-    //     })
-    //     .catch((error) => {
-    //       console.log(error)
-    //       this.defaultCategories = []
-    //     })
-    // },
     newVCard() {
       return {
         phone_number: null,
-        type: "email@mail.pt",
+        type: "",
       }
     },
     loadVCard(phone_number) {
@@ -131,14 +108,11 @@ export default {
       }
     },
     cancel() {
-      // Replace this code to navigate back
-      // this.loadVCard(this.phone_number)
       this.$router.back()
     },
   },
   mounted() {
-    // this.vcard = this.$store.user
-    // console.log(this.$store.state.user.username)
+    this.loadVCard(this.phone_number)
   },
 }
 </script>

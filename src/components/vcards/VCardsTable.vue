@@ -26,7 +26,9 @@
         <td v-if="showMaxDebit" class="text-danger">
           {{ vcard.max_debit }}
         </td>
-        <td v-if="showBlocked">{{ vcard.blocked ? "Yes" : "No" }}</td>
+        <td v-if="showBlocked" class="text-center">
+          {{ vcard.blocked ? "Yes" : "No" }}
+        </td>
         <td
           class="text-end"
           v-if="showEditButton || showDeleteButton || showBlocked"
