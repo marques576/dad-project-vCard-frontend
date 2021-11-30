@@ -13,6 +13,7 @@ import NewUser from "../components/users/NewUser.vue"
 import Category from "../components/categories/Category.vue"
 import Categories from "../components/categories/Categories.vue"
 import VCards from "../components/vcards/VCards.vue"
+import Statistics from "../components/statistics/Statistics.vue"
 
 const routes = [
   {
@@ -112,7 +113,6 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
-
   {
     path: "/categories",
     name: "Categories",
@@ -123,6 +123,11 @@ const routes = [
     name: "NewCategory",
     component: Category,
     props: () => ({ id: null }),
+  },
+  {
+    path: "/statistics",
+    name: "Statistics",
+    component: Statistics,
   },
 ]
 
