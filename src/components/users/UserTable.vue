@@ -6,10 +6,6 @@
           v-if="showId"
           class="align-middle"
         >#</th>
-        <th
-          v-if="showPhoto"
-          class="align-middle"
-        >Photo</th>
         <th class="align-middle">Name</th>
         <th
           v-if="showEmail"
@@ -18,11 +14,10 @@
         <th
           v-if="showAdmin"
           class="align-middle"
-        >Admin?</th>
+        >Edit</th>
         <th
-          v-if="showGender"
           class="align-middle"
-        >Gender</th>
+        >Delete</th>
       </tr>
     </thead>
     <tbody>
@@ -34,33 +29,16 @@
           v-if="showId"
           class="align-middle"
         >{{ user.id }}</td>
-        <td
-          v-if="showPhoto"
-          class="align-middle"
-        >
-          <img
-            :src="photoFullUrl(user)"
-            class="rounded-circle img_photo"
-          >
-        </td>
         <td class="align-middle">{{ user.name }}</td>
         <td
           v-if="showEmail"
           class="align-middle"
         >{{ user.email }}</td>
         <td
-          v-if="showAdmin"
-          class="align-middle"
-        >{{ user.type == 'A' ? 'Sim' : ''}}</td>
-        <td
-          v-if="showGender"
-          class="align-middle"
-        >{{ user.gender_name }}</td>
-        <td
           class="text-end align-middle"
           v-if="showEditButton"
         >
-          <div class="d-flex justify-content-end">
+          <div class="d-flex">
             <button
               class="btn btn-xs btn-light"
               @click="editClick(user)"
@@ -68,7 +46,18 @@
             ><i class="bi bi-xs bi-pencil"></i>
             </button>
           </div>
+
         </td>
+        <td class="text-end align-middle">
+          <div class="d-flex">
+            <button
+              class="btn btn-xs btn-light"
+              v-if="showDeleteButton"
+              @click="deleteClick(user)"
+            ><i class="bi bi-xs bi-trash"></i>
+            </button>
+          </div>
+          </td>
       </tr>
     </tbody>
   </table>
@@ -107,18 +96,21 @@ export default {
       type: Boolean,
       default: true,
     },
+     showDeleteButton: {
+      type: Boolean,
+      default: true,
+    },
   },
   emits: [
     'edit',
+    'delete',
   ],
   methods: {
-    photoFullUrl (user) {
-      return user.photo_url
-        ? this.$serverUrl + "/storage/fotos/" + user.photo_url
-        : "./assets/img/avatar-none.png"
-    },
     editClick (user) {
       this.$emit('edit', user)
+    },
+     deleteClick (user) {
+      this.$emit('delete', user)
     },
   }
 }

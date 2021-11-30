@@ -1,17 +1,25 @@
 <template>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top flex-md-nowrap p-0 shadow">
+  <nav
+    class="
+      navbar navbar-expand-md navbar-dark
+      bg-dark
+      sticky-top
+      flex-md-nowrap
+      p-0
+      shadow
+    "
+  >
     <div class="container-fluid">
-      <a
-        class="navbar-brand col-md-3 col-lg-2 me-0 px-3"
-        href="#"
-      ><img
+      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"
+        ><img
           src="./assets/logo.png"
           alt=""
           width="30"
           height="24"
           class="d-inline-block align-text-top"
-        >
-        App name</a>
+        />
+        App name</a
+      >
       <button
         id="buttonSidebarExpandId"
         class="navbar-toggler"
@@ -27,33 +35,22 @@
 
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
-          <li
-            class="nav-item"
-            v-show="!user"
-          >
-            <a
-              class="nav-link"
-              href="#"
-            ><i class="bi bi-person-check-fill"></i>
+          <li class="nav-item" v-show="!user">
+            <a class="nav-link" href="#"
+              ><i class="bi bi-person-check-fill"></i>
               Register
             </a>
           </li>
-          <li
-            class="nav-item"
-            v-show="!user"
-          >
+          <li class="nav-item" v-show="!user">
             <router-link
               class="nav-link"
-              :class="{active: $route.name === 'Login'}"
-              :to="{ name: 'Login'}"
-            ><i class="bi bi-box-arrow-in-right"></i>
+              :class="{ active: $route.name === 'Login' }"
+              :to="{ name: 'Login' }"
+              ><i class="bi bi-box-arrow-in-right"></i>
               Login
             </router-link>
           </li>
-          <li
-            class="nav-item dropdown"
-            v-show="user"
-          >
+          <li class="nav-item dropdown" v-show="user">
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -66,7 +63,7 @@
                 :src="userPhotoUrl"
                 class="rounded-circle z-depth-0 avatar-img"
                 alt="avatar image"
-              >
+              />
               <span class="avatar-text">{{ userName }}</span>
             </a>
             <ul
@@ -76,28 +73,29 @@
               <li>
                 <router-link
                   class="dropdown-item"
-                  :class="{active: $route.name == 'User' && $route.params.id == userId}"
-                  :to="{ name: 'User', params: { id: userId }}"
-                ><i class="bi bi-person-square"></i>Profile
+                  :class="{
+                    active: $route.name == 'User' && $route.params.id == userId,
+                  }"
+                  :to="{ name: 'User', params: { id: userId } }"
+                  ><i class="bi bi-person-square"></i>Profile
                 </router-link>
               </li>
               <li>
                 <router-link
                   class="dropdown-item"
-                  :class="{active: $route.name === 'ChangePassword'}"
-                  :to="{ name: 'ChangePassword'}"
+                  :class="{ active: $route.name === 'ChangePassword' }"
+                  :to="{ name: 'ChangePassword' }"
                 >
                   <i class="bi bi-key-fill"></i>Change password
                 </router-link>
               </li>
               <li>
-                <hr class="dropdown-divider">
+                <hr class="dropdown-divider" />
               </li>
               <li>
-                <a
-                  class="dropdown-item"
-                  @click.prevent="logout"
-                ><i class="bi bi-arrow-right"></i>Logout</a>
+                <a class="dropdown-item" @click.prevent="logout"
+                  ><i class="bi bi-arrow-right"></i>Logout</a
+                >
               </li>
             </ul>
           </li>
@@ -124,51 +122,56 @@
         class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
       >
         <div class="position-sticky pt-3">
-          <ul
-            class="nav flex-column"
-            v-show="user"
-          >
+          <ul class="nav flex-column" v-show="user">
             <li class="nav-item">
               <router-link
                 class="nav-link"
-                :class="{active: $route.name === 'Dashboard'}"
-                :to="{ name: 'Dashboard'}"
-              ><i class="bi bi-house"></i>
+                :class="{ active: $route.name === 'Dashboard' }"
+                :to="{ name: 'Dashboard' }"
+                ><i class="bi bi-house"></i>
                 Dashboard
               </router-link>
             </li>
             <li class="nav-item">
               <router-link
                 class="nav-link"
-                :class="{active: $route.name === 'CurrentTasks'}"
-                :to="{ name: 'CurrentTasks'}"
+                :class="{ active: $route.name === 'CurrentTasks' }"
+                :to="{ name: 'CurrentTasks' }"
               >
                 <i class="bi bi-list-stars"></i>
                 Current Tasks
               </router-link>
             </li>
-            <li class="nav-item d-flex justify-content-between align-items-center pe-3">
+            <li
+              class="
+                nav-item
+                d-flex
+                justify-content-between
+                align-items-center
+                pe-3
+              "
+            >
               <router-link
                 class="nav-link w-100 me-3"
-                :class="{active: $route.name === 'Tasks'}"
-                :to="{ name: 'Tasks'}"
+                :class="{ active: $route.name === 'Tasks' }"
+                :to="{ name: 'Tasks' }"
               >
                 <i class="bi bi-list-check"></i>
                 Tasks
               </router-link>
               <router-link
                 class="link-secondary"
-                :to="{ name: 'NewTask'}"
+                :to="{ name: 'NewTask' }"
                 aria-label="Add a new task"
-              ><i class="bi bi-xs bi-plus-circle"></i>
+                ><i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
 
             <li class="nav-item" v-if="!isLoading && user && user.type == 'V'">
               <router-link
                 class="nav-link w-100 me-3"
-                :class="{active: $route.name === 'Transactions'}"
-                :to="{ name: 'Transactions'}"
+                :class="{ active: $route.name === 'Transactions' }"
+                :to="{ name: 'Transactions' }"
               >
                 <i class="bi bi-arrow-down-up"></i>
                 Transactions
@@ -189,26 +192,56 @@
             <li class="nav-item">
               <router-link
                 class="nav-link w-100 me-3"
-                :class="{active: $route.name === 'Users'}"
-                :to="{ name: 'Users'}"
+                :class="{ active: $route.name === 'VCards' }"
+                :to="{ name: 'VCards' }"
               >
-                <i class="bi bi-people"></i>
-                Team Members
+                <i class="bi bi-credit-card"></i>
+                VCards
+              </router-link>
+            </li>
+
+              <li
+              class="
+                nav-item
+                d-flex
+                justify-content-between
+                align-items-center
+                pe-3
+              "
+            >
+              <router-link
+                class="nav-link w-100 me-3"
+                :class="{ active: $route.name === 'Users' }"
+                :to="{ name: 'Users' }"
+              >
+                <i class="bi bi-list-check"></i>
+                Administrators
+              </router-link>
+              <router-link
+                class="link-secondary"
+                :to="{ name: 'NewUser' }"
+                aria-label="Add a new task"
+                ><i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
           </ul>
 
           <h6
-            class="sidebar-heading justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
-            :class="{'d-flex': user}"
+            class="
+              sidebar-heading
+              justify-content-between
+              align-items-center
+              px-3
+              mt-4
+              mb-1
+              text-muted
+            "
+            :class="{ 'd-flex': user }"
             v-show="user"
           >
             <span>My Projects</span>
           </h6>
-          <ul
-            class="nav flex-column mb-2"
-            v-show="user"
-          >
+          <ul class="nav flex-column mb-2" v-show="user">
             <li
               class="nav-item"
               v-for="prj in workInProgressProjects"
@@ -216,59 +249,56 @@
             >
               <router-link
                 class="nav-link w-100 me-3"
-                :class="{active: $route.name == 'ProjectTasks' && $route.params.id == prj.id}"
-                :to="{ name: 'ProjectTasks', params: { id: prj.id }}"
+                :class="{
+                  active:
+                    $route.name == 'ProjectTasks' && $route.params.id == prj.id,
+                }"
+                :to="{ name: 'ProjectTasks', params: { id: prj.id } }"
               >
                 <i class="bi bi-file-ruled"></i>
-                {{ prj.name}}
+                {{ prj.name }}
               </router-link>
             </li>
           </ul>
 
           <div class="d-block d-md-none">
-            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <h6
+              class="
+                sidebar-heading
+                d-flex
+                justify-content-between
+                align-items-center
+                px-3
+                mt-4
+                mb-1
+                text-muted
+              "
+            >
               <span>User</span>
             </h6>
             <ul class="nav flex-column mb-2">
-              <li
-                class="nav-item"
-                v-show="!user"
-              >
-                <a
-                  class="nav-link"
-                  href="#"
-                ><i class="bi bi-person-check-fill"></i>
+              <li class="nav-item" v-show="!user">
+                <a class="nav-link" href="#"
+                  ><i class="bi bi-person-check-fill"></i>
                   Register
                 </a>
               </li>
-              <li
-                class="nav-item"
-                v-show="!user"
-              >
+              <li class="nav-item" v-show="!user">
                 <router-link
                   class="nav-link"
-                  :class="{active: $route.name === 'Login'}"
-                  :to="{ name: 'Login'}"
-                ><i class="bi bi-box-arrow-in-right"></i>
+                  :class="{ active: $route.name === 'Login' }"
+                  :to="{ name: 'Login' }"
+                  ><i class="bi bi-box-arrow-in-right"></i>
                   Login
                 </router-link>
               </li>
-              <li
-                class="nav-item"
-                v-show="user"
-              >
-                <a
-                  class="nav-link"
-                  @click.prevent="refresh"
-                >
+              <li class="nav-item" v-show="user">
+                <a class="nav-link" @click.prevent="refresh">
                   <i class="bi bi-arrow-clockwise"></i>
                   Refresh
                 </a>
               </li>
-              <li
-                class="nav-item dropdown"
-                v-show="user"
-              >
+              <li class="nav-item dropdown" v-show="user">
                 <a
                   class="nav-link dropdown-toggle"
                   href="#"
@@ -281,7 +311,7 @@
                     :src="userPhotoUrl"
                     class="rounded-circle z-depth-0 avatar-img"
                     alt="avatar image"
-                  >
+                  />
                   <span class="avatar-text">{{ userName }}</span>
                 </a>
                 <ul
@@ -291,26 +321,30 @@
                   <li>
                     <router-link
                       class="dropdown-item"
-                      :class="{active: $route.name == 'User' && $route.params.id == userId}"
-                      :to="{ name: 'User', params: { id: userId }}"
-                    ><i class="bi bi-person-square"></i>Profile
+                      :class="{
+                        active:
+                          $route.name == 'User' && $route.params.id == userId,
+                      }"
+                      :to="{ name: 'User', params: { id: userId } }"
+                      ><i class="bi bi-person-square"></i>Profile
                     </router-link>
                   </li>
                   <li>
                     <router-link
                       class="dropdown-item"
-                      :class="{active: $route.name === 'ChangePassword'}"
-                      :to="{ name: 'ChangePassword'}"
-                    ><i class="bi bi-key-fill"></i>Change password</router-link>
+                      :class="{ active: $route.name === 'ChangePassword' }"
+                      :to="{ name: 'ChangePassword' }"
+                      ><i class="bi bi-key-fill"></i>Change
+                      password</router-link
+                    >
                   </li>
                   <li>
-                    <hr class="dropdown-divider">
+                    <hr class="dropdown-divider" />
                   </li>
                   <li>
-                    <a
-                      class="dropdown-item"
-                      @click.prevent="logout"
-                    ><i class="bi bi-arrow-right"></i>Logout</a>
+                    <a class="dropdown-item" @click.prevent="logout"
+                      ><i class="bi bi-arrow-right"></i>Logout</a
+                    >
                   </li>
                 </ul>
               </li>
@@ -335,41 +369,51 @@ export default {
     }
   },
   computed: {
-    workInProgressProjects () {
+    workInProgressProjects() {
       return this.$store.getters.myInProgressProjects
     },
-    user () {
+    user() {
       return this.$store.state.user
     },
-    userId () {
+    userId() {
       return this.$store.state.user ? this.$store.state.user.id : -1
     },
-    userName () {
-      return this.$store.state.user ? this.$store.state.user.name : ''
+    userName() {
+      return this.$store.state.user ? this.$store.state.user.name : ""
     },
-    userPhotoUrl () {
+    userPhotoUrl() {
       let urlPhoto = this.$store.state.user
         ? this.$store.state.user.photo_url
         : null
       return urlPhoto
-        ? this.$serverUrl + '/storage/fotos/' + urlPhoto
-        : 'img/avatar-none.png'
-    }
+        ? this.$serverUrl + "/storage/fotos/" + urlPhoto
+        : "img/avatar-none.png"
+    },
   },
   methods: {
-    refresh () {
-      this.$store.dispatch('refresh')
+    refresh() {
+      this.$store.dispatch("refresh")
     },
-    logout () {
-      this.$store.dispatch('logout')
+    logout() {
+      this.$store
+        .dispatch("logout")
         .then(() => {
-          this.$toast.success('User has logged out of the application.')
-          this.$router.push({ name: 'Home' })
+          this.$toast.success("User has logged out of the application.")
+          this.$router.push({ name: "Home" })
         })
         .catch(() => {
-          this.$toast.error('There was a problem logging out of the application!')
+          this.$toast.error(
+            "There was a problem logging out of the application!"
+          )
         })
-    }
+    },
+  },
+  mounted() {
+    this.$store.dispatch("restoreToken").then((token) => {
+      if (token) {
+        this.$store.dispatch("refresh")
+      }
+    })
   },
   mounted () {
     this.$store.dispatch('restoreToken')
