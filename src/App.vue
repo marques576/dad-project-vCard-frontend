@@ -202,7 +202,7 @@
               </router-link>
               <router-link
                 class="link-secondary"
-                :to="{ name: 'Users' }"
+                :to="{ name: 'NewUser' }"
                 aria-label="Add a new task"
                 ><i class="bi bi-xs bi-plus-circle"></i>
               </router-link>

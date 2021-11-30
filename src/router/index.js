@@ -9,6 +9,7 @@ import Transactions from "../components/transactions/Transactions.vue"
 import Project from "../components/transactions/Project.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
+import NewUser from "../components/users/NewUser.vue"
 import Category from "../components/categories/Category.vue"
 import Categories from "../components/categories/Categories.vue"
 import VCards from "../components/vcards/VCards.vue"
@@ -96,6 +97,11 @@ const routes = [
     //props: true
     // Replaced with the following line to ensure that id is a number
     props: (route) => ({ id: parseInt(route.params.id) }),
+  },
+  {
+    path: "/users/new",
+    name: "NewUser",
+    component: NewUser,
   },
   {
     path: "/about",
