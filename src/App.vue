@@ -408,13 +408,6 @@ export default {
         })
     },
   },
-  mounted() {
-    this.$store.dispatch("restoreToken").then((token) => {
-      if (token) {
-        this.$store.dispatch("refresh")
-      }
-    })
-  },
   mounted () {
     this.$store.dispatch('restoreToken')
       .then((token) => {
