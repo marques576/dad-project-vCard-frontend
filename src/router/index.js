@@ -9,6 +9,8 @@ import Transactions from "../components/transactions/Transactions.vue"
 import Project from "../components/transactions/Project.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
+import Category from "../components/categories/Category.vue"
+import Categories from "../components/categories/Categories.vue"
 import VCards from "../components/vcards/VCards.vue"
 import VCard from "../components/vcards/VCard.vue"
 
@@ -118,6 +120,18 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
+  },
+
+  {
+    path: "/categories",
+    name: "Categories",
+    component: Categories,
+  },
+  {
+    path: "/categories/new",
+    name: "NewCategory",
+    component: Category,
+    props: () => ({ id: null }),
   },
 ]
 
