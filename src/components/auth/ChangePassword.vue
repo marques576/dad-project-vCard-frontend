@@ -75,8 +75,10 @@ export default {
     changePassword() {
       this.$axios
         .patch(
-          (this.$store.state.user.user_type == "A" ? "administrators/" : "vcards/") +
-            this.$store.state.user.username +
+          (this.$store.state.user.user_type == "A"
+            ? "administrators/"
+            : "vcards/") +
+            this.$store.state.user.id +
             "/password",
           this.passwords
         )
@@ -93,5 +95,4 @@ export default {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
