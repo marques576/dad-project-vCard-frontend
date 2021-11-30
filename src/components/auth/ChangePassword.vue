@@ -75,7 +75,7 @@ export default {
     changePassword() {
       this.$axios
         .patch(
-          (this.$store.state.user.user_type == "A"
+          (this.$store.state.user.type == "A"
             ? "administrators/"
             : "vcards/") +
             this.$store.state.user.id +

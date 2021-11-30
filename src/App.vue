@@ -391,7 +391,7 @@ export default {
       return this.$store.state.user
     },
     userType() {
-      return this.$store.state.user ? this.$store.state.user.user_type : ""
+      return this.$store.state.user ? this.$store.state.user.type : ""
     },
     userId() {
       return this.$store.state.user ? this.$store.state.user.id : -1
