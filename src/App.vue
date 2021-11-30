@@ -161,7 +161,7 @@
               </router-link>
             </li>
 
-            <li class="nav-item" v-if="!isLoading && user && user.type == 'V'">
+            <li class="nav-item" v-if="!isLoading && userType == 'V'">
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'Transactions' }"
@@ -193,7 +193,7 @@
               </router-link>
             </li>
 
-            <li class="nav-item" v-if="!isLoading && user && user.type == 'V'">
+            <li class="nav-item" v-if="!isLoading && userType == 'V'">
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'NewTransaction' }"
