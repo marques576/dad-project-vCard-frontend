@@ -6,6 +6,7 @@ export default createStore({
   state: {
     user: null,
     transactions: [],
+    paymentTypes: [],
     vcards: [],
   },
   mutations: {
@@ -15,11 +16,11 @@ export default createStore({
     setUser(state, loggedInUser) {
       state.user = loggedInUser
     },
-    resetTransactions(state) {
-      state.transactions = null
+    setPaymentTypes(state, paymentTypes) {
+      state.paymentTypes = paymentTypes
     },
-    setTransactions(state, transactions) {
-      state.transactions = transactions
+    resetPaymentTypes(state) {
+      state.paymentTypes = null
     },
     setVCards(state, vcards) {
       state.vcards = vcards
@@ -29,16 +30,9 @@ export default createStore({
     },
   },
   getters: {
-    transactionsFilter: (state) => (type, category) => {
-      return state.transactions.filter(
-        (p) =>
-          (!type || type == p.type) && (!category || category == p.category_id)
-      )
-    },
-    totalTransactionsFilter: (state, getters) => (type, category) => {
-      return getters.transactionsFilter(type, category).length
-    },
-    vcards: (state) => state.vcards,
+    paymentTypes: (state) => {
+      return state.paymentTypes
+    }
   },
   actions: {
     async login(context, credentials) {
@@ -62,6 +56,16 @@ export default createStore({
         delete axios.defaults.headers.common.Authorization
         sessionStorage.removeItem("token")
         context.commit("resetUser", null)
+      }
+    },
+    async loadPaymentTypes(context) {
+      try {
+        let response = await axios.get('paymenttypes')
+        context.commit('setPaymentTypes', response.data.data)
+        return response.data.data
+      } catch (error) {
+        context.commit('resetPaymentTypes')
+        throw error
       }
     },
     async restoreToken(context) {
@@ -108,10 +112,10 @@ export default createStore({
     },
     async refresh(context) {
       let userPromise = context.dispatch("loadLoggedInUser")
+      let paymentTypesPromise = context.dispatch('loadPaymentTypes')
+      
       await userPromise
-
-      let transactionsPromise = context.dispatch("loadTransactions")
-      await transactionsPromise
+      await paymentTypesPromise
 
       let vcardsPromise = context.dispatch("loadVCards")
       await vcardsPromise

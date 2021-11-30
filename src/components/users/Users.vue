@@ -1,10 +1,20 @@
 <template>
-  <h3 class="mt-5 mb-3">Team Members</h3>
+  <h3 class="mt-5 mb-3">Administrators</h3>
   <hr>
+      <div class="mx-2 mt-2">
+      <button
+        type="button"
+        class="btn btn-success px-4 btn-addprj"
+        @click="newUser"
+      >
+        <i class="bi bi-xs bi-plus-circle"></i>&nbsp; New Administrator
+      </button>
+    </div>
   <user-table
     :users="users"
     :showId="false"
     @edit="editUser"
+    @delete="deleteUser"
   ></user-table>
 </template>
 
@@ -28,7 +38,7 @@ export default {
   },
   methods: {
     loadUsers () {
-      this.$axios.get('users')
+      this.$axios.get('administrators')
         .then((response) => {
           this.users = response.data.data
         })
@@ -39,6 +49,18 @@ export default {
     editUser (user) {
       this.$router.push({ name: 'User', params: { id: user.id } })
     },
+    deleteUser (user) {
+      this.$axios.delete('administrators/' + user.id)
+        .then(() => {
+          this.loadUsers()
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    newUser(){
+      this.$router.push({ name: 'NewUser'})
+    }
   },
   mounted () {
     this.loadUsers()

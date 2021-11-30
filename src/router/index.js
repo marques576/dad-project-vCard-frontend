@@ -6,14 +6,16 @@ import ChangePassword from "../components/auth/ChangePassword.vue"
 import Tasks from "../components/tasks/Tasks.vue"
 import Task from "../components/tasks/Task.vue"
 import Transactions from "../components/transactions/Transactions.vue"
-import Project from "../components/transactions/Project.vue"
+import Transaction from "../components/transactions/Transaction.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
+import NewUser from "../components/users/NewUser.vue"
 import Category from "../components/categories/Category.vue"
 import Categories from "../components/categories/Categories.vue"
 import VCards from "../components/vcards/VCards.vue"
 import DefaultCategory from "../components/defaultCategories/DefaultCategory.vue"
 import DefaultCategories from "../components/defaultCategories/DefaultCategories.vue"
+import VCard from "../components/vcards/VCard.vue"
 
 const routes = [
   {
@@ -70,21 +72,28 @@ const routes = [
     component: Transactions,
   },
   {
-    path: "/transactions/:id",
-    name: "Project",
-    component: Project,
-    props: (route) => ({ id: parseInt(route.params.id) }),
-  },
-  {
     path: "/transactions/new",
-    name: "NewProject",
-    component: Project,
-    props: () => ({ id: null }),
+    name: "NewTransaction",
+    component: Transaction,
   },
   {
     path: "/vcards",
     name: "VCards",
     component: VCards,
+  },
+  {
+    path: "/vcards/new",
+    name: "NewVCard",
+    component: VCard,
+    props: { operationType: "insert" },
+  },
+  {
+    path: "/vcards/:id",
+    name: "VCard",
+    component: VCard,
+    props: (route) => ({
+      phone_number: parseInt(route.params.id),
+    }),
   },
   {
     path: "/users",
@@ -98,6 +107,11 @@ const routes = [
     //props: true
     // Replaced with the following line to ensure that id is a number
     props: (route) => ({ id: parseInt(route.params.id) }),
+  },
+  {
+    path: "/users/new",
+    name: "NewUser",
+    component: NewUser,
   },
   {
     path: "/about",
@@ -154,14 +168,22 @@ const router = createRouter({
 import store from "../store"
 
 router.beforeEach((to, from, next) => {
-  // if (to.name == "Login" || to.name == "Home") {
-  //   next()
-  //   return
-  // }
-  // if (!store.state.user) {
-  //   next({ name: "Login" })
-  //   return
-  // }
+  if (to.name == "Login" || to.name == "Home") {
+    next()
+    return
+  }
+  if (!store.state.user) {
+    next({ name: "Login" })
+    return
+  }
+  if (to.name == "User") {
+    if (store.state.user.type == "A" || store.state.user.id == to.params.id) {
+      next()
+      return
+    }
+    next(false)
+    return
+  }
   // if (to.name == "DefaultCategories") {
   //   if (store.state.user.user_type != "A") {
   //     next(false)
@@ -198,15 +220,6 @@ router.beforeEach((to, from, next) => {
   //     return
   //   }
   // }
-
-  if (to.name == "User") {
-    if (store.state.user.type == "A" || store.state.user.id == to.params.id) {
-      next()
-      return
-    }
-    next(false)
-    return
-  }
   next()
 })
 
