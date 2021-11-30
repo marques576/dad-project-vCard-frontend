@@ -68,7 +68,7 @@
         </tr>
         <tr v-if="transaction.editing">
           <td colspan="9">
-            <transaction-detail
+            <transaction-edit
               @updateDescription="updateDescription(transaction.id, transaction.description)"
               :transaction="transaction"
             />
@@ -80,12 +80,12 @@
 </template>
 
 <script>
-import TransactionDetail from "./TransactionDetail.vue"
+import TransactionEdit from "./TransactionEdit.vue"
 
 export default {
   name: "TransactionsTable",
   components: {
-    TransactionDetail,
+    TransactionEdit,
   },
   props: {
     transactions: {

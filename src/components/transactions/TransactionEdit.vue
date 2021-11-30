@@ -33,7 +33,7 @@
 
 <script>
 export default {
-  name: "TransactionDetail",
+  name: "TransactionEdit",
   props: {
     transaction: Object,
     categories: Object,

@@ -102,11 +102,11 @@
             </ul>
           </li>
           <li
-            class="nav-item"
+            class="nav-item d-flex"
             v-show="user"
           >
             <a
-              class="nav-link"
+              class="nav-link align-self-center"
               @click.prevent="refresh"
             >
               <i class="bi bi-arrow-clockwise"></i>
@@ -164,7 +164,7 @@
               </router-link>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item" v-if="!isLoading && user && user.type == 'V'">
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{active: $route.name === 'Transactions'}"
@@ -172,6 +172,17 @@
               >
                 <i class="bi bi-arrow-down-up"></i>
                 Transactions
+              </router-link>
+            </li>
+
+            <li class="nav-item" v-if="!isLoading && user && user.type == 'V'">
+              <router-link
+                class="nav-link w-100 me-3"
+                :class="{active: $route.name === 'NewTransaction'}"
+                :to="{ name: 'NewTransaction'}"
+              >
+                <i class="bi bi-send"></i>
+                Send Money
               </router-link>
             </li>
 
@@ -193,12 +204,6 @@
             v-show="user"
           >
             <span>My Projects</span>
-            <router-link
-              class="link-secondary"
-              :to="{ name: 'NewProject'}"
-              aria-label="Add a new project"
-            ><i class="bi bi-xs bi-plus-circle"></i>
-            </router-link>
           </h6>
           <ul
             class="nav flex-column mb-2"
@@ -381,9 +386,8 @@ export default {
 @import "./assets/css/dashboard.css";
 
 .avatar-img {
-  margin: -1.2rem 0.8rem -2rem 0.8rem;
-  width: 3.3rem;
-  height: 3.3rem;
+  margin-right: 0.6rem;
+  width: 2.2rem;
 }
 .avatar-text {
   line-height: 2.2rem;

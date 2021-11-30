@@ -6,7 +6,7 @@ import ChangePassword from "../components/auth/ChangePassword.vue"
 import Tasks from "../components/tasks/Tasks.vue"
 import Task from "../components/tasks/Task.vue"
 import Transactions from "../components/transactions/Transactions.vue"
-import Project from "../components/transactions/Project.vue"
+import Transaction from "../components/transactions/Transaction.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
 
@@ -63,16 +63,9 @@ const routes = [
     component: Transactions,
   },
   {
-    path: '/transactions/:id',
-    name: 'Project',
-    component: Project,
-    props: route => ({ id: parseInt(route.params.id) })
-  },
-  {
     path: '/transactions/new',
-    name: 'NewProject',
-    component: Project,
-    props: () => ({ id: null })
+    name: 'NewTransaction',
+    component: Transaction,
   },
   {
     path: '/users',
@@ -104,28 +97,9 @@ const router = createRouter({
 
 import store from '../store'
 
-function fixLogin(router, to, next) {
-  if (store.state.user) {
-    //router.push(to)
-    next()
-  } else {
-    setTimeout(() => {
-      //router.push({'name': to.name})
-      fixLogin(router, to, next)
-    }, 100)
-  }
-}
-
 router.beforeEach((to, from, next) => {
   if ((to.name == 'Login') || (to.name == 'Home')) {
     next()
-    return
-  }
-  if (!store.state.user) {
-    setTimeout(() => {
-      //router.push({'name': to.name})
-      fixLogin(router, to, next)
-    }, 100)
     return
   }
   if (!store.state.user) {

@@ -23,23 +23,22 @@
         <option :value="null"></option>
       </select>
     </div>
-    <div class="mx-2 mt-2">
-      <button
-        type="button"
-        class="btn btn-success px-4 btn-addprj"
-        @click="addProject"
-      >
-        <i class="bi bi-xs bi-plus-circle"></i>&nbsp; New Transaction
-      </button>
-    </div>
   </div>
   <transaction-table
     :transactions="filteredTransactions"
     :showId="true"
     :showDates="true"
     @updateDescription="updateTransactionDescription"
-    @delete="deleteProject"
   ></transaction-table>
+  <template class="paginator">
+  <pagination
+    v-model="page"
+    :records="paginationData ? paginationData.total : 0"
+    :per-page="paginationData ? paginationData.per_page : 0"
+    @paginate="loadTransactions"
+    :options="{hideCount: true, theme: 'bootstrap3'}"
+  ></pagination>
+  </template>
 </template>
 
 <script>
@@ -55,6 +54,8 @@ export default {
       transactions: [],
       filterByType: null,
       filterByCategory: null,
+      page: 1,
+      paginationData: null
     }
   },
   computed: {
@@ -70,31 +71,14 @@ export default {
     },
   },
   methods: {
-    addProject() {
-      this.$router.push({ name: "NewProject" })
-    },
-    editProject(project) {
-      this.$router.push({ name: "Project", params: { id: project.id } })
-    },
-    deleteProject(project) {
-      this.$axios
-        .delete("projects/" + project.id)
-        .then((response) => {
-          let deletedProject = response.data.data
-          let idx = this.projects.findIndex((t) => t.id === deletedProject.id)
-          if (idx >= 0) {
-            this.projects.splice(idx, 1)
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
     loadTransactions() {
       this.$axios
-        .get("vcards/" + this.$store.state.user.id + "/transactions")
+        .get(
+          "vcards/" + this.$store.state.user.id + "/transactions?page=" + this.page
+        )
         .then((response) => {
           this.transactions = response.data.data
+          this.paginationData = response.data.meta
         })
         .catch(() => {
           this.$toast.error("Error loading the transactions!")
@@ -102,12 +86,15 @@ export default {
     },
     updateTransactionDescription(id, description) {
       this.$axios
-        .patch("transactions/" + id, {description: description})
+        .patch("transactions/" + id, { description: description })
         .then(() => {
           this.$toast.success("Edited transaction description with success!")
         })
         .catch((error) => {
-          this.$toast.error("Error editing transaction description! " + error.response.data.errors['description'][0])
+          this.$toast.error(
+            "Error editing transaction description! " +
+              error.response.data.errors["description"][0]
+          )
         })
     },
   },
@@ -126,5 +113,9 @@ export default {
 }
 .btn-addprj {
   margin-top: 1.85rem;
+}
+.paginator {
+  display: flex;
+  justify-content: center;
 }
 </style>

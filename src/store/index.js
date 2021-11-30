@@ -5,7 +5,8 @@ import axios from 'axios'
 export default createStore({
   state: {
     user: null,
-    transactions: []
+    transactions: [],
+    paymentTypes: []
   },
   mutations: {
     resetUser(state) {
@@ -13,11 +14,18 @@ export default createStore({
     },
     setUser(state, loggedInUser) {
       state.user = loggedInUser
+    },
+    setPaymentTypes(state, paymentTypes) {
+      state.paymentTypes = paymentTypes
+    },
+    resetPaymentTypes(state) {
+      state.paymentTypes = null
     }
   },
   getters: {
-    totalTransactionsFilter: (state, getters) => (type, category) => {
-    },
+    paymentTypes: (state) => {
+      return state.paymentTypes
+    }
   },
   actions: {
     async login(context, credentials) {
@@ -43,6 +51,16 @@ export default createStore({
         context.commit('resetUser', null)
       }
     },
+    async loadPaymentTypes(context) {
+      try {
+        let response = await axios.get('paymenttypes')
+        context.commit('setPaymentTypes', response.data.data)
+        return response.data.data
+      } catch (error) {
+        context.commit('resetPaymentTypes')
+        throw error
+      }
+    },
     async restoreToken(context) {
       let storedToken = sessionStorage.getItem('token')
       if (storedToken) {
@@ -65,8 +83,10 @@ export default createStore({
     },
     async refresh(context) {
       let userPromise = context.dispatch('loadLoggedInUser')
+      let paymentTypesPromise = context.dispatch('loadPaymentTypes')
 
       await userPromise
+      await paymentTypesPromise
     },
   },
 })
