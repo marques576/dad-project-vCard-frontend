@@ -35,7 +35,7 @@
         v-model="editingVCard.email"
       />
     </div>
-    <div v-if="operationType == 'update'" class="mb-3">
+    <div v-if="operationType == 'update' && admin" class="mb-3">
       <label for="inputBalance" class="form-label">Balance</label>
       <input
         type="text"
@@ -46,7 +46,7 @@
         v-model="editingVCard.balance"
       />
     </div>
-    <div v-if="operationType == 'update'" class="mb-3">
+    <div v-if="operationType == 'update' && admin" class="mb-3">
       <label for="inputMaxDebit" class="form-label">Max Debit</label>
       <input
         type="text"
@@ -78,7 +78,7 @@
         v-model="editingVCard.password_confirmation"
       />
     </div>
-    <div v-if="operationType == 'insert'" class="mb-3">
+    <div v-if="operationType == 'insert' && admin" class="mb-3">
       <label for="inputCode" class="form-label">Code</label>
       <input
         type="password"
@@ -99,7 +99,7 @@
         v-model="editingVCard.confirmation_code_confirmation"
       />
     </div>
-    <div v-if="operationType == 'update'" class="mb-3 checkBilled">
+    <div v-if="operationType == 'update' && admin" class="mb-3 checkBilled">
       <div class="form-check">
         <input
           class="form-check-input"
@@ -150,6 +150,7 @@ export default {
   data() {
     return {
       editingVCard: this.vcard,
+      admin: this.$store.state.user.type == "A",
     }
   },
   watch: {

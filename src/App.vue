@@ -75,6 +75,18 @@
             >
               <li>
                 <router-link
+                  v-if="userType == 'V'"
+                  class="dropdown-item"
+                  :class="{
+                    active:
+                      $route.name == 'VCard' &&
+                      $route.params.phone_number == userId,
+                  }"
+                  :to="{ name: 'VCard', params: { id: userId } }"
+                  ><i class="bi bi-person-square"></i>Profile
+                </router-link>
+                <router-link
+                  v-if="userType == 'A'"
                   class="dropdown-item"
                   :class="{
                     active: $route.name == 'User' && $route.params.id == userId,
@@ -185,7 +197,7 @@
               </router-link>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item" v-if="userType=='A'">
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'VCards' }"
