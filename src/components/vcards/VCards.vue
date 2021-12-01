@@ -31,15 +31,6 @@
         <option :value="null"></option>
       </select>
     </div> -->
-    <div class="mx-2 mt-2">
-      <button
-        type="button"
-        class="btn btn-success px-4 btn-addprj"
-        @click="addVCard"
-      >
-        <i class="bi bi-xs bi-plus-circle"></i>&nbsp; New VCard
-      </button>
-    </div>
   </div>
   <VCardsTable
     :vcards="vCards"

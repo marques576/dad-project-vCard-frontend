@@ -7,7 +7,7 @@
         <th v-if="showEmail">Email</th>
         <th v-if="showBalance">Balance</th>
         <th v-if="showMaxDebit">Max Debit</th>
-        <th v-if="showMaxDebit">Locked</th>
+        <th v-if="showMaxDebit" class="text-center">Locked</th>
         <th v-if="showEditButton || showDeleteButton"></th>
       </tr>
     </thead>
@@ -60,7 +60,7 @@
               @click="deleteClick(vcard)"
               v-if="showDeleteButton"
             >
-              <i class="bi bi-xs bi-x-square-fill"></i>
+              <i class="bi bi-xs bi-trash"></i>
             </button>
           </div>
         </td>

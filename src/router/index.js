@@ -3,6 +3,7 @@ import Home from "../views/Home.vue"
 import Dashboard from "../components/Dashboard.vue"
 import Login from "../components/auth/Login.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
+import ChangeCode from "../components/auth/ChangeSecurityCode.vue"
 import Tasks from "../components/tasks/Tasks.vue"
 import Task from "../components/tasks/Task.vue"
 import Transactions from "../components/transactions/Transactions.vue"
@@ -32,6 +33,11 @@ const routes = [
     path: "/password",
     name: "ChangePassword",
     component: ChangePassword,
+  },
+  {
+    path: "/securitycode",
+    name: "ChangeCode",
+    component: ChangeCode,
   },
   {
     path: "/dashboard",
@@ -82,7 +88,7 @@ const routes = [
     component: VCards,
   },
   {
-    path: "/vcards/new",
+    path: "/register",
     name: "NewVCard",
     component: VCard,
     props: { operationType: "insert" },
@@ -168,7 +174,7 @@ const router = createRouter({
 import store from "../store"
 
 router.beforeEach((to, from, next) => {
-  if (to.name == "Login" || to.name == "Home") {
+  if (to.name == "Login" || to.name == "NewVCard" || to.name == "Home") {
     next()
     return
   }

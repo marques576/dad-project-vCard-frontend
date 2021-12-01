@@ -36,10 +36,13 @@
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
           <li class="nav-item" v-show="!user">
-            <a class="nav-link" href="#"
+            <router-link
+              class="nav-link"
+              :class="{ active: $route.name === 'NewVCard' }"
+              :to="{ name: 'NewVCard' }"
               ><i class="bi bi-person-check-fill"></i>
               Register
-            </a>
+            </router-link>
           </li>
           <li class="nav-item" v-show="!user">
             <router-link
@@ -81,12 +84,24 @@
                 </router-link>
               </li>
               <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li>
+                <router-link
+                  class="dropdown-item"
+                  :class="{ active: $route.name === 'ChangeCode' }"
+                  :to="{ name: 'ChangeCode' }"
+                >
+                  <i class="bi bi-key-fill"></i>Change Security Code
+                </router-link>
+              </li>
+              <li>
                 <router-link
                   class="dropdown-item"
                   :class="{ active: $route.name === 'ChangePassword' }"
                   :to="{ name: 'ChangePassword' }"
                 >
-                  <i class="bi bi-key-fill"></i>Change password
+                  <i class="bi bi-key-fill"></i>Change Password
                 </router-link>
               </li>
               <li>
@@ -124,40 +139,6 @@
                 :to="{ name: 'Dashboard' }"
                 ><i class="bi bi-house"></i>
                 Dashboard
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link
-                class="nav-link"
-                :class="{ active: $route.name === 'CurrentTasks' }"
-                :to="{ name: 'CurrentTasks' }"
-              >
-                <i class="bi bi-list-stars"></i>
-                Current Tasks
-              </router-link>
-            </li>
-            <li
-              class="
-                nav-item
-                d-flex
-                justify-content-between
-                align-items-center
-                pe-3
-              "
-            >
-              <router-link
-                class="nav-link w-100 me-3"
-                :class="{ active: $route.name === 'Tasks' }"
-                :to="{ name: 'Tasks' }"
-              >
-                <i class="bi bi-list-check"></i>
-                Tasks
-              </router-link>
-              <router-link
-                class="link-secondary"
-                :to="{ name: 'NewTask' }"
-                aria-label="Add a new task"
-                ><i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
 
