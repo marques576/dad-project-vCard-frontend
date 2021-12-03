@@ -47,9 +47,7 @@ export default {
   data() {
     return {
       categories: [],
-      users: [],
-      filterByVCard: null,
-      filterByType: "C",
+      filterByType: "",
     }
   },
   computed: {
@@ -79,23 +77,13 @@ export default {
           console.log(error)
         })
     },
-    loadUsers() {
-      this.$axios
-        .get("users")
-        .then((response) => {
-          this.users = response.data.data
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
     addCategory() {
       this.$router.push({ name: "NewCategory" })
     },
     editCategory(category) {
       this.$router.push({ name: "Category", params: { id: category.id } })
     },
-    delete_category(category) {
+    deleteCategory(category) {
       this.$axios
         .delete("categories/" + category.id)
         .then((response) => {
@@ -113,7 +101,6 @@ export default {
     },
   },
   mounted() {
-    this.loadUsers()
     this.loadCategories()
   },
 }

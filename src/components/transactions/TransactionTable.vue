@@ -9,56 +9,84 @@
         <th v-if="showNewBalance">New Balance</th>
         <th v-if="showPaymentType">Payment Type</th>
         <th v-if="showPaymentReference">Payment Reference</th>
-        <th v-if="showCategory">Category</th>
-        <th v-if="showDescription">Description</th>
         <th v-if="showValue">Value</th>
         <th v-if="showEditButton || showDeleteButton"></th>
       </tr>
     </thead>
     <tbody>
-      <tr
-        v-for="transaction in transactions"
-        :key="transaction.id"
-      >
-        <td v-if="showId" class="text-primary">{{ transaction.id }}</td>
-        <td v-if="showDateTime">{{ transaction.datetime }}</td>
-        <td v-if="showType">{{ transaction.type }}</td>
-        <td v-if="showOldBalance">{{ transaction.old_balance + "€" }}</td>
-        <td v-if="showNewBalance">{{ transaction.new_balance + "€" }}</td>
-        <td v-if="showPaymentType" class="text-info">{{ transaction.payment_type }}</td>
-        <td v-if="showPaymentReference">{{ transaction.payment_reference }}</td>
-        <td v-if="showCategory">{{ transaction.category_id }}</td>
-        <td v-if="showDescription">{{ transaction.description }}</td>
-        <td v-if="showValue" :class="{'text-success': transaction.type == 'C', 'text-danger': transaction.type == 'D'}">{{ (transaction.type == 'C' ? '+' : '-') + transaction.value + "€"}}</td>
-        <td
-          class="text-end"
-          v-if="showEditButton || showDeleteButton"
-        >
-          <div class="d-flex justify-content-end">
-            <button
-              class="btn btn-xs btn-light"
-              @click="editClick(project)"
-              v-if="showEditButton"
-            ><i class="bi bi-xs bi-pencil"></i>
-            </button>
+      <template v-for="transaction in transactions" :key="transaction.id">
+        <tr>
+          <td v-if="showId" class="text-primary">{{ transaction.id }}</td>
+          <td v-if="showDateTime">{{ transaction.datetime }}</td>
+          <td v-if="showType">{{ transaction.type }}</td>
+          <td v-if="showOldBalance">{{ transaction.old_balance + "€" }}</td>
+          <td v-if="showNewBalance">{{ transaction.new_balance + "€" }}</td>
+          <td v-if="showPaymentType" class="text-info">
+            {{ transaction.payment_type }}
+          </td>
+          <td v-if="showPaymentReference">
+            {{ transaction.payment_reference }}
+          </td>
+          <td
+            v-if="showValue"
+            :class="{
+              'text-success': transaction.type == 'C',
+              'text-danger': transaction.type == 'D',
+            }"
+          >
+            {{
+              (transaction.type == "C" ? "+" : "-") + transaction.value + "€"
+            }}
+          </td>
+          <td class="text-end" v-if="showEditButton || showDeleteButton">
+            <div class="d-flex justify-content-end">
+              <button
+                class="btn btn-xs btn-light"
+                @click="
+                  transaction.editing = transaction.editing ? false : true
+                "
+                v-if="showEditButton"
+              >
+                <i
+                  class="bi m-0"
+                  :class="{
+                    'bi-caret-down-fill': !transaction.editing,
+                    'bi-caret-up-fill': transaction.editing,
+                  }"
+                ></i>
+              </button>
 
-            <button
-              class="btn btn-xs btn-light"
-              @click="deleteClick(project)"
-              v-if="showDeleteButton"
-            ><i class="bi bi-xs bi-x-square-fill"></i>
-            </button>
-          </div>
-        </td>
-      </tr>
+              <button
+                class="btn btn-xs btn-light"
+                @click="deleteClick(project)"
+                v-if="showDeleteButton"
+              >
+                <i class="bi bi-xs bi-x-square-fill"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr v-if="transaction.editing">
+          <td colspan="9">
+            <transaction-edit
+              @updateDescription="updateDescription(transaction.id, transaction.description)"
+              :transaction="transaction"
+            />
+          </td>
+        </tr>
+      </template>
     </tbody>
   </table>
 </template>
 
 <script>
-export default {
+import TransactionEdit from "./TransactionEdit.vue"
 
+export default {
   name: "TransactionsTable",
+  components: {
+    TransactionEdit,
+  },
   props: {
     transactions: {
       type: Array,
@@ -113,18 +141,18 @@ export default {
       default: false,
     },
   },
-  emits: [
-    'edit',
-    'delete',
-  ],
+  emits: ["updateDescription", "delete"],
   methods: {
-    editClick (project) {
-      this.$emit('edit', project)
+    editClick(project) {
+      this.$emit("edit", project)
     },
-    deleteClick (project) {
-      this.$emit('delete', project)
+    deleteClick(project) {
+      this.$emit("delete", project)
     },
-  }
+    updateDescription(id, description) {
+      this.$emit("updateDescription", id, description)
+    },
+  },
 }
 </script>
 

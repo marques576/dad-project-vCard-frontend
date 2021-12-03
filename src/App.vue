@@ -99,8 +99,8 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item" v-show="user">
-            <a class="nav-link" @click.prevent="refresh">
+          <li class="nav-item d-flex" v-show="user">
+            <a class="nav-link align-self-center" @click.prevent="refresh">
               <i class="bi bi-arrow-clockwise"></i>
             </a>
           </li>
@@ -161,7 +161,7 @@
               </router-link>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item" v-if="!isLoading && userType == 'V'">
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'Transactions' }"
@@ -169,6 +169,38 @@
               >
                 <i class="bi bi-arrow-down-up"></i>
                 Transactions
+              </router-link>
+            </li>
+            <li class="nav-item" v-if="userType == 'A'">
+              <router-link
+                class="nav-link w-100 me-3"
+                :class="{ active: $route.name === 'DefaultCategories' }"
+                :to="{ name: 'DefaultCategories' }"
+              >
+                <i class="bi bi-tag"></i>
+                Default Categories
+              </router-link>
+            </li>
+
+            <li class="nav-item" v-else>
+              <router-link
+                class="nav-link w-100 me-3"
+                :class="{ active: $route.name === 'Categories' }"
+                :to="{ name: 'Categories' }"
+              >
+                <i class="bi bi-tag"></i>
+                Categories
+              </router-link>
+            </li>
+
+            <li class="nav-item" v-if="!isLoading && userType == 'V'">
+              <router-link
+                class="nav-link w-100 me-3"
+                :class="{ active: $route.name === 'NewTransaction' }"
+                :to="{ name: 'NewTransaction' }"
+              >
+                <i class="bi bi-send"></i>
+                Send Money
               </router-link>
             </li>
 
@@ -233,12 +265,6 @@
             v-show="user"
           >
             <span>My Projects</span>
-            <router-link
-              class="link-secondary"
-              :to="{ name: 'NewProject' }"
-              aria-label="Add a new project"
-              ><i class="bi bi-xs bi-plus-circle"></i>
-            </router-link>
           </h6>
           <ul class="nav flex-column mb-2" v-show="user">
             <li
@@ -352,7 +378,7 @@
         </div>
       </nav>
 
-      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <main v-if="!isLoading" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <router-view></router-view>
       </main>
     </div>
@@ -362,12 +388,20 @@
 <script>
 export default {
   name: "RootComponent",
+  data() {
+    return {
+      isLoading: true,
+    }
+  },
   computed: {
     workInProgressProjects() {
       return this.$store.getters.myInProgressProjects
     },
     user() {
       return this.$store.state.user
+    },
+    userType() {
+      return this.$store.state.user ? this.$store.state.user.type : ""
     },
     userId() {
       return this.$store.state.user ? this.$store.state.user.id : -1
@@ -403,11 +437,14 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch("restoreToken").then((token) => {
-      if (token) {
-        this.$store.dispatch("refresh")
-      }
-    })
+    this.$store
+      .dispatch("restoreToken")
+      .then((token) => {
+        if (token) {
+          return this.$store.dispatch("refresh")
+        }
+      })
+      .then(() => (this.isLoading = false))
   },
 }
 </script>
@@ -416,9 +453,8 @@ export default {
 @import "./assets/css/dashboard.css";
 
 .avatar-img {
-  margin: -1.2rem 0.8rem -2rem 0.8rem;
-  width: 3.3rem;
-  height: 3.3rem;
+  margin-right: 0.6rem;
+  width: 2.2rem;
 }
 .avatar-text {
   line-height: 2.2rem;

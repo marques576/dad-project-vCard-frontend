@@ -6,7 +6,7 @@ import ChangePassword from "../components/auth/ChangePassword.vue"
 import Tasks from "../components/tasks/Tasks.vue"
 import Task from "../components/tasks/Task.vue"
 import Transactions from "../components/transactions/Transactions.vue"
-import Project from "../components/transactions/Project.vue"
+import Transaction from "../components/transactions/Transaction.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
 import NewUser from "../components/users/NewUser.vue"
@@ -14,6 +14,9 @@ import Category from "../components/categories/Category.vue"
 import Categories from "../components/categories/Categories.vue"
 import VCards from "../components/vcards/VCards.vue"
 import Statistics from "../components/statistics/Statistics.vue"
+import DefaultCategory from "../components/defaultCategories/DefaultCategory.vue"
+import DefaultCategories from "../components/defaultCategories/DefaultCategories.vue"
+import VCard from "../components/vcards/VCard.vue"
 
 const routes = [
   {
@@ -70,21 +73,28 @@ const routes = [
     component: Transactions,
   },
   {
-    path: "/transactions/:id",
-    name: "Project",
-    component: Project,
-    props: (route) => ({ id: parseInt(route.params.id) }),
-  },
-  {
     path: "/transactions/new",
-    name: "NewProject",
-    component: Project,
-    props: () => ({ id: null }),
+    name: "NewTransaction",
+    component: Transaction,
   },
   {
     path: "/vcards",
     name: "VCards",
     component: VCards,
+  },
+  {
+    path: "/vcards/new",
+    name: "NewVCard",
+    component: VCard,
+    props: { operationType: "insert" },
+  },
+  {
+    path: "/vcards/:id",
+    name: "VCard",
+    component: VCard,
+    props: (route) => ({
+      phone_number: parseInt(route.params.id),
+    }),
   },
   {
     path: "/users",
@@ -129,11 +139,93 @@ const routes = [
     name: "Statistics",
     component: Statistics,
   },
+  {
+    path: "/categories/:id",
+    name: "Category",
+    component: Category,
+    props: (route) => ({ id: parseInt(route.params.id) }),
+  },
+
+  {
+    path: "/defaultCategories",
+    name: "DefaultCategories",
+    component: DefaultCategories,
+  },
+  {
+    path: "/defaultCategories/new",
+    name: "NewDefaultCategory",
+    component: DefaultCategory,
+    props: () => ({ id: null }),
+  },
+  {
+    path: "/defaultCategories/:id",
+    name: "DefaultCategory",
+    component: DefaultCategory,
+    props: (route) => ({ id: parseInt(route.params.id) }),
+  },
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+})
+
+import store from "../store"
+
+router.beforeEach((to, from, next) => {
+  if (to.name == "Login" || to.name == "Home") {
+    next()
+    return
+  }
+  if (!store.state.user) {
+    next({ name: "Login" })
+    return
+  }
+  if (to.name == "User") {
+    if (store.state.user.type == "A" || store.state.user.id == to.params.id) {
+      next()
+      return
+    }
+    next(false)
+    return
+  }
+  // if (to.name == "DefaultCategories") {
+  //   if (store.state.user.user_type != "A") {
+  //     next(false)
+  //     return
+  //   }
+  // }
+  // if (to.name == "NewDefaultCategory") {
+  //   if (store.state.user.user_type != "A") {
+  //     next(false)
+  //     return
+  //   }
+  // }
+  // if (to.name == "DefaultCategory") {
+  //   if (store.state.user.user_type != "A") {
+  //     next(false)
+  //     return
+  //   }
+  // }
+  // if (to.name == "Categories") {
+  //   if (store.state.user.user_type != "V") {
+  //     next(false)
+  //     return
+  //   }
+  // }
+  // if (to.name == "NewCategory") {
+  //   if (store.state.user.user_type != "V") {
+  //     next(false)
+  //     return
+  //   }
+  // }
+  // if (to.name == "Category") {
+  //   if (store.state.user.user_type != "V") {
+  //     next(false)
+  //     return
+  //   }
+  // }
+  next()
 })
 
 export default router

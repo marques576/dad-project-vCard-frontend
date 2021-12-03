@@ -1,6 +1,6 @@
 <template>
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3">{{ categoryTitle }}</h3>
+    <h3 class="mt-5 mb-3">{{ defaultCategoryTitle }}</h3>
     <hr />
 
     <div class="mb-3">
@@ -9,31 +9,19 @@
         type="text"
         class="form-control"
         id="inputName"
-        placeholder="Category Name"
+        placeholder="Default Category Name"
         required
-        v-model="editingCategory.name"
-      />
-    </div>
-
-    <div class="mb-3 me-3 flex-grow-1">
-      <label for="inputVCard" class="form-label">VCard</label>
-      <input
-        type="text"
-        class="form-control"
-        id="inputVCard"
-        :placeholder="category.vcard"
-        v-model="editingCategory.vcard"
-        disabled
+        v-model="editingDefaultCategory.name"
       />
     </div>
 
     <div class="d-flex flex-wrap justify-content-between">
       <div class="mb-3 ms-xs-3 flex-grow-1">
-        <label for="inputCategory" class="form-label">Type</label>
+        <label for="inputDefaultCategory" class="form-label">Type</label>
         <select
           class="form-select"
-          id="inputCategory"
-          v-model="editingCategory.type"
+          id="inputDefaultCategory"
+          v-model="editingDefaultCategory.type"
         >
           <option :value="null"></option>
           <option value="C">Crédito</option>
@@ -55,10 +43,10 @@
 
 <script>
 export default {
-  name: "CategoryDetail",
+  name: "DefaultCategoryDetail",
   components: {},
   props: {
-    category: {
+    defaultCategory: {
       type: Object,
       required: true,
     },
@@ -66,36 +54,37 @@ export default {
       type: String,
       default: "insert", // insert / update
     },
+    vcard: {
+      type: Object,
+    },
   },
   emits: ["save", "cancel"],
   data() {
     return {
-      editingCategory: this.category,
+      editingDefaultCategory: this.defaultCategory,
     }
   },
   watch: {
-    category(newCategory) {
-      this.editingCategory = newCategory
+    defaultCategory(newDefaultCategory) {
+      this.editingDefaultCategory = newDefaultCategory
     },
   },
   computed: {
-    categoryTitle() {
-      if (!this.editingCategory) {
+    defaultCategoryTitle() {
+      if (!this.editingDefaultCategory) {
         return ""
       }
-      console.log(this.editingCategory)
-
       return this.operationType == "insert"
-        ? "New Category"
-        : "Category #" + this.editingCategory.id
+        ? "New Default Category"
+        : "Default Category #" + this.editingDefaultCategory.id
     },
   },
   methods: {
     save() {
-      this.$emit("save", this.editingCategory)
+      this.$emit("save", this.editingDefaultCategory)
     },
     cancel() {
-      this.$emit("cancel", this.editingCategory)
+      this.$emit("cancel", this.editingDefaultCategory)
     },
   },
 }
