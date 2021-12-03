@@ -150,7 +150,7 @@ export default {
   data() {
     return {
       editingVCard: this.vcard,
-      admin: this.$store.state.user.type == "A",
+      admin: this.$store.state.user && this.$store.state.user.type == "A",
     }
   },
   watch: {
