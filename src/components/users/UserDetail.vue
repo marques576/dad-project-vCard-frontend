@@ -15,9 +15,13 @@
             v-model="editingUser.name"
             v-bind:class="{ 'is-invalid': v$.editingUser.name.$error ?? false }"
           />
-          <span v-if="v$.editingUser.name.$error" style="color:red;">
+          <span v-if="v$.editingUser.name.$error" style="color: red">
             {{ v$.editingUser.name.$errors[0].$message }}
           </span>
+          <field-error-message
+            :errors="errors"
+            fieldName="name"
+          ></field-error-message>
         </div>
 
         <div class="mb-3 px-1">
@@ -28,12 +32,18 @@
             id="inputEmail"
             placeholder="Email"
             required
-            v-model="editingUser.email" 
-            v-bind:class="{ 'is-invalid': v$.editingUser.email.$error ?? false }"
+            v-model="editingUser.email"
+            v-bind:class="{
+              'is-invalid': v$.editingUser.email.$error ?? false,
+            }"
           />
-          <span v-if="v$.editingUser.email.$error" style="color:red;">
+          <span v-if="v$.editingUser.email.$error" style="color: red">
             {{ v$.editingUser.email.$errors[0].$message }}
           </span>
+      <field-error-message
+        :errors="errors"
+        fieldName="email"
+      ></field-error-message>
         </div>
         <div class="d-flex ms-1 mt-4 flex-wrap justify-content-between">
           <div class="mb-3 me-3 flex-grow-1">
@@ -57,7 +67,7 @@
 
 <script>
 import useVuelidate from "@vuelidate/core"
-import { required, email } from "@vuelidate/validators"
+import { required,email } from "@vuelidate/validators"
 export default {
   name: "UserDetail",
   components: {},
@@ -65,6 +75,9 @@ export default {
     user: {
       type: Object,
       required: true,
+    },
+    errors: {
+      type: Object,
     },
   },
   emits: ["save", "cancel"],
@@ -79,7 +92,7 @@ export default {
     return {
       editingUser: {
         name: { required },
-        email: { required, email },
+        email: { required,email },
       },
     }
   },
@@ -93,7 +106,7 @@ export default {
     save() {
       this.v$.$touch()
       if (!this.v$.$error) {
-      //this.$emit("save", this.editingUser)
+        this.$emit("save", this.editingUser)
       }
     },
     cancel() {

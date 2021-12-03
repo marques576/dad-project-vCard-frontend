@@ -3,6 +3,7 @@
     :user="user"
     @save="save"
     @cancel="cancel"
+    :errors="errors"
   ></user-detail>
 </template>
 
@@ -23,6 +24,7 @@ export default {
   data () {
     return {
       user: this.newUser(),
+      errors: null
     }
   },
   watch: {
@@ -65,6 +67,7 @@ export default {
         })
         .catch((error) => {
           if (error.response.status == 422) {
+            this.errors = error.response.data.errors
             this.$toast.error('User #' + this.id + ' was not updated due to validation errors!')
           } else {
             this.$toast.error('User #' + this.id + ' was not updated due to unknown server error!')
