@@ -78,7 +78,7 @@
         v-model="editingVCard.password_confirmation"
       />
     </div>
-    <div v-if="operationType == 'insert' && admin" class="mb-3">
+    <div v-if="operationType == 'insert'" class="mb-3">
       <label for="inputCode" class="form-label">Code</label>
       <input
         type="password"
