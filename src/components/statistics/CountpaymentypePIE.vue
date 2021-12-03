@@ -1,10 +1,10 @@
 <script>
 import { defineComponent } from 'vue'
-import { Line } from 'vue3-chart-v2'
+import { Doughnut } from 'vue3-chart-v2'
 
 export default defineComponent({
-  name: 'SumYearChart',
-  extends: Line,
+  name: 'CountpaymentypePIE',
+  extends: Doughnut,
   props: {
     labels: {
       type: Array,
@@ -22,7 +22,7 @@ export default defineComponent({
       datasets: [
         {
           label: 'Soma por Mês',
-          backgroundColor: '#f87979',
+          backgroundColor: ['green', 'orange', 'blue', 'brown', 'red', 'purple'],
           data: this.data
         }
       ]
