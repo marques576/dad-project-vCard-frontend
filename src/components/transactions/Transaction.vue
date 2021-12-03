@@ -1,5 +1,5 @@
 <template>
-  <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
+  <form class="row g-3 needs-validation" @submit.prevent="save">
     <h3 class="mt-5 mb-3">Send Money</h3>
     <hr />
 
@@ -8,8 +8,9 @@
       <input
         type="number"
         class="form-control"
-        min="0.00"
-        max=""
+        required
+        min="0.01"
+        step=".01"
         id="inputValue"
         placeholder="0,01"
         :class="{'is-invalid': errors && errors['value']}"
@@ -44,6 +45,7 @@
         type="text"
         class="form-control"
         id="inputPaymentReference"
+        required
         placeholder="Insert the payment reference"
         :class="{'is-invalid': errors && errors['payment_reference']}"
         v-model="transaction.payment_reference"
@@ -82,9 +84,26 @@
         fieldName="description"
       ></field-error-message>
     </div>
+    
+    <div class="mb-3">
+      <label for="inputConfirmationCode" class="form-label">Confirmation Code</label>
+      <input
+        type="text"
+        class="form-control"
+        id="inputConfirmationCode"
+        required
+        placeholder="Insert your confirmation code"
+        :class="{'is-invalid': errors && errors['confirmation_code']}"
+        v-model="confirmationCode"
+      />
+      <field-error-message
+        :errors="errors"
+        fieldName="confirmation_code"
+      ></field-error-message>
+    </div>
 
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" class="btn btn-success px-5" @click="save">
+      <button type="submit" class="btn btn-success px-5">
         Send
       </button>
       <button type="button" class="btn btn-light px-5" @click="cancel">
@@ -100,6 +119,7 @@ export default {
   data() {
     return {
       transaction: this.newTransaction(),
+      confirmationCode : null,
       paymentTypes: [],
       errors: null
     }
@@ -115,6 +135,7 @@ export default {
       }
     },
     save() {
+      this.transaction.confirmation_code = this.confirmationCode
       this.$axios
         .post("transactions", this.transaction)
         .then((response) => {
