@@ -2,6 +2,7 @@
   <default-category-detail
     :operationType="operation"
     :defaultCategory="defaultCategory"
+    :errors="errors"
     @save="save"
     @cancel="cancel"
   ></default-category-detail>
@@ -24,6 +25,7 @@ export default {
   data() {
     return {
       defaultCategory: this.newDefaultCategory(),
+      errors: null,
     }
   },
   computed: {
@@ -79,6 +81,7 @@ export default {
           })
           .catch((error) => {
             if (error.response.status == 422) {
+              this.errors = error.response.data.errors
               this.$toast.error(
                 "Default Category was not created due to validation errors!"
               )
