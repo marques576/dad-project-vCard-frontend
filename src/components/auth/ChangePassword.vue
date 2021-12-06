@@ -17,7 +17,17 @@
           id="inputCurrentPassword"
           required
           v-model="passwords.oldpassword"
+          v-bind:class="{
+            'is-invalid': v$.passwords.oldpassword.$error ?? false,
+          }"
         />
+        <span v-if="v$.passwords.oldpassword.$error" style="color: red">
+          {{ v$.passwords.oldpassword.$errors[0].$message }}
+        </span>
+        <field-error-message
+          :errors="errors"
+          fieldName="oldpassword"
+        ></field-error-message>
       </div>
     </div>
     <div class="mb-3">
@@ -29,7 +39,15 @@
           id="inputPassword"
           required
           v-model="passwords.password"
+          v-bind:class="{ 'is-invalid': v$.passwords.password.$error ?? false }"
         />
+        <span v-if="v$.passwords.password.$error" style="color: red">
+          {{ v$.passwords.password.$errors[0].$message }}
+        </span>
+        <field-error-message
+          :errors="errors"
+          fieldName="password"
+        ></field-error-message>
       </div>
     </div>
     <div class="mb-3">
@@ -43,7 +61,20 @@
           id="inputPasswordConfirm"
           required
           v-model="passwords.password_confirmation"
+          v-bind:class="{
+            'is-invalid': v$.passwords.password_confirmation.$error ?? false,
+          }"
         />
+        <span
+          v-if="v$.passwords.password_confirmation.$error"
+          style="color: red"
+        >
+          {{ v$.passwords.password_confirmation.$errors[0].$message }}
+        </span>
+        <field-error-message
+          :errors="errors"
+          fieldName="password_confirmation"
+        ></field-error-message>
       </div>
     </div>
     <div class="mb-3 d-flex justify-content-center">
@@ -59,25 +90,38 @@
 </template>
 
 <script>
+import useVuelidate from "@vuelidate/core"
+import { required, sameAs } from "@vuelidate/validators"
+
 export default {
   name: "ChangePassword",
   data() {
     return {
+      v$: useVuelidate(),
       passwords: {
         oldpassword: "",
         password: "",
         password_confirmation: "",
+      },
+      errors: [],
+    }
+  },
+  validations() {
+    return {
+      passwords: {
+        oldpassword: { required },
+        password: { required },
+        password_confirmation: { required, sameAs: sameAs("password") },
       },
     }
   },
   // emits: ["changedPassword"],
   methods: {
     changePassword() {
+      this.v$.$touch()
       this.$axios
         .patch(
-          (this.$store.state.user.type == "A"
-            ? "administrators/"
-            : "vcards/") +
+          (this.$store.state.user.type == "A" ? "administrators/" : "vcards/") +
             this.$store.state.user.id +
             "/password",
           this.passwords
@@ -87,6 +131,7 @@ export default {
           this.$router.back()
         })
         .catch((error) => {
+          this.errors = error.response.data.errors
           console.log(error)
           this.$toast.error("Password not updated.")
         })

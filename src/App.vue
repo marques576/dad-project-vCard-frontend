@@ -98,7 +98,7 @@
               <li>
                 <hr class="dropdown-divider" />
               </li>
-              <li>
+              <li v-if="userType == 'V'">
                 <router-link
                   class="dropdown-item"
                   :class="{ active: $route.name === 'ChangeCode' }"
@@ -197,7 +197,7 @@
               </router-link>
             </li>
 
-            <li class="nav-item" v-if="userType=='A'">
+            <li class="nav-item" v-if="userType == 'A'">
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'VCards' }"

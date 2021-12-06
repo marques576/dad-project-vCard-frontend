@@ -2,6 +2,7 @@
   <v-card-detail
     :operationType="operation"
     :vcard="vcard"
+    :errors="errors"
     @save="save"
     @cancel="cancel"
   ></v-card-detail>
@@ -25,6 +26,7 @@ export default {
     return {
       // vcard: this.loadVCard(this.phone_number),
       vcard: this.newVCard(),
+      errors: null,
     }
   },
   computed: {
@@ -69,10 +71,10 @@ export default {
           })
           .catch((error) => {
             if (error.response.status == 422) {
+              this.errors = error.response.data.errors
               this.$toast.error(
                 "VCard was not created due to validation errors!"
               )
-              console.log(error)
             } else {
               this.$toast.error(
                 "VCard was not created due to unknown server error!"
@@ -92,6 +94,7 @@ export default {
           })
           .catch((error) => {
             if (error.response.status == 422) {
+              this.errors = error.response.data.errors
               this.$toast.error(
                 "VCard #" +
                   this.phone_number +
