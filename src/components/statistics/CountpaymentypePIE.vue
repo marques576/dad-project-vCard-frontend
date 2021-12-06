@@ -21,7 +21,6 @@ export default defineComponent({
       labels: this.labels,
       datasets: [
         {
-          label: 'Soma por Mês',
           backgroundColor: ['green', 'orange', 'blue', 'brown', 'red', 'purple'],
           data: this.data
         }
