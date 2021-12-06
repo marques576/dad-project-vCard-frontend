@@ -83,7 +83,7 @@
     style=" display: flex; flex-direction: row; align-content: space-between !important width:100% margin-top: 20033px !important"
   >
     <SumYearChart
-      style="width:30%; height 30%"
+      style="width:50%; height 50%"
       v-if="date && value"
       v-bind:labels="date"
       v-bind:data="value"
@@ -106,7 +106,7 @@
     </table>
 
     <CountpaymentypePIE
-      style="width:30%; height 30%;"
+      style="width:50%; height 50%;"
       v-if="dateCountpaymentypePIE && valueCountpaymentypePIE"
       v-bind:labels="dateCountpaymentypePIE"
       v-bind:data="valueCountpaymentypePIE"
