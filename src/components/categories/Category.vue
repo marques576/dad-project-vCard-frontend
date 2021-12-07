@@ -3,6 +3,7 @@
     v-if="!isLoading"
     :operationType="operation"
     :category="category"
+    :errors="errors"
     @save="save"
     @cancel="cancel"
   ></category-detail>
@@ -27,6 +28,7 @@ export default {
       category: this.newCategory(),
       // vcard: null,
       isLoading: true,
+      errors: null,
     }
   },
   computed: {
@@ -60,7 +62,6 @@ export default {
       if (!id || id < 0) {
         this.category = this.newCategory()
         this.isLoading = false
-        console.log(this.isLoading)
       } else {
         this.$axios
           .get("categories/" + id)
@@ -89,6 +90,7 @@ export default {
           })
           .catch((error) => {
             if (error.response.status == 422) {
+              this.errors = error.response.data.errors
               this.$toast.error(
                 "Category was not created due to validation errors!"
               )
