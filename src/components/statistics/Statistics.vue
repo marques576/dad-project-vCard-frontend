@@ -159,7 +159,7 @@ export default defineComponent({
   methods: {
     loadYears() {
       this.$axios
-        .get("statistics/getYears")
+        .get("statistics/years")
         .then((response) => {
           this.years = response.data
         })
