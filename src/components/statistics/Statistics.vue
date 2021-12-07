@@ -1,6 +1,6 @@
 <template>
   <h3 class="mt-5 mb-3">Statistics</h3>
-<br>
+  <br />
   <section
     id="counter"
     class="sec-padding"
@@ -78,16 +78,21 @@
       </div>
     </div>
   </section>
-  <br><br>
-  
-<select class="form-select" style="width: 20%" @change="filterYear()"  v-model="selectedYear">
-  <option value=" ">All</option>
-  <option v-for="year in years" :key="year.year" :value="year.year">{{year.year}}</option>
-</select>
-  
-  
-  <br>
+  <br /><br />
 
+  <select
+    class="form-select"
+    style="width: 20%"
+    @change="filterYear()"
+    v-model="selectedYear"
+  >
+    <option value=" ">All</option>
+    <option v-for="year in years" :key="year.year" :value="year.year">
+      {{ year.year }}
+    </option>
+  </select>
+
+  <br />
 
   <div
     style=" display: flex; flex-direction: row; align-content: space-between !important width:100% margin-top: 20033px !important"
@@ -99,24 +104,24 @@
       v-bind:labels="date"
       v-bind:data="value"
     />
-    <table class="table" style="margin: 0% 5% 0% 5%" :items="categories"> 
-         <thead class="thead-dark">
-    <tr>
-      <th scope="col">Top 5 most used categories</th>
-      <th scope="col">Count</th>
-    </tr>
-  </thead>
-  <tbody>
-  <tr v-for="category in categories" :key="category.name">
-      <th scope="row">{{category.name.charAt(0).toUpperCase() + category.name.slice(1)}}</th>
-      <td>{{category.count}}</td>
-    </tr>
-
-
+    <table class="table" style="margin: 0% 5% 0% 5%" :items="categories">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Top 5 most used categories</th>
+          <th scope="col">Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="category in categories" :key="category.name">
+          <th scope="row">
+            {{ category.name.charAt(0).toUpperCase() + category.name.slice(1) }}
+          </th>
+          <td>{{ category.count }}</td>
+        </tr>
       </tbody>
     </table>
 
-    <CountpaymentypePIE 
+    <CountpaymentypePIE
       :key="updateCharts"
       style="width:50%; height 50%;"
       v-if="dateCountpaymentypePIE && valueCountpaymentypePIE"
@@ -152,8 +157,8 @@ export default defineComponent({
     }
   },
   methods: {
-    loadYears(){
-        this.$axios
+    loadYears() {
+      this.$axios
         .get("statistics/getYears")
         .then((response) => {
           this.years = response.data
@@ -165,7 +170,7 @@ export default defineComponent({
 
     loadSumbymonthyear() {
       this.$axios
-        .get("statistics/sumbymonthyear/"+this.selectedYear)
+        .get("statistics/sumbymonthyear/" + this.selectedYear)
         .then((response) => {
           this.sumbymonthyear = response.data
           this.date = this.sumbymonthyear.map(function (el) {
@@ -182,7 +187,7 @@ export default defineComponent({
 
     loadCountpaymentypePIE() {
       this.$axios
-        .get("statistics/countpaymentype/"+this.selectedYear)
+        .get("statistics/countpaymentype/" + this.selectedYear)
         .then((response) => {
           this.sumbymonthyear = response.data
           this.dateCountpaymentypePIE = this.sumbymonthyear.map(function (el) {
@@ -209,7 +214,7 @@ export default defineComponent({
     },
     loadCategories() {
       this.$axios
-        .get("statistics/categories/"+ this.selectedYear)
+        .get("statistics/categories/" + this.selectedYear)
         .then((response) => {
           this.categories = response.data
         })
@@ -217,20 +222,18 @@ export default defineComponent({
           console.log(error)
         })
     },
-    filterYear(){
-          this.loadSumbymonthyear()
-          //console.log(this.sumbymonthyear)
-          this.loadCountpaymentypePIE()
-          this.loadCategories()
-          console.log(this.selectedYear)
-          this.updateCharts = Math.random()     
-    }
+    filterYear() {
+      this.loadSumbymonthyear()
+      this.loadCountpaymentypePIE()
+      this.loadCategories()
+      this.updateCharts = Math.random()
+    },
   },
 
   mounted() {
-this.loadCounters()
-this.loadYears()
-this.filterYear()
+    this.loadCounters()
+    this.loadYears()
+    this.filterYear()
 
     // this.loadYears()
     // this.loadSumbymonthyear()
