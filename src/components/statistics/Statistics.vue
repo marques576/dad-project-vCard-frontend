@@ -58,7 +58,7 @@
           <div class="count">
             <span class="fa fa-smile-o"></span>
             <p class="number">{{ counters.numTransactions }}</p>
-            <h4>Number os transactions</h4>
+            <h4>Number of transactions</h4>
           </div>
         </div>
         <div class="col-md-3">
