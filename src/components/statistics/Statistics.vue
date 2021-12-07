@@ -1,5 +1,6 @@
 <template>
   <h3 class="mt-5 mb-3">Statistics</h3>
+<br>
   <section
     id="counter"
     class="sec-padding"
@@ -77,12 +78,22 @@
       </div>
     </div>
   </section>
-  <br><br><br>
+  <br><br>
+  
+<select class="form-select" style="width: 20%" @change="filterYear()"  v-model="selectedYear">
+  <option value=" ">All</option>
+  <option v-for="year in years" :key="year.year" :value="year.year">{{year.year}}</option>
+</select>
+  
+  
+  <br>
+
 
   <div
     style=" display: flex; flex-direction: row; align-content: space-between !important width:100% margin-top: 20033px !important"
   >
     <SumYearChart
+      :key="updateCharts"
       style="width:50%; height 50%"
       v-if="date && value"
       v-bind:labels="date"
@@ -105,7 +116,8 @@
       </tbody>
     </table>
 
-    <CountpaymentypePIE
+    <CountpaymentypePIE 
+      :key="updateCharts"
       style="width:50%; height 50%;"
       v-if="dateCountpaymentypePIE && valueCountpaymentypePIE"
       v-bind:labels="dateCountpaymentypePIE"
@@ -134,12 +146,26 @@ export default defineComponent({
       valueCountpaymentypePIE: [],
       counters: [],
       categories: [],
+      years: [],
+      selectedYear: " ",
+      updateCharts: 0,
     }
   },
   methods: {
+    loadYears(){
+        this.$axios
+        .get("statistics/getYears")
+        .then((response) => {
+          this.years = response.data
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+
     loadSumbymonthyear() {
       this.$axios
-        .get("statistics/sumbymonthyear")
+        .get("statistics/sumbymonthyear/"+this.selectedYear)
         .then((response) => {
           this.sumbymonthyear = response.data
           this.date = this.sumbymonthyear.map(function (el) {
@@ -156,7 +182,7 @@ export default defineComponent({
 
     loadCountpaymentypePIE() {
       this.$axios
-        .get("statistics/countpaymentype")
+        .get("statistics/countpaymentype/"+this.selectedYear)
         .then((response) => {
           this.sumbymonthyear = response.data
           this.dateCountpaymentypePIE = this.sumbymonthyear.map(function (el) {
@@ -183,22 +209,34 @@ export default defineComponent({
     },
     loadCategories() {
       this.$axios
-        .get("statistics/categories")
+        .get("statistics/categories/"+ this.selectedYear)
         .then((response) => {
           this.categories = response.data
-          console.log(this.categories)
         })
         .catch((error) => {
           console.log(error)
         })
     },
+    filterYear(){
+          this.loadSumbymonthyear()
+          //console.log(this.sumbymonthyear)
+          this.loadCountpaymentypePIE()
+          this.loadCategories()
+          console.log(this.selectedYear)
+          this.updateCharts = Math.random()     
+    }
   },
 
   mounted() {
-    this.loadSumbymonthyear()
-    this.loadCountpaymentypePIE()
-    this.loadCounters()
-    this.loadCategories()
+this.loadCounters()
+this.loadYears()
+this.filterYear()
+
+    // this.loadYears()
+    // this.loadSumbymonthyear()
+    // this.loadCountpaymentypePIE()
+    // this.loadCounters()
+    // this.loadCategories()
   },
 })
 </script>

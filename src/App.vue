@@ -245,7 +245,7 @@
                 :class="{ active: $route.name === 'Statistics' }"
                 :to="{ name: 'Statistics' }"
               >
-                <i class="bi bi-arrow-down-up"></i>
+                <i class="bi bi-bar-chart-line"></i>
                 Statistics
               </router-link>
             </li>
