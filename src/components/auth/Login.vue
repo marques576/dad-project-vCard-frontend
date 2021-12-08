@@ -1,5 +1,13 @@
 <template>
-  <form class="row g-3 needs-validation" novalidate @submit.prevent="login">
+  <div class="d-flex justify-content-center">
+    <img src="../../assets/img/manCreditCard.png" style="width: 250px; height: 250px" />
+  </div>
+  <form
+    class="row g-3 needs-validation"
+    novalidate
+    @submit.prevent="login"
+    style="width: 70%; margin-left: 15%"
+  >
     <h3 class="mt-5 mb-3">Login</h3>
     <hr />
     <div class="mb-3">
@@ -34,7 +42,7 @@
         ></field-error-message>
       </div>
     </div>
-    <div class="mb-3 d-flex justify-content-center">
+    <div class="mb-3 d-flex justify-content-end">
       <button type="button" class="btn btn-primary px-5" @click="login">
         Login
       </button>

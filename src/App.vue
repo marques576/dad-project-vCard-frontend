@@ -114,6 +114,7 @@
       <nav
         id="sidebarMenu"
         class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
+        v-if="user || windowWidth < 768"
       >
         <div class="position-sticky pt-3">
           <ul class="nav flex-column" v-show="user">
@@ -309,7 +310,7 @@
         </div>
       </nav>
 
-      <main v-if="!isLoading" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <main v-if="!isLoading" :class="{}" class="col-md-9 ms-sm-auto col-lg-10 px-md-4" v-bind:style= "[!user ? {'margin-right': 'auto'} : {}]">
         <router-view></router-view>
       </main>
     </div>
@@ -322,6 +323,7 @@ export default {
   data() {
     return {
       isLoading: true,
+      windowWidth: window.innerWidth,
     }
   },
   computed: {
@@ -366,13 +368,21 @@ export default {
           )
         })
     },
+    onResize() {
+      this.windowWidth = window.innerWidth
+    },
   },
   sockets: {
     newTransaction(transaction) {
-      this.$toast.success("You received " + transaction.value + "€ from " + transaction.vcard)
+      this.$toast.success(
+        "You received " + transaction.value + "€ from " + transaction.vcard
+      )
     },
   },
   mounted() {
+    this.$nextTick(() => {
+      window.addEventListener("resize", this.onResize)
+    })
     this.$store
       .dispatch("restoreToken")
       .then((token) => {
@@ -381,6 +391,9 @@ export default {
         }
       })
       .then(() => (this.isLoading = false))
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.onResize)
   },
 }
 </script>
