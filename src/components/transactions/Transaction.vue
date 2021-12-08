@@ -63,6 +63,10 @@
         id="inputCategory"
         v-model="transaction.category_id"
       >
+        <option :value="null">None</option>
+        <option v-for="category in this.$store.getters.categories" :key="category.id" :value="category.id">
+          {{ category.name }}
+        </option>
       </select>
       <field-error-message
         :errors="errors"
@@ -120,7 +124,6 @@ export default {
     return {
       transaction: this.newTransaction(),
       confirmationCode : null,
-      paymentTypes: [],
       errors: null
     }
   },
@@ -131,6 +134,7 @@ export default {
         type: "D",
         value: null,
         payment_type: this.$store.getters.paymentTypes[0].code,
+        category_id: null,
         payment_reference: null,
       }
     },
@@ -144,6 +148,9 @@ export default {
               response.data.data.id +
               " was created successfully."
           )
+          if (this.transaction.payment_type == 'VCARD'){
+            this.$socket.emit('newTransaction', this.transaction)
+          }
           this.$router.push({name: 'Dashboard'})
         })
         .catch((error) => {

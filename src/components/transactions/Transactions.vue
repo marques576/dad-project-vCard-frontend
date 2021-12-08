@@ -11,7 +11,7 @@
   <div class="mb-3 d-flex justify-content-between flex-wrap">
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectStatus" class="form-label">Filter by type:</label>
-      <select class="form-select" id="selectType" v-model="filterByType">
+      <select @change="loadTransactions()" class="form-select" id="selectType" v-model="filterByType">
         <option :value="null"></option>
         <option value="D">Deposits</option>
         <option value="C">Credits</option>
@@ -19,25 +19,33 @@
     </div>
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectCategory" class="form-label">Filter by category:</label>
-      <select class="form-select" id="selectOwner" v-model="filterByCategory">
+      <select @change="loadTransactions()" class="form-select" id="selectOwner" v-model="filterByCategory">
         <option :value="null"></option>
+        <option
+          v-for="category in this.$store.getters.categories"
+          :key="category.id"
+          :value="category.id"
+        >
+          {{ category.name }}
+        </option>
       </select>
     </div>
   </div>
   <transaction-table
-    :transactions="filteredTransactions"
+    :transactions="transactions"
     :showId="true"
     :showDates="true"
     @updateDescription="updateTransactionDescription"
+    @updateCategory="updateTransactionCategory"
   ></transaction-table>
   <template class="paginator">
-  <pagination
-    v-model="page"
-    :records="paginationData ? paginationData.total : 0"
-    :per-page="paginationData ? paginationData.per_page : 0"
-    @paginate="loadTransactions"
-    :options="{hideCount: true, theme: 'bootstrap3'}"
-  ></pagination>
+    <pagination
+      v-model="page"
+      :records="paginationData ? paginationData.total : 0"
+      :per-page="paginationData ? paginationData.per_page : 0"
+      @paginate="loadTransactions"
+      :options="{ hideCount: true, theme: 'bootstrap3' }"
+    ></pagination>
   </template>
 </template>
 
@@ -55,27 +63,30 @@ export default {
       filterByType: null,
       filterByCategory: null,
       page: 1,
-      paginationData: null
+      paginationData: null,
     }
   },
   computed: {
-    filteredTransactions() {
-      return this.transactions.filter(
-        (p) =>
-          (!this.filterByType || this.filterByType == p.type) &&
-          (!this.filterByCategory || this.filterByCategory == p.category_id)
-      )
-    },
     totalTransactions() {
-      return this.filteredTransactions.length
+      return this.transactions.length
+    },
+  },
+  sockets: {
+    newTransaction() {
+      this.loadTransactions()
     },
   },
   methods: {
     loadTransactions() {
+      let query = "vcards/" + this.$store.state.user.id + "/transactions?page=" + this.page + "&order=desc"
+      if (this.filterByCategory){
+        query += "&category=" + this.filterByCategory
+      }
+      if (this.filterByType){
+        query += "&type=" + this.filterByType 
+      }
       this.$axios
-        .get(
-          "vcards/" + this.$store.state.user.id + "/transactions?page=" + this.page
-        )
+        .get(query)
         .then((response) => {
           this.transactions = response.data.data
           this.paginationData = response.data.meta
@@ -94,6 +105,19 @@ export default {
           this.$toast.error(
             "Error editing transaction description! " +
               error.response.data.errors["description"][0]
+          )
+        })
+    },
+    updateTransactionCategory(id, category_id) {
+      this.$axios
+        .patch("transactions/" + id, { category_id: category_id })
+        .then(() => {
+          this.$toast.success("Edited transaction category with success!")
+        })
+        .catch((error) => {
+          this.$toast.error(
+            "Error editing transaction category! " +
+              error.response.data.errors["category_id"][0]
           )
         })
     },

@@ -8,10 +8,14 @@ export default createStore({
     transactions: [],
     paymentTypes: [],
     vcards: [],
+    categories: [],
   },
   mutations: {
     resetUser(state) {
-      state.user = null
+      if (state.user){
+        this.$socket.emit('logged_out', state.user)
+        state.user = null
+      }
     },
     setUser(state, loggedInUser) {
       state.user = loggedInUser
@@ -28,10 +32,19 @@ export default createStore({
     resetVCards(state) {
       state.vcards = null
     },
+    setCategories(state, categories) {
+      state.categories = categories
+    },
+    resetCategories(state) {
+      state.categories = null
+    }
   },
   getters: {
     paymentTypes: (state) => {
       return state.paymentTypes
+    },
+    categories: (state) => {
+      return state.categories
     }
   },
   actions: {
@@ -82,6 +95,7 @@ export default createStore({
       try {
         let response = await axios.get("users/me")
         context.commit("setUser", response.data.data)
+        this.$socket.emit('logged_in', response.data.data)
       } catch (error) {
         delete axios.defaults.headers.common.Authorization
         context.commit("resetUser", null)
@@ -97,6 +111,18 @@ export default createStore({
         return response.data.data
       } catch (error) {
         context.commit("resetTransactions", null)
+        throw error
+      }
+    },
+    async loadCategories(context) {
+      try {
+        let response = await axios.get(
+          "vcards/" + context.state.user.username + "/categories"
+        )
+        context.commit("setCategories", response.data.data)
+        return response.data.data
+      } catch (error) {
+        context.commit("resetCategories", null)
         throw error
       }
     },
@@ -119,6 +145,9 @@ export default createStore({
 
       let vcardsPromise = context.dispatch("loadVCards")
       await vcardsPromise
+
+      let categoriesPromise = context.dispatch("loadCategories")
+      await categoriesPromise
     },
   },
 })

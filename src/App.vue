@@ -15,10 +15,10 @@
           src="./assets/logo.png"
           alt=""
           width="30"
-          height="24"
+          height="26"
           class="d-inline-block align-text-top"
         />
-        App name</a
+        VCards</a
       >
       <button
         id="buttonSidebarExpandId"
@@ -126,40 +126,6 @@
                 Dashboard
               </router-link>
             </li>
-            <li class="nav-item">
-              <router-link
-                class="nav-link"
-                :class="{ active: $route.name === 'CurrentTasks' }"
-                :to="{ name: 'CurrentTasks' }"
-              >
-                <i class="bi bi-list-stars"></i>
-                Current Tasks
-              </router-link>
-            </li>
-            <li
-              class="
-                nav-item
-                d-flex
-                justify-content-between
-                align-items-center
-                pe-3
-              "
-            >
-              <router-link
-                class="nav-link w-100 me-3"
-                :class="{ active: $route.name === 'Tasks' }"
-                :to="{ name: 'Tasks' }"
-              >
-                <i class="bi bi-list-check"></i>
-                Tasks
-              </router-link>
-              <router-link
-                class="link-secondary"
-                :to="{ name: 'NewTask' }"
-                aria-label="Add a new task"
-                ><i class="bi bi-xs bi-plus-circle"></i>
-              </router-link>
-            </li>
 
             <li class="nav-item" v-if="!isLoading && userType == 'V'">
               <router-link
@@ -196,8 +162,8 @@
             <li class="nav-item" v-if="!isLoading && userType == 'V'">
               <router-link
                 class="nav-link w-100 me-3"
-                :class="{ active: $route.name === 'NewTransaction' }"
-                :to="{ name: 'NewTransaction' }"
+                :class="{ active: $route.name === 'Send Money' }"
+                :to="{ name: 'Send Money' }"
               >
                 <i class="bi bi-send"></i>
                 Send Money
@@ -214,7 +180,7 @@
                 VCards
               </router-link>
             </li>
-              <li
+            <li
               class="
                 nav-item
                 d-flex
@@ -238,7 +204,7 @@
                 ><i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
-            
+
             <li class="nav-item">
               <router-link
                 class="nav-link w-100 me-3"
@@ -247,41 +213,6 @@
               >
                 <i class="bi bi-bar-chart-line"></i>
                 Statistics
-              </router-link>
-            </li>
-          </ul>
-
-          <h6
-            class="
-              sidebar-heading
-              justify-content-between
-              align-items-center
-              px-3
-              mt-4
-              mb-1
-              text-muted
-            "
-            :class="{ 'd-flex': user }"
-            v-show="user"
-          >
-            <span>My Projects</span>
-          </h6>
-          <ul class="nav flex-column mb-2" v-show="user">
-            <li
-              class="nav-item"
-              v-for="prj in workInProgressProjects"
-              :key="prj.id"
-            >
-              <router-link
-                class="nav-link w-100 me-3"
-                :class="{
-                  active:
-                    $route.name == 'ProjectTasks' && $route.params.id == prj.id,
-                }"
-                :to="{ name: 'ProjectTasks', params: { id: prj.id } }"
-              >
-                <i class="bi bi-file-ruled"></i>
-                {{ prj.name }}
               </router-link>
             </li>
           </ul>
@@ -434,6 +365,11 @@ export default {
             "There was a problem logging out of the application!"
           )
         })
+    },
+  },
+  sockets: {
+    newTransaction(transaction) {
+      this.$toast.success("You received " + transaction.value + "€ from " + transaction.vcard)
     },
   },
   mounted() {
