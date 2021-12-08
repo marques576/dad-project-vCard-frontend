@@ -189,6 +189,7 @@
                 align-items-center
                 pe-3
               "
+              v-if="!isLoading && userType == 'A'"
             >
               <router-link
                 class="nav-link w-100 me-3"
