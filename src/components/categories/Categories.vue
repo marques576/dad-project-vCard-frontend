@@ -34,6 +34,15 @@
     @edit="editCategory"
     @delete="deleteCategory"
   ></category-table>
+  <template class="paginator">
+    <pagination
+      v-model="page"
+      :records="paginationData ? paginationData.total : 0"
+      :per-page="paginationData ? paginationData.per_page : 0"
+      @paginate="loadCategories"
+      :options="{ hideCount: true, theme: 'bootstrap3' }"
+    ></pagination>
+  </template>
 </template>
 
 <script>
@@ -48,6 +57,8 @@ export default {
     return {
       categories: [],
       filterByType: "",
+      page: 1,
+      paginationData: null,
     }
   },
   computed: {
@@ -69,12 +80,19 @@ export default {
   methods: {
     loadCategories() {
       this.$axios
-        .get("categories")
+        .get(
+          "vcards/" +
+            this.$store.state.user.id +
+            "/categories?page=" +
+            this.page
+        )
         .then((response) => {
+          console.log(response.data)
           this.categories = response.data.data
+          this.paginationData = response.data.meta
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
+          this.$toast.error("Error loading the categories!")
         })
     },
     addCategory() {
@@ -115,5 +133,9 @@ export default {
 }
 .btn-addprj {
   margin-top: 1.85rem;
+}
+.paginator {
+  display: flex;
+  justify-content: center;
 }
 </style>

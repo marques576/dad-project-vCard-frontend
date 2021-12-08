@@ -13,6 +13,13 @@
         required
         v-model="editingDefaultCategory.name"
       />
+      <span v-if="v$.editingCategory.name.$error" style="color: red">
+        {{ v$.editingCategory.name.$errors[0].$message }}
+      </span>
+      <field-error-message
+        :errors="errors"
+        fieldName="name"
+      ></field-error-message>
     </div>
 
     <div class="d-flex flex-wrap justify-content-between">
@@ -27,6 +34,13 @@
           <option value="C">Crédito</option>
           <option value="D">Débito</option>
         </select>
+        <span v-if="v$.editingCategory.type.$error" style="color: red">
+          {{ v$.editingCategory.type.$errors[0].$message }}
+        </span>
+        <field-error-message
+          :errors="errors"
+          fieldName="type"
+        ></field-error-message>
       </div>
     </div>
 
@@ -42,6 +56,9 @@
 </template>
 
 <script>
+import useVuelidate from "@vuelidate/core"
+import { required } from "@vuelidate/validators"
+
 export default {
   name: "DefaultCategoryDetail",
   components: {},
@@ -54,14 +71,23 @@ export default {
       type: String,
       default: "insert", // insert / update
     },
-    vcard: {
+    errors: {
       type: Object,
     },
   },
   emits: ["save", "cancel"],
   data() {
     return {
+      v$: useVuelidate(),
       editingDefaultCategory: this.defaultCategory,
+    }
+  },
+  validations() {
+    return {
+      editingCategory: {
+        name: { required },
+        type: { required },
+      },
     }
   },
   watch: {

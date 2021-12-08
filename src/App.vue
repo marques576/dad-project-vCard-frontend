@@ -214,8 +214,7 @@
                 VCards
               </router-link>
             </li>
-
-            <li
+              <li
               class="
                 nav-item
                 d-flex
@@ -237,6 +236,17 @@
                 :to="{ name: 'NewUser' }"
                 aria-label="Add a new task"
                 ><i class="bi bi-xs bi-plus-circle"></i>
+              </router-link>
+            </li>
+            
+            <li class="nav-item">
+              <router-link
+                class="nav-link w-100 me-3"
+                :class="{ active: $route.name === 'Statistics' }"
+                :to="{ name: 'Statistics' }"
+              >
+                <i class="bi bi-bar-chart-line"></i>
+                Statistics
               </router-link>
             </li>
           </ul>
