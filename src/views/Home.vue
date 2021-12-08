@@ -1,21 +1,23 @@
 <template>
-  <div class="home">
-    <img
-      alt="Vue logo"
-      src="../assets/logo.png"
-      style="width: 280px; height: 200px;"
-    >
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div
+    style="
+      background-color: #f5f5f5;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: white;
+    "
+  >
+    <img style="width: 100%; height: auto" src="../assets/img/homeScreen.png" />
   </div>
 </template>
 
 <script>
-import HelloWorld from "../components/HelloWorld.vue"
-
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
-  }
+  name: "Home",
+  components: {},
 }
 </script>
