@@ -70,6 +70,7 @@
           <td colspan="9">
             <transaction-edit
               @updateDescription="updateDescription(transaction.id, transaction.description)"
+              @updateCategory="updateCategory(transaction.id, transaction.category_id)"
               :transaction="transaction"
             />
           </td>
@@ -141,7 +142,7 @@ export default {
       default: false,
     },
   },
-  emits: ["updateDescription", "delete"],
+  emits: ["updateDescription", "updateCategory", "delete"],
   methods: {
     editClick(project) {
       this.$emit("edit", project)
@@ -151,6 +152,9 @@ export default {
     },
     updateDescription(id, description) {
       this.$emit("updateDescription", id, description)
+    },
+    updateCategory(id, category_id) {
+      this.$emit("updateCategory", id, category_id)
     },
   },
 }

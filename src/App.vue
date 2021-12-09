@@ -15,10 +15,10 @@
           src="./assets/logo.png"
           alt=""
           width="30"
-          height="24"
+          height="26"
           class="d-inline-block align-text-top"
         />
-        App name</a
+        VCards</a
       >
       <button
         id="buttonSidebarExpandId"
@@ -141,6 +141,7 @@
       <nav
         id="sidebarMenu"
         class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
+        v-if="user || windowWidth < 768"
       >
         <div class="position-sticky pt-3">
           <ul class="nav flex-column" v-show="user">
@@ -154,7 +155,7 @@
               </router-link>
             </li>
 
-            <li class="nav-item" v-if="!isLoading && user && user.type == 'V'">
+            <li class="nav-item" v-if="!isLoading && userType == 'V'">
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'Transactions' }"
@@ -186,11 +187,11 @@
               </router-link>
             </li>
 
-            <li class="nav-item" v-if="!isLoading && user && user.type == 'V'">
+            <li class="nav-item" v-if="!isLoading && userType == 'V'">
               <router-link
                 class="nav-link w-100 me-3"
-                :class="{ active: $route.name === 'NewTransaction' }"
-                :to="{ name: 'NewTransaction' }"
+                :class="{ active: $route.name === 'Send Money' }"
+                :to="{ name: 'Send Money' }"
               >
                 <i class="bi bi-send"></i>
                 Send Money
@@ -207,7 +208,6 @@
                 VCards
               </router-link>
             </li>
-
             <li
               class="
                 nav-item
@@ -216,6 +216,7 @@
                 align-items-center
                 pe-3
               "
+              v-if="!isLoading && userType == 'A'"
             >
               <router-link
                 class="nav-link w-100 me-3"
@@ -232,39 +233,15 @@
                 ><i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
-          </ul>
 
-          <h6
-            class="
-              sidebar-heading
-              justify-content-between
-              align-items-center
-              px-3
-              mt-4
-              mb-1
-              text-muted
-            "
-            :class="{ 'd-flex': user }"
-            v-show="user"
-          >
-            <span>My Projects</span>
-          </h6>
-          <ul class="nav flex-column mb-2" v-show="user">
-            <li
-              class="nav-item"
-              v-for="prj in workInProgressProjects"
-              :key="prj.id"
-            >
+            <li class="nav-item">
               <router-link
                 class="nav-link w-100 me-3"
-                :class="{
-                  active:
-                    $route.name == 'ProjectTasks' && $route.params.id == prj.id,
-                }"
-                :to="{ name: 'ProjectTasks', params: { id: prj.id } }"
+                :class="{ active: $route.name === 'Statistics' }"
+                :to="{ name: 'Statistics' }"
               >
-                <i class="bi bi-file-ruled"></i>
-                {{ prj.name }}
+                <i class="bi bi-bar-chart-line"></i>
+                Statistics
               </router-link>
             </li>
           </ul>
@@ -361,7 +338,7 @@
         </div>
       </nav>
 
-      <main v-if="!isLoading" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <main v-if="!isLoading" :class="{}" class="col-md-9 ms-sm-auto col-lg-10 px-md-4" v-bind:style= "[!user ? {'margin-right': 'auto'} : {}]">
         <router-view></router-view>
       </main>
     </div>
@@ -374,6 +351,7 @@ export default {
   data() {
     return {
       isLoading: true,
+      windowWidth: window.innerWidth,
     }
   },
   computed: {
@@ -418,8 +396,21 @@ export default {
           )
         })
     },
+    onResize() {
+      this.windowWidth = window.innerWidth
+    },
+  },
+  sockets: {
+    newTransaction(transaction) {
+      this.$toast.success(
+        "You received " + transaction.value + "€ from " + transaction.vcard
+      )
+    },
   },
   mounted() {
+    this.$nextTick(() => {
+      window.addEventListener("resize", this.onResize)
+    })
     this.$store
       .dispatch("restoreToken")
       .then((token) => {
@@ -428,6 +419,9 @@ export default {
         }
       })
       .then(() => (this.isLoading = false))
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.onResize)
   },
 }
 </script>

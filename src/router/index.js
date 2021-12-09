@@ -4,8 +4,6 @@ import Dashboard from "../components/Dashboard.vue"
 import Login from "../components/auth/Login.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
 import ChangeCode from "../components/auth/ChangeSecurityCode.vue"
-import Tasks from "../components/tasks/Tasks.vue"
-import Task from "../components/tasks/Task.vue"
 import Transactions from "../components/transactions/Transactions.vue"
 import Transaction from "../components/transactions/Transaction.vue"
 import Users from "../components/users/Users.vue"
@@ -14,6 +12,7 @@ import NewUser from "../components/users/NewUser.vue"
 import Category from "../components/categories/Category.vue"
 import Categories from "../components/categories/Categories.vue"
 import VCards from "../components/vcards/VCards.vue"
+import Statistics from "../components/statistics/Statistics.vue"
 import DefaultCategory from "../components/defaultCategories/DefaultCategory.vue"
 import DefaultCategories from "../components/defaultCategories/DefaultCategories.vue"
 import VCard from "../components/vcards/VCard.vue"
@@ -45,41 +44,13 @@ const routes = [
     component: Dashboard,
   },
   {
-    path: "/tasks",
-    name: "Tasks",
-    component: Tasks,
-  },
-  {
-    path: "/tasks/current",
-    name: "CurrentTasks",
-    component: Tasks,
-    props: { onlyCurrentTasks: true, tasksTitle: "Current Tasks" },
-  },
-  {
-    path: "/tasks/:id",
-    name: "Task",
-    component: Task,
-    props: (route) => ({ id: parseInt(route.params.id) }),
-  },
-  {
-    path: "/tasks/new",
-    name: "NewTask",
-    component: Task,
-    props: (route) => ({
-      id: null,
-      fixedProject: route.params.fixedProject
-        ? parseInt(route.params.fixedProject)
-        : null,
-    }),
-  },
-  {
     path: "/transactions",
     name: "Transactions",
     component: Transactions,
   },
   {
     path: "/transactions/new",
-    name: "NewTransaction",
+    name: "Send Money",
     component: Transaction,
   },
   {
@@ -128,7 +99,6 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
-
   {
     path: "/categories",
     name: "Categories",
@@ -139,6 +109,11 @@ const routes = [
     name: "NewCategory",
     component: Category,
     props: () => ({ id: null }),
+  },
+  {
+    path: "/statistics",
+    name: "Statistics",
+    component: Statistics,
   },
   {
     path: "/categories/:id",
@@ -174,6 +149,7 @@ const router = createRouter({
 import store from "../store"
 
 router.beforeEach((to, from, next) => {
+  document.title = to.name
   if (to.name == "Login" || to.name == "NewVCard" || to.name == "Home") {
     next()
     return
@@ -190,42 +166,6 @@ router.beforeEach((to, from, next) => {
     next(false)
     return
   }
-  // if (to.name == "DefaultCategories") {
-  //   if (store.state.user.user_type != "A") {
-  //     next(false)
-  //     return
-  //   }
-  // }
-  // if (to.name == "NewDefaultCategory") {
-  //   if (store.state.user.user_type != "A") {
-  //     next(false)
-  //     return
-  //   }
-  // }
-  // if (to.name == "DefaultCategory") {
-  //   if (store.state.user.user_type != "A") {
-  //     next(false)
-  //     return
-  //   }
-  // }
-  // if (to.name == "Categories") {
-  //   if (store.state.user.user_type != "V") {
-  //     next(false)
-  //     return
-  //   }
-  // }
-  // if (to.name == "NewCategory") {
-  //   if (store.state.user.user_type != "V") {
-  //     next(false)
-  //     return
-  //   }
-  // }
-  // if (to.name == "Category") {
-  //   if (store.state.user.user_type != "V") {
-  //     next(false)
-  //     return
-  //   }
-  // }
   next()
 })
 
