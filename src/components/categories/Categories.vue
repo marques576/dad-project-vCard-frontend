@@ -11,10 +11,15 @@
   <div class="mb-3 d-flex justify-content-between flex-wrap">
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectType" class="form-label">Filter by status:</label>
-      <select class="form-select" id="selectType" v-model="filterByType">
+      <select
+        @change="loadCategories()"
+        class="form-select"
+        id="selectType"
+        v-model="filterByType"
+      >
         <option :value="null"></option>
-        <option value="C">Credito</option>
         <option value="D">Debito</option>
+        <option value="C">Credito</option>
       </select>
     </div>
     <div class="mx-2 mt-2">
@@ -56,7 +61,7 @@ export default {
   data() {
     return {
       categories: [],
-      filterByType: "",
+      filterByType: null,
       page: 1,
       paginationData: null,
     }
@@ -68,24 +73,25 @@ export default {
       )
     },
     totalCategories() {
-      return this.categories.reduce(
-        (counter, c) =>
-          !this.filterByType || this.filterByType == c.type
-            ? counter + 1
-            : counter,
-        0
-      )
+      // return this.categories.reduce(
+      //   (counter, c) =>
+      //     !this.filterByType || this.filterByType == c.type
+      //       ? counter + 1
+      //       : counter,
+      //   0
+      // )
+      return this.paginationData ? this.paginationData.total : 0
     },
   },
   methods: {
     loadCategories() {
+      let query =
+        "vcards/" + this.$store.state.user.id + "/categories?page=" + this.page
+      if (this.filterByType) {
+        query += "&type=" + this.filterByType
+      }
       this.$axios
-        .get(
-          "vcards/" +
-            this.$store.state.user.id +
-            "/categories?page=" +
-            this.page
-        )
+        .get(query)
         .then((response) => {
           console.log(response.data)
           this.categories = response.data.data
