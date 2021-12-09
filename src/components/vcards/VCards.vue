@@ -68,7 +68,7 @@ export default {
   },
   computed: {
     totalVCards() {
-      return this.vCards.length
+      return this.paginationData ? this.paginationData.total : 0
     },
   },
   methods: {
