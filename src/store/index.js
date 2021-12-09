@@ -126,8 +126,10 @@ export default createStore({
       await userPromise
       await paymentTypesPromise
 
-      let categoriesPromise = context.dispatch("loadCategories")
-      await categoriesPromise
+      if (this.state.user && this.state.user.type == 'V'){
+        let categoriesPromise = context.dispatch("loadCategories")
+        await categoriesPromise
+      }
     },
   },
 })
