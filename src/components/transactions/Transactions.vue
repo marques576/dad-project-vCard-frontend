@@ -68,7 +68,7 @@ export default {
   },
   computed: {
     totalTransactions() {
-      return this.transactions.length
+      return this.paginationData ? this.paginationData.total : 0;
     },
   },
   sockets: {
