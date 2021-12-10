@@ -34,8 +34,6 @@ export default {
     },
   },
   watch: {
-    // beforeRouteUpdate was not fired correctly
-    // Used this watcher instead to update the ID
     id: {
       immediate: true,
       handler(newValue) {
@@ -118,13 +116,8 @@ export default {
       }
     },
     cancel() {
-      // Replace this code to navigate back
-      // this.loadCategory(this.id)
       this.$router.back()
     },
-  },
-  mounted() {
-    // console.log(this.$store.state.user.username)
   },
 }
 </script>

@@ -85,7 +85,6 @@ export default {
       this.$axios
         .get(query)
         .then((response) => {
-          console.log(response.data)
           this.categories = response.data.data
           this.paginationData = response.data.meta
         })

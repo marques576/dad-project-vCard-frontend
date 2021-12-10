@@ -121,7 +121,10 @@ export default {
   },
   methods: {
     save() {
-      this.$emit("save", this.editingCategory)
+      this.v$.$touch()
+      if (!this.v$.$error) {
+        this.$emit("save", this.editingCategory)
+      }
     },
     cancel() {
       this.$emit("cancel", this.editingCategory)
@@ -130,12 +133,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.total_price {
-  width: 26rem;
-}
-.checkBilled {
-  margin-top: 0.4rem;
-  min-height: 2.375rem;
-}
-</style>
+<style scoped></style>

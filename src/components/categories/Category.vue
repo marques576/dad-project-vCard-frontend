@@ -1,6 +1,5 @@
 <template>
   <category-detail
-    v-if="!isLoading"
     :operationType="operation"
     :category="category"
     :errors="errors"
@@ -26,8 +25,6 @@ export default {
   data() {
     return {
       category: this.newCategory(),
-      // vcard: null,
-      isLoading: true,
       errors: null,
     }
   },
@@ -35,13 +32,8 @@ export default {
     operation() {
       return !this.id || this.id < 0 ? "insert" : "update"
     },
-    vCard() {
-      return this.$store.state.user ? this.$store.state.user.username : ""
-    },
   },
   watch: {
-    // beforeRouteUpdate was not fired correctly
-    // Used this watcher instead to update the ID
     id: {
       immediate: true,
       handler(newValue) {
@@ -61,14 +53,12 @@ export default {
     loadCategory(id) {
       if (!id || id < 0) {
         this.category = this.newCategory()
-        this.isLoading = false
       } else {
         this.$axios
           .get("categories/" + id)
           .then((response) => {
             this.category = response.data.data
           })
-          .then(() => (this.isLoading = false))
           .catch((error) => {
             console.log(error)
           })
@@ -127,14 +117,8 @@ export default {
       }
     },
     cancel() {
-      // Replace this code to navigate back
-      // this.loadCategory(this.id)
       this.$router.back()
     },
-  },
-  mounted() {
-    // this.vcard = this.$store.user
-    // console.log(this.$store.state.user.username)
   },
 }
 </script>

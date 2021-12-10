@@ -13,8 +13,8 @@
         required
         v-model="editingDefaultCategory.name"
       />
-      <span v-if="v$.editingCategory.name.$error" style="color: red">
-        {{ v$.editingCategory.name.$errors[0].$message }}
+      <span v-if="v$.editingDefaultCategory.name.$error" style="color: red">
+        {{ v$.editingDefaultCategory.name.$errors[0].$message }}
       </span>
       <field-error-message
         :errors="errors"
@@ -34,8 +34,8 @@
           <option value="C">Crédito</option>
           <option value="D">Débito</option>
         </select>
-        <span v-if="v$.editingCategory.type.$error" style="color: red">
-          {{ v$.editingCategory.type.$errors[0].$message }}
+        <span v-if="v$.editingDefaultCategory.type.$error" style="color: red">
+          {{ v$.editingDefaultCategory.type.$errors[0].$message }}
         </span>
         <field-error-message
           :errors="errors"
@@ -84,7 +84,7 @@ export default {
   },
   validations() {
     return {
-      editingCategory: {
+      editingDefaultCategory: {
         name: { required },
         type: { required },
       },
@@ -107,7 +107,10 @@ export default {
   },
   methods: {
     save() {
-      this.$emit("save", this.editingDefaultCategory)
+      this.v$.$touch()
+      if (!this.v$.$error) {
+        this.$emit("save", this.editingDefaultCategory)
+      }
     },
     cancel() {
       this.$emit("cancel", this.editingDefaultCategory)
@@ -116,12 +119,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.total_price {
-  width: 26rem;
-}
-.checkBilled {
-  margin-top: 0.4rem;
-  min-height: 2.375rem;
-}
-</style>
+<style scoped></style>
