@@ -113,7 +113,6 @@ export default {
       if (!this.editingCategory) {
         return ""
       }
-      console.log(this.editingCategory)
 
       return this.operationType == "insert"
         ? "New Category"

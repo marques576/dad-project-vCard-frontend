@@ -76,8 +76,6 @@ export default {
     },
     save() {
       if (this.operation == "insert") {
-        console.log(this.category)
-
         this.$axios
           .post("categories", this.category)
           .then((response) => {
