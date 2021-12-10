@@ -4,20 +4,22 @@
       <div class="form-group d-flex" style="margin-bottom: 10px">
         <div>
           <label for="completeInput" style="margin-right: 10px">Category</label>
-          <select id="categoryInput" v-model="editTransaction.category_id">
-            <option :value="null"></option>
-           <!-- <option
-              v-for="category in categories"
+          <select id="categoryInput" @change="editCategory" v-model="editTransaction.category_id">
+            <option :value="null">None</option>
+            <option
+              v-for="category in this.$store.getters.categories"
               :key="category.id"
               :value="category.id"
             >
               {{ category.name }}
-            </option> -->
+            </option>
           </select>
         </div>
       </div>
       <div class="form-group">
-        <label for="inputDescription" style="margin-bottom: 5px">Description</label>
+        <label for="inputDescription" style="margin-bottom: 5px"
+          >Description</label
+        >
         <textarea
           v-model="editTransaction.description"
           rows="3"
@@ -38,17 +40,20 @@ export default {
     transaction: Object,
     categories: Object,
   },
-  emits: ['updateDescription'],
+  emits: ["updateDescription", "updateCategory"],
   data() {
     return {
       editTransaction: this.transaction,
     }
   },
   methods: {
-    editDescription(){
+    editDescription() {
       this.$emit("updateDescription")
+    },
+    editCategory(){
+      this.$emit("updateCategory")
     }
-  }
+  },
 }
 </script>
 

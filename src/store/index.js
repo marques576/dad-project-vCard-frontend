@@ -7,11 +7,14 @@ export default createStore({
     user: null,
     transactions: [],
     paymentTypes: [],
-    vcards: [],
+    categories: [],
   },
   mutations: {
     resetUser(state) {
-      state.user = null
+      if (state.user) {
+        this.$socket.emit("logged_out", state.user)
+        state.user = null
+      }
     },
     setUser(state, loggedInUser) {
       state.user = loggedInUser
@@ -22,17 +25,20 @@ export default createStore({
     resetPaymentTypes(state) {
       state.paymentTypes = null
     },
-    setVCards(state, vcards) {
-      state.vcards = vcards
+    setCategories(state, categories) {
+      state.categories = categories
     },
-    resetVCards(state) {
-      state.vcards = null
+    resetCategories(state) {
+      state.categories = null
     },
   },
   getters: {
     paymentTypes: (state) => {
       return state.paymentTypes
-    }
+    },
+    categories: (state) => {
+      return state.categories
+    },
   },
   actions: {
     async login(context, credentials) {
@@ -60,11 +66,11 @@ export default createStore({
     },
     async loadPaymentTypes(context) {
       try {
-        let response = await axios.get('paymenttypes')
-        context.commit('setPaymentTypes', response.data.data)
+        let response = await axios.get("paymenttypes")
+        context.commit("setPaymentTypes", response.data.data)
         return response.data.data
       } catch (error) {
-        context.commit('resetPaymentTypes')
+        context.commit("resetPaymentTypes")
         throw error
       }
     },
@@ -82,6 +88,7 @@ export default createStore({
       try {
         let response = await axios.get("users/me")
         context.commit("setUser", response.data.data)
+        this.$socket.emit("logged_in", response.data.data)
       } catch (error) {
         delete axios.defaults.headers.common.Authorization
         context.commit("resetUser", null)
@@ -100,25 +107,29 @@ export default createStore({
         throw error
       }
     },
-    async loadVCards(context) {
+    async loadCategories(context) {
       try {
-        let response = await axios.get("vcards")
-        context.commit("setVCards", response.data.data)
+        let response = await axios.get(
+          "vcards/" + context.state.user.username + "/categories"
+        )
+        context.commit("setCategories", response.data.data)
         return response.data.data
       } catch (error) {
-        context.commit("resetVCards", null)
+        context.commit("resetCategories", null)
         throw error
       }
     },
     async refresh(context) {
       let userPromise = context.dispatch("loadLoggedInUser")
-      let paymentTypesPromise = context.dispatch('loadPaymentTypes')
-      
+      let paymentTypesPromise = context.dispatch("loadPaymentTypes")
+
       await userPromise
       await paymentTypesPromise
 
-      let vcardsPromise = context.dispatch("loadVCards")
-      await vcardsPromise
+      if (this.state.user && this.state.user.type == 'V'){
+        let categoriesPromise = context.dispatch("loadCategories")
+        await categoriesPromise
+      }
     },
   },
 })

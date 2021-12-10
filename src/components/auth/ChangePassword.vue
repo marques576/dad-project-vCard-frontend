@@ -17,7 +17,9 @@
           id="inputCurrentPassword"
           required
           v-model="passwords.oldpassword"
-          v-bind:class="{'is-invalid': v$.passwords.oldpassword.$error ?? false}"
+          v-bind:class="{
+            'is-invalid': v$.passwords.oldpassword.$error ?? false,
+          }"
         />
         <span v-if="v$.passwords.oldpassword.$error" style="color: red">
           {{ v$.passwords.oldpassword.$errors[0].$message }}

@@ -31,15 +31,6 @@
         <option :value="null"></option>
       </select>
     </div> -->
-    <div class="mx-2 mt-2">
-      <button
-        type="button"
-        class="btn btn-success px-4 btn-addprj"
-        @click="addVCard"
-      >
-        <i class="bi bi-xs bi-plus-circle"></i>&nbsp; New VCard
-      </button>
-    </div>
   </div>
   <VCardsTable
     :vcards="vCards"
@@ -47,6 +38,15 @@
     @edit="editVCard"
     @delete="deleteVCard"
   ></VCardsTable>
+  <template class="paginator">
+    <pagination
+      v-model="page"
+      :records="paginationData ? paginationData.total : 0"
+      :per-page="paginationData ? paginationData.per_page : 0"
+      @paginate="loadVCards"
+      :options="{ hideCount: true, theme: 'bootstrap3' }"
+    ></pagination>
+  </template>
 </template>
 
 <script>
@@ -62,19 +62,22 @@ export default {
       // filterByType: null,
       // filterByCategory: null,
       vCards: [],
+      page: 1,
+      paginationData: null,
     }
   },
   computed: {
     totalVCards() {
-      return this.vCards.length
+      return this.paginationData ? this.paginationData.total : 0
     },
   },
   methods: {
     loadVCards() {
       this.$axios
-        .get("vcards/")
+        .get("vcards?page=" + this.page)
         .then((response) => {
           this.vCards = response.data.data
+          this.paginationData = response.data.meta
         })
         .catch((error) => {
           console.log(error)
@@ -162,5 +165,9 @@ export default {
 }
 .btn-addprj {
   margin-top: 1.85rem;
+}
+.paginator {
+  display: flex;
+  justify-content: center;
 }
 </style>
