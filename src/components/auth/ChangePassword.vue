@@ -111,7 +111,7 @@ export default {
       passwords: {
         oldpassword: { required },
         password: { required },
-        password_confirmation: { required, sameAs: sameAs("password") },
+        password_confirmation: { required, sameAs: sameAs(this.passwords.password) },
       },
     }
   },
