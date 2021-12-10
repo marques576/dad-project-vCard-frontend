@@ -35,7 +35,6 @@
   <category-table
     :categories="filteredCategories"
     :showId="true"
-    :showDates="true"
     @edit="editCategory"
     @delete="deleteCategory"
   ></category-table>
@@ -73,13 +72,6 @@ export default {
       )
     },
     totalCategories() {
-      // return this.categories.reduce(
-      //   (counter, c) =>
-      //     !this.filterByType || this.filterByType == c.type
-      //       ? counter + 1
-      //       : counter,
-      //   0
-      // )
       return this.paginationData ? this.paginationData.total : 0
     },
   },

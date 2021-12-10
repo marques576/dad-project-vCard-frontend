@@ -11,10 +11,15 @@
   <div class="mb-3 d-flex justify-content-between flex-wrap">
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectType" class="form-label">Filter by status:</label>
-      <select class="form-select" id="selectType" v-model="filterByType">
+      <select
+        @change="loadDefaultCategories()"
+        class="form-select"
+        id="selectType"
+        v-model="filterByType"
+      >
         <option :value="null"></option>
-        <option value="C">Credito</option>
         <option value="D">Debito</option>
+        <option value="C">Credito</option>
       </select>
     </div>
     <div class="mx-2 mt-2">
@@ -33,6 +38,15 @@
     @edit="editDefaultCategory"
     @delete="deleteDefaultCategory"
   ></default-category-table>
+  <template class="paginator">
+    <pagination
+      v-model="page"
+      :records="paginationData ? paginationData.total : 0"
+      :per-page="paginationData ? paginationData.per_page : 0"
+      @paginate="loadDefaultCategories"
+      :options="{ hideCount: true, theme: 'bootstrap3' }"
+    ></pagination>
+  </template>
 </template>
 
 <script>
@@ -46,9 +60,9 @@ export default {
   data() {
     return {
       defaultCategories: [],
-      users: [],
-      filterByVCard: null,
-      filterByType: "",
+      filterByType: null,
+      page: 1,
+      paginationData: null,
     }
   },
   computed: {
@@ -58,34 +72,23 @@ export default {
       )
     },
     totalDefaultCategories() {
-      return this.defaultCategories.reduce(
-        (counter, c) =>
-          !this.filterByType || this.filterByType == c.type
-            ? counter + 1
-            : counter,
-        0
-      )
+      return this.paginationData ? this.paginationData.total : 0
     },
   },
   methods: {
     loadDefaultCategories() {
+      let query = "defaultCategories?page=" + this.page
+      if (this.filterByType) {
+        query += "&type=" + this.filterByType
+      }
       this.$axios
-        .get("defaultCategories")
+        .get(query)
         .then((response) => {
           this.defaultCategories = response.data.data
+          this.paginationData = response.data.meta
         })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-    loadUsers() {
-      this.$axios
-        .get("users")
-        .then((response) => {
-          this.users = response.data.data
-        })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
+          this.$toast.error("Error loading the default categories!")
         })
     },
     addDefaultCategory() {
@@ -115,7 +118,6 @@ export default {
     },
   },
   mounted() {
-    this.loadUsers()
     this.loadDefaultCategories()
   },
 }
@@ -130,5 +132,9 @@ export default {
 }
 .btn-addprj {
   margin-top: 1.85rem;
+}
+.paginator {
+  display: flex;
+  justify-content: center;
 }
 </style>
