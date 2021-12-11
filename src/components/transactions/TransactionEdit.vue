@@ -4,7 +4,11 @@
       <div class="form-group d-flex" style="margin-bottom: 10px">
         <div>
           <label for="completeInput" style="margin-right: 10px">Category</label>
-          <select id="categoryInput" @change="editCategory" v-model="editTransaction.category_id">
+          <select
+            id="categoryInput"
+            @change="editCategory"
+            v-model="editTransaction.category_id"
+          >
             <option :value="null">None</option>
             <option
               v-for="category in this.$store.getters.categories"
@@ -28,6 +32,11 @@
           placeholder="Enter the transaction description"
           id="inputDescription"
         />
+        <div class="d-flex justify-content-end">
+        <button type="button" @click="pdfDownload" class="btn btn-danger">
+          Get PDF
+        </button>
+        </div>
       </div>
     </div>
   </div>
@@ -50,9 +59,24 @@ export default {
     editDescription() {
       this.$emit("updateDescription")
     },
-    editCategory(){
+    editCategory() {
       this.$emit("updateCategory")
-    }
+    },
+    pdfDownload() {
+      this.$axios
+        .get("pdf/" + this.editTransaction.id, { responseType: "blob" })
+        .then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]))
+          const link = document.createElement("a")
+          link.href = url
+          link.setAttribute("download", this.editTransaction.id + ".pdf") //or any other extension
+          document.body.appendChild(link)
+          link.click()
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
   },
 }
 </script>
