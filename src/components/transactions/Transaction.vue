@@ -12,7 +12,7 @@
         min="0.01"
         step=".01"
         id="inputValue"
-        placeholder="0,01"
+        placeholder="0.01"
         :class="{'is-invalid': errors && errors['value']}"
         v-model="transaction.value"
       />
@@ -49,6 +49,8 @@
         placeholder="Insert the payment reference"
         :class="{'is-invalid': errors && errors['payment_reference']}"
         v-model="transaction.payment_reference"
+        ref="inputPaymentReference"
+        @input="validatePaymentReference"
       />
       <field-error-message
         :errors="errors"
@@ -92,7 +94,7 @@
     <div class="mb-3">
       <label for="inputConfirmationCode" class="form-label">Confirmation Code</label>
       <input
-        type="text"
+        type="password"
         class="form-control"
         id="inputConfirmationCode"
         required
@@ -167,10 +169,46 @@ export default {
         })
     },
     cancel() {
-      // Replace this code to navigate back
-      // this.loadProject(this.id)
       this.$router.back()
     },
+    validatePaymentReference(){
+      var constraints = { 
+        phoneNumber: ["^9([1-3]|6)[0-9]{7}$", "Invalid phone number format"] ,
+        iban: ["^PT50[0-9]{21}$", "Invalid IBAN format"] ,
+        paypal: ['/^[\w-.]+@([\w-]+.)+[\w-]{2,4}$/', "Invalid Paypal email format"] ,
+        mastercard: ["/^5[1-5][0-9]{14}|^(222[1-9]|22[3-9]\\d|2[3-6]\\d{2}|27[0-1]\\d|2720)[0-9]{12}$", "Invalid Mastercard format"] ,
+        visa: ["^4[0-9]{12}(?:[0-9]{3})?$", "Invalid VISA format"],
+        mb: ["^[0-9]{5}-[0-9]{9}$", "Invalid MB format"]
+      };
+
+      this.$refs.inputPaymentReference.setCustomValidity("")
+      
+      if (this.transaction.type == 'VCARD' || this.transaction.type == 'MBWAY'){
+        if (!(new RegExp(constraints.phoneNumber[0]).test(this.transaction.payment_reference))){
+          this.$refs.inputPaymentReference.setCustomValidity(constraints.phoneNumber[1])
+        }
+      }
+      else if (this.transaction.type == 'PAYPAL'){
+        if (!(new RegExp(constraints.paypal[0]).test(this.transaction.payment_reference))){
+          this.$refs.inputPaymentReference.setCustomValidity(constraints.paypal[1])
+        }
+      }
+      else if (this.transaction.type == 'MASTERCARD'){
+        if (!(new RegExp(constraints.mastercard[0]).test(this.transaction.payment_reference))){
+          this.$refs.inputPaymentReference.setCustomValidity(constraints.mastercard[1])
+        }
+      }
+      else if (this.transaction.type == 'VISA'){
+        if (!(new RegExp(constraints.visa[0]).test(this.transaction.payment_reference))){
+          this.$refs.inputPaymentReference.setCustomValidity(constraints.visa[1])
+        }
+      }
+      else if (this.transaction.type == 'MB'){
+        if (!(new RegExp(constraints.mb[0]).test(this.transaction.payment_reference))){
+          this.$refs.inputPaymentReference.setCustomValidity(constraints.mb[1])
+        }
+      }
+    }
   },
 }
 </script>

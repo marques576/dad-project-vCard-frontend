@@ -11,7 +11,7 @@
   <div class="mb-3 d-flex justify-content-between flex-wrap">
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectStatus" class="form-label">Filter by type:</label>
-      <select @change="loadTransactions()" class="form-select" id="selectType" v-model="filterByType">
+      <select @change="loadTransactions(); page=1;" class="form-select" id="selectType" v-model="filterByType">
         <option :value="null"></option>
         <option value="D">Deposits</option>
         <option value="C">Credits</option>
@@ -19,7 +19,7 @@
     </div>
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectCategory" class="form-label">Filter by category:</label>
-      <select @change="loadTransactions()" class="form-select" id="selectOwner" v-model="filterByCategory">
+      <select @change="loadTransactions(); page=1;" class="form-select" id="selectOwner" v-model="filterByCategory">
         <option :value="null"></option>
         <option
           v-for="category in this.$store.getters.categories"

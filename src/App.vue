@@ -1,8 +1,8 @@
 <template>
   <nav
     class="
-      navbar navbar-expand-md navbar-dark
-      bg-dark
+      navbar navbar-expand-md navbar-light
+      bg-white
       sticky-top
       flex-md-nowrap
       p-0
@@ -246,6 +246,59 @@
             </li>
           </ul>
 
+          <h6
+            class="
+              sidebar-heading
+              justify-content-between
+              align-items-center
+              px-3
+              mt-4
+              mb-1
+              text-muted
+              d-flex
+            "
+            v-if="!isLoading && userType == 'V'"
+          >
+            <span>My Contacts</span>
+            <router-link
+              class="link-secondary"
+              aria-label="Add a new contact"
+              :class="{ active: $route.name === 'Send Money' }"
+              :to="{ name: 'Send Money' }"
+              ><i class="bi bi-xs bi-plus-circle"></i>
+            </router-link>
+          </h6>
+          <ul class="nav flex-column mb-2" v-if="!isLoading && userType == 'V'">
+            <li
+              class="nav-item contact"
+              v-for="contact in this.$store.getters.contacts"
+              :key="contact.contact"
+              style="margin-top: 10px"
+              :class="{ active: $route.name === 'Send Money' }"
+            >
+              <div class="d-flex">
+                <router-link
+                  class="nav-link w-100 me-3 d-flex align-items-center justify-content-center contact-title"
+                  :to="{ name: 'Send Money' }"
+                >
+                  {{ contact.name }}
+                </router-link>
+                <router-link
+                  class="d-flex align-items-center justify-content-center"
+                  :to="{ name: 'Send Money' }"
+                >
+                  <i class="bi bi-send"></i>
+                </router-link>
+                <router-link
+                  class="d-flex align-items-center justify-content-center contacts-last-icon"
+                  :to="{ name: 'Send Money' }"
+                >
+                  <i class="bi bi-chat-dots"></i>
+                </router-link>
+              </div>
+            </li>
+          </ul>
+
           <div class="d-block d-md-none">
             <h6
               class="
@@ -338,7 +391,12 @@
         </div>
       </nav>
 
-      <main v-if="!isLoading" :class="{}" class="col-md-9 ms-sm-auto col-lg-10 px-md-4" v-bind:style= "[!user ? {'margin-right': 'auto'} : {}]">
+      <main
+        v-if="!isLoading"
+        :class="{}"
+        class="col-md-9 ms-sm-auto col-lg-10 px-md-4"
+        v-bind:style="[!user ? { 'margin-right': 'auto' } : {}]"
+      >
         <router-view></router-view>
       </main>
     </div>
@@ -429,6 +487,31 @@ export default {
 <style lang="css">
 @import "./assets/css/dashboard.css";
 
+.contact {
+  border-radius: 60px;
+  width: 90%;
+  align-self: center;
+  background-color: #e9e9e9;
+}
+.contact.active {
+  background-color: #e2e2e2;
+}
+.contact-title{
+  margin: 0 !important;
+}
+.contacts-last-icon {
+  margin-right: 10px;
+}
+.navbar-brand {
+  box-shadow: none;
+  background-color: transparent;
+}
+.sidebar {
+  padding: 0;
+  top: inherit;
+  bottom: inherit;
+  height: 100%;
+}
 .avatar-img {
   margin-right: 0.6rem;
   width: 2.2rem;

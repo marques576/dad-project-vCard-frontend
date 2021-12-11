@@ -8,6 +8,7 @@ export default createStore({
     transactions: [],
     paymentTypes: [],
     categories: [],
+    contacts: [],
   },
   mutations: {
     resetUser(state) {
@@ -31,6 +32,12 @@ export default createStore({
     resetCategories(state) {
       state.categories = null
     },
+    setContacts(state, contacts) {
+      state.contacts = contacts
+    },
+    resetContacts(state) {
+      state.contacts = null
+    },
   },
   getters: {
     paymentTypes: (state) => {
@@ -38,6 +45,9 @@ export default createStore({
     },
     categories: (state) => {
       return state.categories
+    },
+    contacts: (state) => {
+      return state.contacts
     },
   },
   actions: {
@@ -95,18 +105,6 @@ export default createStore({
         throw error
       }
     },
-    async loadTransactions(context) {
-      try {
-        let response = await axios.get(
-          "vcards/" + context.state.user.username + "/transactions"
-        )
-        context.commit("setTransactions", response.data.data)
-        return response.data.data
-      } catch (error) {
-        context.commit("resetTransactions", null)
-        throw error
-      }
-    },
     async loadCategories(context) {
       try {
         let response = await axios.get(
@@ -115,7 +113,19 @@ export default createStore({
         context.commit("setCategories", response.data.data)
         return response.data.data
       } catch (error) {
-        context.commit("resetCategories", null)
+        context.commit("resetCategories")
+        throw error
+      }
+    },
+    async loadContacts(context) {
+      try {
+        let response = await axios.get(
+          "vcards/" + context.state.user.username + "/contacts"
+        )
+        context.commit("setContacts", response.data.data)
+        return response.data.data
+      } catch (error) {
+        context.commit("resetContacts")
         throw error
       }
     },
@@ -128,7 +138,10 @@ export default createStore({
 
       if (this.state.user && this.state.user.type == 'V'){
         let categoriesPromise = context.dispatch("loadCategories")
+        let contactsPromise = context.dispatch("loadContacts")
+        
         await categoriesPromise
+        await contactsPromise
       }
     },
   },
