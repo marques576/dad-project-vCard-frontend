@@ -13,7 +13,7 @@
         step=".01"
         id="inputValue"
         placeholder="0.01"
-        :class="{'is-invalid': errors && errors['value']}"
+        :class="{ 'is-invalid': errors && errors['value'] }"
         v-model="transaction.value"
       />
       <field-error-message
@@ -29,7 +29,11 @@
         id="inputPaymentType"
         v-model="transaction.payment_type"
       >
-        <option v-for="type in this.$store.getters.paymentTypes" :key="type.code" :value="type.code">
+        <option
+          v-for="type in this.$store.getters.paymentTypes"
+          :key="type.code"
+          :value="type.code"
+        >
           {{ type.code }}
         </option>
       </select>
@@ -40,14 +44,16 @@
     </div>
 
     <div class="mb-3">
-      <label for="inputPaymentReference" class="form-label">Payment Reference</label>
+      <label for="inputPaymentReference" class="form-label"
+        >Payment Reference</label
+      >
       <input
         type="text"
         class="form-control"
         id="inputPaymentReference"
         required
         placeholder="Insert the payment reference"
-        :class="{'is-invalid': errors && errors['payment_reference']}"
+        :class="{ 'is-invalid': errors && errors['payment_reference'] }"
         v-model="transaction.payment_reference"
         ref="inputPaymentReference"
         @input="validatePaymentReference"
@@ -57,7 +63,7 @@
         fieldName="payment_reference"
       ></field-error-message>
     </div>
-    
+
     <div class="mb-3 me-3">
       <label for="inputCategory" class="form-label">Category</label>
       <select
@@ -66,7 +72,11 @@
         v-model="transaction.category_id"
       >
         <option :value="null">None</option>
-        <option v-for="category in this.$store.getters.categories" :key="category.id" :value="category.id">
+        <option
+          v-for="category in this.$store.getters.categories"
+          :key="category.id"
+          :value="category.id"
+        >
           {{ category.name }}
         </option>
       </select>
@@ -75,7 +85,7 @@
         fieldName="category_id"
       ></field-error-message>
     </div>
-    
+
     <div class="mb-3">
       <label for="inputDescription" class="form-label">Description</label>
       <textarea
@@ -90,16 +100,18 @@
         fieldName="description"
       ></field-error-message>
     </div>
-    
+
     <div class="mb-3">
-      <label for="inputConfirmationCode" class="form-label">Confirmation Code</label>
+      <label for="inputConfirmationCode" class="form-label"
+        >Confirmation Code</label
+      >
       <input
         type="password"
         class="form-control"
         id="inputConfirmationCode"
         required
         placeholder="Insert your confirmation code"
-        :class="{'is-invalid': errors && errors['confirmation_code']}"
+        :class="{ 'is-invalid': errors && errors['confirmation_code'] }"
         v-model="confirmationCode"
       />
       <field-error-message
@@ -109,9 +121,7 @@
     </div>
 
     <div class="mb-3 d-flex justify-content-end">
-      <button type="submit" class="btn btn-success px-5">
-        Send
-      </button>
+      <button type="submit" class="btn btn-success px-5">Send</button>
       <button type="button" class="btn btn-light px-5" @click="cancel">
         Cancel
       </button>
@@ -125,9 +135,27 @@ export default {
   data() {
     return {
       transaction: this.newTransaction(),
-      confirmationCode : null,
-      errors: null
+      confirmationCode: null,
+      errors: null,
     }
+  },
+  props: {
+    payment_type: {
+      type: String,
+      default: null,
+    },
+    payment_reference: {
+      type: String,
+      default: null,
+    },
+  },
+  watch: {
+    payment_reference: function (newVal) {
+      this.transaction.payment_reference = newVal
+    },
+    payment_type: function (newVal) {
+      this.transaction.payment_type = newVal
+    },
   },
   methods: {
     newTransaction() {
@@ -135,9 +163,11 @@ export default {
         vcard: this.$store.state.user.username,
         type: "D",
         value: null,
-        payment_type: this.$store.getters.paymentTypes[0].code,
+        payment_type: this.payment_type
+          ? this.payment_type
+          : this.$store.getters.paymentTypes[0].code,
         category_id: null,
-        payment_reference: null,
+        payment_reference: this.payment_reference,
       }
     },
     save() {
@@ -150,10 +180,10 @@ export default {
               response.data.data.id +
               " was created successfully."
           )
-          if (this.transaction.payment_type == 'VCARD'){
-            this.$socket.emit('newTransaction', this.transaction)
+          if (this.transaction.payment_type == "VCARD") {
+            this.$socket.emit("newTransaction", this.transaction)
           }
-          this.$router.push({name: 'Dashboard'})
+          this.$router.push({ name: "Dashboard" })
         })
         .catch((error) => {
           if (error.response.status == 422) {
@@ -171,7 +201,8 @@ export default {
     cancel() {
       this.$router.back()
     },
-    validatePaymentReference(){
+    validatePaymentReference() {
+      /*
       var constraints = { 
         phoneNumber: ["^9([1-3]|6)[0-9]{7}$", "Invalid phone number format"] ,
         iban: ["^PT50[0-9]{21}$", "Invalid IBAN format"] ,
@@ -179,10 +210,10 @@ export default {
         mastercard: ["/^5[1-5][0-9]{14}|^(222[1-9]|22[3-9]\\d|2[3-6]\\d{2}|27[0-1]\\d|2720)[0-9]{12}$", "Invalid Mastercard format"] ,
         visa: ["^4[0-9]{12}(?:[0-9]{3})?$", "Invalid VISA format"],
         mb: ["^[0-9]{5}-[0-9]{9}$", "Invalid MB format"]
-      };
+      };*/
 
       this.$refs.inputPaymentReference.setCustomValidity("")
-      
+      /*
       if (this.transaction.type == 'VCARD' || this.transaction.type == 'MBWAY'){
         if (!(new RegExp(constraints.phoneNumber[0]).test(this.transaction.payment_reference))){
           this.$refs.inputPaymentReference.setCustomValidity(constraints.phoneNumber[1])
@@ -207,8 +238,8 @@ export default {
         if (!(new RegExp(constraints.mb[0]).test(this.transaction.payment_reference))){
           this.$refs.inputPaymentReference.setCustomValidity(constraints.mb[1])
         }
-      }
-    }
+      }*/
+    },
   },
 }
 </script>

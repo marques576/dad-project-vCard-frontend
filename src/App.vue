@@ -263,8 +263,7 @@
             <router-link
               class="link-secondary"
               aria-label="Add a new contact"
-              :class="{ active: $route.name === 'Send Money' }"
-              :to="{ name: 'Send Money' }"
+              :to="{ name: 'New Contact' }"
               ><i class="bi bi-xs bi-plus-circle"></i>
             </router-link>
           </h6>
@@ -274,18 +273,18 @@
               v-for="contact in this.$store.getters.contacts"
               :key="contact.contact"
               style="margin-top: 10px"
-              :class="{ active: $route.name === 'Send Money' }"
+              :class="{ active: $route.name === 'Contact' && $route.params.id == contact.id}"
             >
               <div class="d-flex">
                 <router-link
                   class="nav-link w-100 me-3 d-flex align-items-center justify-content-center contact-title"
-                  :to="{ name: 'Send Money' }"
+                  :to="{ name: 'Contact', params: { id: contact.id } }"
                 >
                   {{ contact.name }}
                 </router-link>
                 <router-link
                   class="d-flex align-items-center justify-content-center"
-                  :to="{ name: 'Send Money' }"
+                  :to="{ name: 'Send Money', params: { payment_type: 'VCARD', payment_reference: contact.contact } }"
                 >
                   <i class="bi bi-send"></i>
                 </router-link>
@@ -491,10 +490,10 @@ export default {
   border-radius: 60px;
   width: 90%;
   align-self: center;
-  background-color: #e9e9e9;
+  background-color: #ebebeb;
 }
 .contact.active {
-  background-color: #e2e2e2;
+  background-color: #d8d8d8;
 }
 .contact-title{
   margin: 0 !important;

@@ -16,6 +16,7 @@ import Statistics from "../components/statistics/Statistics.vue"
 import DefaultCategory from "../components/defaultCategories/DefaultCategory.vue"
 import DefaultCategories from "../components/defaultCategories/DefaultCategories.vue"
 import VCard from "../components/vcards/VCard.vue"
+import Contact from "../components/contacts/Contact.vue"
 
 const routes = [
   {
@@ -52,6 +53,7 @@ const routes = [
     path: "/transactions/new",
     name: "Send Money",
     component: Transaction,
+    props: true,
   },
   {
     path: "/vcards",
@@ -71,6 +73,20 @@ const routes = [
     props: (route) => ({
       phone_number: parseInt(route.params.id),
     }),
+  },
+  {
+    path: '/contacts/:id',
+    name: 'Contact',
+    component: Contact,
+    props: route => ({ id: parseInt(route.params.id) })
+  },
+  {
+    path: '/contacts/new',
+    name: 'New Contact',
+    component: Contact,
+    props: () => ({
+      id: null,
+    })
   },
   {
     path: "/users",

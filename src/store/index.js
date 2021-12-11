@@ -38,6 +38,21 @@ export default createStore({
     resetContacts(state) {
       state.contacts = null
     },
+    insertContact(state, newContact) {
+      state.contacts.push(newContact)
+    },
+    updateContact(state, updateContact) {
+      let idx = state.contacts.findIndex((t) => t.id === updateContact.id)
+      if (idx >= 0) {
+        state.contacts[idx] = updateContact
+      }
+    },
+    deleteContact(state, deleteContact) {
+      let idx = state.contacts.findIndex((t) => t.id === deleteContact.id)
+      if (idx >= 0) {
+        state.contacts.splice(idx, 1)
+      }
+    },
   },
   getters: {
     paymentTypes: (state) => {
@@ -129,6 +144,31 @@ export default createStore({
         throw error
       }
     },
+    async insertContact(context, contact) {
+      let response = await axios.post("contacts", contact)
+
+      if (response.status == 201){
+        context.commit('insertContact', response.data.data)
+      }
+
+      return response.data.data
+    },
+    async updateContact(context, contact) {
+      let response = await axios.put("contacts/" + contact.id, contact)
+
+      if (response.status == 200)
+        context.commit('updateContact', response.data.data)
+
+      return response.data.data
+    },
+    async deleteContact(context, contact) {
+      let response = await axios.delete("contacts/" + contact.id)
+
+      if (response.status == 200)
+        context.commit('deleteContact', response.data.data)
+
+      return response.data.data
+    },
     async refresh(context) {
       let userPromise = context.dispatch("loadLoggedInUser")
       let paymentTypesPromise = context.dispatch("loadPaymentTypes")
@@ -136,10 +176,10 @@ export default createStore({
       await userPromise
       await paymentTypesPromise
 
-      if (this.state.user && this.state.user.type == 'V'){
+      if (this.state.user && this.state.user.type == 'V') {
         let categoriesPromise = context.dispatch("loadCategories")
         let contactsPromise = context.dispatch("loadContacts")
-        
+
         await categoriesPromise
         await contactsPromise
       }
