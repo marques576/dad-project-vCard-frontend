@@ -433,10 +433,16 @@
     @click="openChat"
   >
     <i class="bi bi-chat" style="margin: 0"></i>
+    <span
+      class="totalUnreadMessages"
+      v-show="this.$store.state.chat.totalUnreadMessages > 0"
+      >{{ this.$store.state.chat.totalUnreadMessages }}</span
+    >
   </button>
   <div
     class="chat-popup"
     v-if="!isLoading && user && user.type == 'V' && chatOpened"
+    style="background-color: #fff7fa"
   >
     <div class="d-flex justify-content-between">
       <h2 style="margin: 7px">Live Chat</h2>
@@ -446,53 +452,67 @@
         class="bi bi-x-lg"
       ></i>
     </div>
-    <ul class="nav nav-tabs">
-      <li
-        @click="this.$store.state.chat.activeChat = correspondent"
-        class="nav-item"
-        style="cursor: pointer"
-        v-for="(chat, correspondent) in this.$store.state.chat.chats"
-        :key="correspondent"
+    <div class="d-flex justify-content-between">
+      <ul
+        class="nav nav-tabs"
+        :style="[activeChat ? { 'overflow-y': 'auto', height: '40px' } : {}]"
       >
-        <a
-          class="nav-link"
-          :class="{
-            active: correspondent == this.$store.state.chat.activeChat,
-          }"
-          aria-current="page"
-          >{{ chat.contactName ? chat.contactName : correspondent }}
-          <span
-            v-if="chat.unread > 0"
-            style="
-              width: 20px;
-              height: 20px;
-              display: inline-block;
-              color: white;
-              text-align: center;
-              border-radius: 50%;
-              border-width: 1px;
-              background-color: red;
-              margin-left: 5px;
-            "
-            >{{ chat.unread }}</span
-          ></a
+        <li
+          class="nav-item"
+          style="cursor: pointer"
+          v-for="(chat, correspondent) in this.$store.state.chat.chats"
+          :key="correspondent"
+          v-show="chat.opened"
         >
-      </li>
-    </ul>
+          <a
+            @click="this.$store.state.chat.activeChat = correspondent"
+            class="nav-link"
+            :class="{
+              active: correspondent == activeChat,
+            }"
+            aria-current="page"
+            >{{ chat.contactName ? chat.contactName : correspondent }}
+            <span
+              v-if="chat.unread > 0"
+              style="
+                width: 20px;
+                height: 20px;
+                display: inline-block;
+                color: white;
+                text-align: center;
+                border-radius: 50%;
+                border-width: 1px;
+                background-color: red;
+                margin-left: 5px;
+              "
+              >{{ chat.unread }}</span
+            ></a
+          >
+        </li>
+      </ul>
+      <i v-if="activeChat" class="bi bi-x-circle" @click="this.$store.commit('closeChat')" style="cursor: pointer !important;"></i>
+    </div>
     <div class="chat-messages">
       <ul
-        v-if="this.$store.state.chat.activeChat"
+        v-if="activeChat"
         style="padding: 0; margin: 0; height: 100%; overflow-y: auto"
+        class="d-flex flex-column-reverse"
       >
         <li
           class="d-flex flex-column-reverse"
-          v-for="message in this.$store.state.chat.chats[
-            this.$store.state.chat.activeChat
-          ].messages"
-          :key="message.from"
+          v-for="(message, index) in this.$store.state.chat.chats[activeChat]
+            .messages"
+          :key="message"
+          style="margin-bottom: 5px"
         >
           <div :class="{ 'align-self-end': message.from == user.username }">
             <span
+              v-if="
+                this.$store.state.chat.chats[activeChat].messages[index + 1]
+                  ? this.$store.state.chat.chats[activeChat].messages[index + 1]
+                      .from != message.from
+                  : true
+              "
               style="display: inherit; font-size: 12px"
               :class="{ 'text-end': message.from == user.username }"
               >{{
@@ -503,7 +523,11 @@
                   : message.from
               }}</span
             >
-            <span class="message-text">{{ message.text }}</span>
+            <span
+              class="message-text"
+              :class="{ 'bg-info': message.from == user.username }"
+              >{{ message.text }}</span
+            >
           </div>
         </li>
       </ul>
@@ -513,7 +537,7 @@
     </div>
     <div
       :style="[
-        this.$store.state.chat.activeChat
+        activeChat
           ? { height: '40px' }
           : { height: '40px', 'margin-top': '58px' },
       ]"
@@ -524,9 +548,10 @@
         v-model="chatMessage"
         class="chat-message-input"
         style="padding: 15px"
+        @keyup.enter="sendMessage(activeChat)"
       />
       <i
-        @click="sendMessage(this.$store.state.chat.activeChat)"
+        @click="sendMessage(activeChat)"
         class="bi bi-send"
         style="margin-right: 20px; color: green; cursor: pointer !important"
       ></i>
@@ -569,6 +594,47 @@ export default {
         ? this.$serverUrl + "/storage/fotos/" + urlPhoto
         : "img/avatar-none.png"
     },
+    activeChat() {
+      return this.$store.state.chat.activeChat
+    },
+    activeChatUnreadMessages() {
+      if (this.activeChat)
+        return this.$store.state.chat.chats[this.activeChat].unread
+      return 0
+    },
+  },
+  watch: {
+    activeChatUnreadMessages() {
+      if (this.chatOpened) {
+        if (this.activeChatUnreadMessages > 0) {
+          this.$store.state.chat.totalUnreadMessages -=
+            this.$store.state.chat.chats[this.activeChat].unread
+          this.$store.state.chat.chats[this.activeChat].unread = 0
+        }
+      }
+    },
+    activeChat(newVal, oldVal) {
+      if ( this.activeChat &&
+        this.chatOpened &&
+        newVal != oldVal &&
+        this.$store.state.chat.chats[this.activeChat].unread > 0
+      ) {
+        this.$store.state.chat.totalUnreadMessages -=
+          this.$store.state.chat.chats[this.activeChat].unread
+        this.$store.state.chat.chats[this.activeChat].unread = 0
+      }
+    },
+    chatOpened(newVal) {
+      if (
+        this.activeChat &&
+        newVal &&
+        this.$store.state.chat.chats[this.activeChat].unread > 0
+      ) {
+        this.$store.state.chat.totalUnreadMessages -=
+          this.$store.state.chat.chats[this.activeChat].unread
+        this.$store.state.chat.chats[this.activeChat].unread = 0
+      }
+    },
   },
   methods: {
     refresh() {
@@ -597,7 +663,7 @@ export default {
       this.chatOpened = false
     },
     sendMessage(receiver) {
-      if (this.$store.state.chat.activeChat) {
+      if (this.activeChat && this.chatMessage.length > 0) {
         let message = {
           from: this.user.username,
           to: receiver,
@@ -613,6 +679,9 @@ export default {
         this.$store.commit("insertChat", contact)
       }
       this.$store.state.chat.activeChat = contact
+      if (!this.$store.state.chat.chats[contact].opened) {
+        this.$store.state.chat.chats[contact].opened = true
+      }
       if (!this.chatOpened) {
         this.chatOpened = true
       }
@@ -651,10 +720,19 @@ export default {
   vertical-align: 0;
 }
 
+.totalUnreadMessages {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  background-color: red;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
 .message-text {
   border-radius: 15px;
   background-color: lightblue;
-  height: 100%;
   display: table;
   padding: 10px;
   max-width: 200px;

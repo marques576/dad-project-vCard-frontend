@@ -86,7 +86,7 @@ export default {
             this.$toast.success("Contact was created successfully.")
             this.contact = contact
             this.originalValueStr = this.dataAsString()
-            this.$router.back()
+            this.$router.push({name: 'Contact', params: {id: this.contact.id}})
           })
           .catch((error) => {
             if (error.response.status == 422) {
