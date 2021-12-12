@@ -9,6 +9,7 @@ export default createStore({
     paymentTypes: [],
     categories: [],
     contacts: [],
+    chat: { activeChat: "", chats: { } }
   },
   mutations: {
     resetUser(state) {
@@ -45,12 +46,44 @@ export default createStore({
       let idx = state.contacts.findIndex((t) => t.id === updateContact.id)
       if (idx >= 0) {
         state.contacts[idx] = updateContact
+        if (state.chat.chats[updateContact.contact]){
+          state.chat.chats[updateContact.contact].contactName = updateContact.name
+          state.chat.chats[updateContact.contact].messages.forEach(message => {
+            message.contactName = updateContact.name
+          });
+        }
       }
     },
     deleteContact(state, deleteContact) {
       let idx = state.contacts.findIndex((t) => t.id === deleteContact.id)
       if (idx >= 0) {
         state.contacts.splice(idx, 1)
+        if (state.chat.chats[deleteContact.contact]){
+          state.chat.chats[deleteContact.contact].contactName = null
+          state.chat.chats[deleteContact.contact].messages.forEach(message => {
+            message.contactName = null
+          });
+        }
+      }
+    },
+    insertChat(state, receiver){
+      if (!state.chat.chats[receiver]){
+        let contact = state.contacts.find((t) => t.contact == receiver)
+        state.chat.chats[receiver] = {unread: 0, contactName: contact ? contact.name : null, messages: []}
+        if (state.chat.activeChat === ''){
+          state.chat.activeChat = receiver
+        }
+      }
+    },
+    insertMessage(state, { message, fromMe }) {
+      let receiver = fromMe ? message.to : message.from
+      if (!state.chat.chats[receiver]){
+        this.commit("insertChat", receiver)
+      }
+      message.contactName = state.chat.chats[receiver].contactName
+      state.chat.chats[receiver].messages.push(message)
+      if (!fromMe){
+        state.chat.chats[receiver].unread += 1
       }
     },
   },
@@ -147,7 +180,7 @@ export default createStore({
     async insertContact(context, contact) {
       let response = await axios.post("contacts", contact)
 
-      if (response.status == 201){
+      if (response.status == 201) {
         context.commit('insertContact', response.data.data)
       }
 
@@ -168,6 +201,9 @@ export default createStore({
         context.commit('deleteContact', response.data.data)
 
       return response.data.data
+    },
+    async SOCKET_newMessage(context, message) {
+      context.commit('insertMessage', {message: message, fromMe: false})
     },
     async refresh(context) {
       let userPromise = context.dispatch("loadLoggedInUser")

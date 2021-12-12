@@ -7,7 +7,7 @@ import router from "./router"
 import store from "./store"
 import axios from "axios"
 import Toaster from "@meforma/vue-toaster"
-import Pagination from 'v-pagination-3' 
+import Pagination from 'v-pagination-3'
 import VueSocketIO from 'vue-3-socket.io'
 
 import FieldErrorMessage from "./components/global/FieldErrorMessage.vue"
@@ -20,8 +20,13 @@ let toastOptions = {
 }
 
 const socketIO = new VueSocketIO({
- debug: true,
- connection: 'http://localhost:8081',
+  debug: true,
+  connection: 'http://localhost:8081',
+  vuex: {
+    store,
+    actionPrefix: 'SOCKET_',
+    mutationPrefix: 'SOCKET_'
+  }
 })
 
 const app = createApp(App).use(store).use(router).use(Toaster, toastOptions).use(socketIO)

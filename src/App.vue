@@ -273,27 +273,54 @@
               v-for="contact in this.$store.getters.contacts"
               :key="contact.contact"
               style="margin-top: 10px"
-              :class="{ active: $route.name === 'Contact' && $route.params.id == contact.id}"
+              :class="{
+                active:
+                  $route.name === 'Contact' && $route.params.id == contact.id,
+              }"
             >
               <div class="d-flex">
                 <router-link
-                  class="nav-link w-100 me-3 d-flex align-items-center justify-content-center contact-title"
+                  class="
+                    nav-link
+                    w-100
+                    me-3
+                    d-flex
+                    align-items-center
+                    justify-content-center
+                    contact-title
+                  "
                   :to="{ name: 'Contact', params: { id: contact.id } }"
                 >
                   {{ contact.name }}
                 </router-link>
                 <router-link
+                  v-if="contact.contact != user.username"
                   class="d-flex align-items-center justify-content-center"
-                  :to="{ name: 'Send Money', params: { payment_type: 'VCARD', payment_reference: contact.contact } }"
+                  :to="{
+                    name: 'Send Money',
+                    params: {
+                      payment_type: 'VCARD',
+                      payment_reference: contact.contact,
+                    },
+                  }"
                 >
                   <i class="bi bi-send"></i>
                 </router-link>
-                <router-link
-                  class="d-flex align-items-center justify-content-center contacts-last-icon"
-                  :to="{ name: 'Send Money' }"
+                <div
+                  v-if="contact.contact != user.username"
+                  class="
+                    contacts-last-icon
+                    d-flex
+                    justify-content-center
+                    align-items-center
+                  "
                 >
-                  <i class="bi bi-chat-dots"></i>
-                </router-link>
+                  <i
+                    class="bi bi-chat-dots"
+                    style="cursor: pointer !important"
+                    @click="chatWithContact(contact.contact)"
+                  ></i>
+                </div>
               </div>
             </li>
           </ul>
@@ -400,6 +427,111 @@
       </main>
     </div>
   </div>
+  <button
+    class="open-button"
+    v-if="!isLoading && user && user.type == 'V' && !chatOpened"
+    @click="openChat"
+  >
+    <i class="bi bi-chat" style="margin: 0"></i>
+  </button>
+  <div
+    class="chat-popup"
+    v-if="!isLoading && user && user.type == 'V' && chatOpened"
+  >
+    <div class="d-flex justify-content-between">
+      <h2 style="margin: 7px">Live Chat</h2>
+      <i
+        @click="closeChat"
+        style="color: red; cursor: pointer !important"
+        class="bi bi-x-lg"
+      ></i>
+    </div>
+    <ul class="nav nav-tabs">
+      <li
+        @click="this.$store.state.chat.activeChat = correspondent"
+        class="nav-item"
+        style="cursor: pointer"
+        v-for="(chat, correspondent) in this.$store.state.chat.chats"
+        :key="correspondent"
+      >
+        <a
+          class="nav-link"
+          :class="{
+            active: correspondent == this.$store.state.chat.activeChat,
+          }"
+          aria-current="page"
+          >{{ chat.contactName ? chat.contactName : correspondent }}
+          <span
+            v-if="chat.unread > 0"
+            style="
+              width: 20px;
+              height: 20px;
+              display: inline-block;
+              color: white;
+              text-align: center;
+              border-radius: 50%;
+              border-width: 1px;
+              background-color: red;
+              margin-left: 5px;
+            "
+            >{{ chat.unread }}</span
+          ></a
+        >
+      </li>
+    </ul>
+    <div class="chat-messages">
+      <ul
+        v-if="this.$store.state.chat.activeChat"
+        style="padding: 0; margin: 0; height: 100%; overflow-y: auto"
+      >
+        <li
+          class="d-flex flex-column-reverse"
+          v-for="message in this.$store.state.chat.chats[
+            this.$store.state.chat.activeChat
+          ].messages"
+          :key="message.from"
+        >
+          <div :class="{ 'align-self-end': message.from == user.username }">
+            <span
+              style="display: inherit; font-size: 12px"
+              :class="{ 'text-end': message.from == user.username }"
+              >{{
+                message.from == user.username
+                  ? "Me"
+                  : message.contactName
+                  ? message.contactName
+                  : message.from
+              }}</span
+            >
+            <span class="message-text">{{ message.text }}</span>
+          </div>
+        </li>
+      </ul>
+      <div v-else style="text-align: center">
+        <h4>No active chats</h4>
+      </div>
+    </div>
+    <div
+      :style="[
+        this.$store.state.chat.activeChat
+          ? { height: '40px' }
+          : { height: '40px', 'margin-top': '58px' },
+      ]"
+      class="d-flex justify-content-between align-items-center"
+    >
+      <input
+        type="text"
+        v-model="chatMessage"
+        class="chat-message-input"
+        style="padding: 15px"
+      />
+      <i
+        @click="sendMessage(this.$store.state.chat.activeChat)"
+        class="bi bi-send"
+        style="margin-right: 20px; color: green; cursor: pointer !important"
+      ></i>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -409,6 +541,8 @@ export default {
     return {
       isLoading: true,
       windowWidth: window.innerWidth,
+      chatOpened: false,
+      chatMessage: "",
     }
   },
   computed: {
@@ -456,6 +590,33 @@ export default {
     onResize() {
       this.windowWidth = window.innerWidth
     },
+    openChat() {
+      this.chatOpened = true
+    },
+    closeChat() {
+      this.chatOpened = false
+    },
+    sendMessage(receiver) {
+      if (this.$store.state.chat.activeChat) {
+        let message = {
+          from: this.user.username,
+          to: receiver,
+          text: this.chatMessage,
+        }
+        this.$socket.emit("newMessage", message)
+        this.$store.commit("insertMessage", { message: message, fromMe: true })
+        this.chatMessage = ""
+      }
+    },
+    chatWithContact(contact) {
+      if (!this.$store.state.chat.chats[contact]) {
+        this.$store.commit("insertChat", contact)
+      }
+      this.$store.state.chat.activeChat = contact
+      if (!this.chatOpened) {
+        this.chatOpened = true
+      }
+    },
   },
   sockets: {
     newTransaction(transaction) {
@@ -486,6 +647,61 @@ export default {
 <style lang="css">
 @import "./assets/css/dashboard.css";
 
+.bi.bi-chat::before {
+  vertical-align: 0;
+}
+
+.message-text {
+  border-radius: 15px;
+  background-color: lightblue;
+  height: 100%;
+  display: table;
+  padding: 10px;
+  max-width: 200px;
+  word-break: break-all;
+}
+
+.open-button {
+  background-color: rgb(0, 120, 150);
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+.chat-popup {
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  background-color: white;
+  z-index: 9;
+  width: 400px;
+  height: 500px;
+}
+
+.chat-messages {
+  height: 320px;
+  width: calc(100% - 40px);
+  margin: 20px;
+}
+
+.chat-message-input {
+  width: 85%;
+  margin-left: 5px;
+  height: 80%;
+  border-radius: 15px;
+  border-width: 0;
+  background-color: rgb(224, 224, 224);
+}
+
 .contact {
   border-radius: 60px;
   width: 90%;
@@ -495,7 +711,7 @@ export default {
 .contact.active {
   background-color: #d8d8d8;
 }
-.contact-title{
+.contact-title {
   margin: 0 !important;
 }
 .contacts-last-icon {
