@@ -37,6 +37,7 @@
     @toggleBlock="toggleBlockVCard"
     @edit="editVCard"
     @delete="deleteVCard"
+    @createTransaction="createTransaction"
   ></VCardsTable>
   <template class="paginator">
     <pagination
@@ -148,6 +149,14 @@ export default {
           )
           console.log(error)
         })
+    },
+    createTransaction(vcard){
+      this.$router.push({
+        name: "Create Credit Transaction",
+        params: {
+          vcard: vcard.phone_number,
+        },
+      })
     },
   },
   mounted() {

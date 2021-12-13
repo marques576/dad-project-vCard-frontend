@@ -56,6 +56,14 @@ const routes = [
     props: true,
   },
   {
+    path: "/transactions/new/:vcard",
+    name: "Create Credit Transaction",
+    component: Transaction,
+    props: (route) => ({
+      vcard: route.params.vcard
+    }),
+  },
+  {
     path: "/vcards",
     name: "VCards",
     component: VCards,

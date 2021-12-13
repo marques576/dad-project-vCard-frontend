@@ -1,6 +1,6 @@
 <template>
   <form class="row g-3 needs-validation" @submit.prevent="save">
-    <h3 class="mt-5 mb-3">Send Money</h3>
+    <h3 class="mt-5 mb-3">{{this.$store.state.user.type == 'V' ? "Send Money" : "Create credit transaction to " + vcard}}</h3>
     <hr />
 
     <div class="mb-3">
@@ -30,7 +30,7 @@
         v-model="transaction.payment_type"
       >
         <option
-          v-for="type in this.$store.getters.paymentTypes"
+          v-for="type in payment_types"
           :key="type.code"
           :value="type.code"
         >
@@ -64,7 +64,7 @@
       ></field-error-message>
     </div>
 
-    <div class="mb-3 me-3">
+    <div class="mb-3 me-3" v-if="this.$store.state.user.type == 'V'">
       <label for="inputCategory" class="form-label">Category</label>
       <select
         class="form-select pe-2"
@@ -86,7 +86,7 @@
       ></field-error-message>
     </div>
 
-    <div class="mb-3">
+    <div class="mb-3" v-if="this.$store.state.user.type == 'V'">
       <label for="inputDescription" class="form-label">Description</label>
       <textarea
         rows="4"
@@ -101,7 +101,7 @@
       ></field-error-message>
     </div>
 
-    <div class="mb-3">
+    <div class="mb-3" v-if="this.$store.state.user.type == 'V'">
       <label for="inputConfirmationCode" class="form-label"
         >Confirmation Code</label
       >
@@ -135,9 +135,18 @@ export default {
   data() {
     return {
       transaction: this.newTransaction(),
-      confirmationCode: null,
+      confirmationCode: this.$store.state.user.type == 'V' ? null : '0000',
       errors: null,
     }
+  },
+  computed: {
+   payment_types() {
+    let pt = this.$store.getters.paymentTypes;
+    if (this.$store.state.user.type == 'A'){
+      pt = pt.filter((type) => type.code != 'VCARD')
+    }
+    return pt
+   } 
   },
   props: {
     payment_type: {
@@ -148,6 +157,10 @@ export default {
       type: String,
       default: null,
     },
+    vcard: {
+      type: String,
+      default: null
+    }
   },
   watch: {
     payment_reference: function (newVal) {
@@ -160,8 +173,8 @@ export default {
   methods: {
     newTransaction() {
       return {
-        vcard: this.$store.state.user.username,
-        type: "D",
+        vcard: this.vcard ? this.vcard : this.$store.state.user.username,
+        type: this.$store.state.user.type == 'V' ? "D" : "C",
         value: null,
         payment_type: this.payment_type
           ? this.payment_type
@@ -183,7 +196,13 @@ export default {
           if (this.transaction.payment_type == "VCARD") {
             this.$socket.emit("newTransaction", this.transaction)
           }
-          this.$router.push({ name: "Dashboard" })
+          if (this.$store.state.user.type == 'V'){
+            this.$router.push({ name: "Dashboard" })
+          } else {
+            this.transaction.payment_reference = this.transaction.vcard
+            this.$socket.emit("newTransaction", this.transaction)
+            this.$router.push({ name: "VCards" })
+          }
         })
         .catch((error) => {
           if (error.response.status == 422) {

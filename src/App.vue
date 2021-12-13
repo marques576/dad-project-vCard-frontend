@@ -690,7 +690,7 @@ export default {
   sockets: {
     newTransaction(transaction) {
       this.$toast.success(
-        "You received " + transaction.value + "€ from " + transaction.vcard
+        "You received " + transaction.value + "€ from " + (transaction.vcard == this.user.username ? "an admin" : transaction.vcard)
       )
     },
   },
