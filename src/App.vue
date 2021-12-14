@@ -142,6 +142,7 @@
         id="sidebarMenu"
         class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
         v-if="user || windowWidth < 768"
+        style="height: 93%;"
       >
         <div class="position-sticky pt-3">
           <ul class="nav flex-column" v-show="user">
