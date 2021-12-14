@@ -25,6 +25,22 @@
     </div>
 
     <div class="mb-3">
+
+      <div v-if="operationType == 'update'" class="d-flex justify-content-center">
+      <img :src="photo_urlPreview" width="200" height="200" class="rounded-circle" alt="avatar image" />
+      </div>
+      <div class="d-flex justify-content-center">
+      <input
+      @change="onPhoto_url_change"
+        class="btn btn-primary"
+        ref="myFiles"
+        type="file"
+        accept="image/png, image/jpeg, image/gif, image/svg+xml"
+      />
+      </div>
+      <br />
+
+
       <label for="inputName" class="form-label">Name</label>
       <input
         type="text"
@@ -253,6 +269,7 @@ export default {
       v$: useVuelidate(),
       editingVCard: this.vcard,
       admin: this.$store.state.user && this.$store.state.user.type == "A",
+      photo_urlPreview: null,
     }
   },
   validations() {
@@ -264,7 +281,10 @@ export default {
         balance: { required },
         max_debit: { required },
         password: { required },
-        password_confirmation: { required, sameAs: sameAs(this.editingVCard.password) },
+        password_confirmation: {
+          required,
+          sameAs: sameAs(this.editingVCard.password),
+        },
         confirmation_code: { required },
         confirmation_code_confirmation: {
           required,
@@ -277,6 +297,9 @@ export default {
   watch: {
     vcard(newVCard) {
       this.editingVCard = newVCard
+      this.photo_urlPreview = this.editingVCard.photo_url
+        ? this.$serverUrl + "/storage/fotos/" + this.editingVCard.photo_url
+        : "img/avatar-none.png"
     },
   },
   computed: {
@@ -297,10 +320,39 @@ export default {
     cancel() {
       this.$emit("cancel", this.editingVCard)
     },
-  },
+    onPhoto_url_change(e){
+            const file = e.target.files[0];
+            this.photo_urlPreview = URL.createObjectURL(file)
+            
+            var formdata = new FormData();
+            formdata.append("photo_url", e.target.files[0])
+
+            this.$axios
+          .post("vcards/" + this.editingVCard.phone_number + "/photo" ,formdata, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((response) => {
+            console.log(response)
+             this.$toast.success(
+              "VCard #" +
+                this.phone_number +
+                "photo was updated successfully."
+            )
+          })
+          .catch((error) => {
+           console.log(error)
+            this.$toast.error(
+                "VCard #" +
+                  this.phone_number +
+                  " was not updated due to unknown server error!"
+              )
+          })   
+    },
   mounted() {
-    // console.log(this.editingVCard)
   },
+},
 }
 </script>
 

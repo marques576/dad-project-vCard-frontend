@@ -63,6 +63,8 @@
               aria-expanded="false"
             >
               <img
+                width="35"
+                height="35"
                 :src="userPhotoUrl"
                 class="rounded-circle z-depth-0 avatar-img"
                 alt="avatar image"
