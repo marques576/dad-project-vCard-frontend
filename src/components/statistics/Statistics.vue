@@ -246,6 +246,7 @@ export default defineComponent({
 
 <style scoped>
 #counter {
+  border-radius: 20px;
   background-color: black;
   color: #ffffff;
   display: block;
@@ -259,6 +260,7 @@ export default defineComponent({
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   text-align: center;
+  border-radius: 20px;
 }
 
 .count h4 {
