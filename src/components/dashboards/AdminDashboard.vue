@@ -89,7 +89,7 @@ h4,
 h5,
 h6 {
     margin-top: 0;
-    margin-bottom: .5rem
+    margin-bottom: .5rem;
 }
 
 img {
@@ -163,7 +163,8 @@ h6 {
 }
 
 .mb-5 {
-    margin-bottom: 3rem!important
+    margin-bottom: 3rem!important;
+    font-size: 3rem;
 }
 
 .font-weight-normal {
