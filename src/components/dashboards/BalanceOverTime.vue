@@ -20,25 +20,19 @@ export default defineComponent({
        this.renderChart({
       labels: this.labels,
       options: {
-        maintainAspectRatio: false,
-        scales: {
-          xAxes: [{
-         
-              display: false
-          
-          }]
-        }
+        
     },
       datasets: [
         {
-          label: 'Balance Over Time',
+          label: 'Balance Over Time Per Week',
           backgroundColor: 'rgb(75, 192, 192)',
           data: this.data,
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
         }
       ],
-    })
+    }
+    )
  }, 1000)
   }
 })

@@ -7,7 +7,6 @@
 
     <hr />
 
-
 <div class="main-panel">
     <div class="row">
       <div
@@ -33,7 +32,7 @@
         class="col-md-4 stretch-card grid-margin"
         style="text-decoration: none"
       >
-        <div class="card bg-gradient-info card-img-holder text-white" style="  width: 70%; min-width: 70%;">
+        <div class="card bg-gradient-info card-img-holder text-white" >
           
 
                               <div class="card-group" >
@@ -96,14 +95,11 @@
   
   
   
-  
-   <BalanceOverTime
-      style="width:100%; height:20%;"
+   <BalanceOverTime height="70"
       v-if="date && value"
       v-bind:labels="date"
       v-bind:data="value"
     />
-  
 
   
 </template>
@@ -154,8 +150,8 @@ mounted() {
 
 .main-panel {
   vertical-align: top;
-  -ms-transform: translateY(5%);
-  transform: translateY(5%);
+  -ms-transform: translateY(0%);
+  transform: translateY(0%);
 }
 
 .row {
