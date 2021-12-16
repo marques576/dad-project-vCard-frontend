@@ -60,7 +60,7 @@
             </h4>
             
 
-            <table class="table table-sm table-borderless text-white">
+            <table class="table table-sm table-borderless text-white d-flex justify-content-left">
             <tbody>
                 <tr v-for="transaction in $store.state.transactions" :key="transaction.id">
                   <td> <i :class="[transaction.type=='C' ? 'bi bi-arrow-down-circle-fill' : 'bi bi-arrow-up-circle-fill']"></i></td>
@@ -95,7 +95,7 @@
   
   
   
-   <BalanceOverTime height="70"
+   <BalanceOverTime height="50"
       v-if="date && value"
       v-bind:labels="date"
       v-bind:data="value"
@@ -437,7 +437,7 @@ h6 {
     .card {
         position: relative;
         height: 270px;
-        width: 450px;
+        width: 495px;
         border-radius: 25px;
         background: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(30px);

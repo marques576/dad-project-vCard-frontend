@@ -65,9 +65,6 @@ export default {
 <style>
 .main-panel {
     vertical-align: middle;
-    
-  
-  
   -ms-transform: translateY(50%);
   transform: translateY(50%);
         
