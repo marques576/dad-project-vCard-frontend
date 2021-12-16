@@ -264,7 +264,10 @@ export default {
         balance: { required },
         max_debit: { required },
         password: { required },
-        password_confirmation: { required, sameAs: sameAs(this.editingVCard.password) },
+        password_confirmation: {
+          required,
+          sameAs: sameAs(this.editingVCard.password),
+        },
         confirmation_code: { required },
         confirmation_code_confirmation: {
           required,

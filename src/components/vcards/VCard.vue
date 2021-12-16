@@ -90,6 +90,7 @@ export default {
                 response.data.data.phone_number +
                 " was updated successfully."
             )
+            this.$store.dispatch("loadLoggedInUser")
             this.$router.back()
           })
           .catch((error) => {
