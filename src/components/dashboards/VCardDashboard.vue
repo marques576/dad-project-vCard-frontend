@@ -37,8 +37,8 @@
 
                               <div class="card-group" >
                               <div class="card" id="creditCard">
-                              <div class="logo"><img src="https://raw.githubusercontent.com/dasShounak/freeUseImages/main/Visa-Logo-PNG-Image.png" alt="Visa"></div>
-                              <div class="chip"><img src="https://raw.githubusercontent.com/dasShounak/freeUseImages/main/chip.png" alt="chip"></div>
+                              <div class="logo"><img src="../../assets/img/Visa-Logo-PNG-Image.png" alt="Visa"></div>
+                              <div class="chip"><img src="../../assets/img/chip.png" alt="chip"></div>
                               <div class="number">{{$store.state.user.id}}</div>
                               <div class="name">{{$store.state.user.name}}</div>
                               <div class="ring"></div>
@@ -60,11 +60,11 @@
             </h4>
             
 
-            <table class="table table-borderless text-white">
+            <table class="table table-sm table-borderless text-white">
             <tbody>
                 <tr v-for="transaction in $store.state.transactions" :key="transaction.id">
                   <td> <i :class="[transaction.type=='C' ? 'bi bi-arrow-down-circle-fill' : 'bi bi-arrow-up-circle-fill']"></i></td>
-                  <td>{{transaction.value}}€</td>
+                  <td><h3>{{transaction.value}}€</h3></td>
                 </tr>
             </tbody>
         </table>

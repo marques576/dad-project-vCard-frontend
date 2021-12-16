@@ -24,7 +24,7 @@ export default defineComponent({
     },
       datasets: [
         {
-          label: 'Balance Over Time Per Week',
+          label: 'Balance Over Time Per Month',
           backgroundColor: 'rgb(75, 192, 192)',
           data: this.data,
           fill: false,
