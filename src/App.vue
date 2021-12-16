@@ -167,7 +167,12 @@
                 Transactions
               </router-link>
             </li>
-            <li class="nav-item" v-if="userType == 'A'">
+            <li class="nav-item 
+                d-flex
+                justify-content-between
+                align-items-center
+                pe-3"
+                 v-if="userType == 'A'">
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'DefaultCategories' }"
@@ -175,6 +180,11 @@
               >
                 <i class="bi bi-tag"></i>
                 Default Categories
+              </router-link>
+                <router-link
+                class="link-secondary"
+                :to="{ name: 'NewDefaultCategory' }"
+                ><i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
 
