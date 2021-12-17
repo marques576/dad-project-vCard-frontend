@@ -5,6 +5,7 @@
     :errors="errors"
     @save="save"
     @cancel="cancel"
+    @remove="remove"
   ></v-card-detail>
 </template>
 
@@ -24,7 +25,6 @@ export default {
   },
   data() {
     return {
-      // vcard: this.loadVCard(this.phone_number),
       vcard: this.newVCard(),
       errors: null,
     }
@@ -54,6 +54,24 @@ export default {
             console.log(error)
           })
       }
+    },
+    remove(o) {
+      this.$axios
+        .delete("vcards/" + this.vcard.phone_number, { data: o })
+        .then(() => {
+          this.$store
+            .dispatch("logout")
+            .then(() => {
+              this.$toast.success("User has been deleted successfuly")
+              this.$router.push({ name: "Home" })
+            })
+            .catch(() => {
+              this.$toast.error("There was a problem with the application!")
+            })
+        })
+        .catch(() => {
+          this.$toast.error("There was a problem while deleting your account!")
+        })
     },
     save() {
       if (this.operation == "insert") {

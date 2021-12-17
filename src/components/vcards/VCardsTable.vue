@@ -54,14 +54,6 @@
             >
               <i class="bi bi-xs bi-pencil"></i>
             </button>
-
-            <button
-              class="btn btn-xs btn-light"
-              @click="deleteClick(vcard)"
-              v-if="showDeleteButton"
-            >
-              <i class="bi bi-xs bi-trash"></i>
-            </button>
           </div>
         </td>
       </tr>
@@ -111,7 +103,7 @@ export default {
       default: true,
     },
   },
-  emits: ["edit", "delete", "toggleBlock"],
+  emits: ["edit", "toggleBlock"],
   methods: {
     isBlocked(vcard) {
       if (!this.showBlocked) return ""
@@ -125,9 +117,6 @@ export default {
     },
     editClick(vcard) {
       this.$emit("edit", vcard)
-    },
-    deleteClick(vcard) {
-      this.$emit("delete", vcard)
     },
   },
 }
