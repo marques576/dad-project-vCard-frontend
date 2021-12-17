@@ -10,7 +10,7 @@
   <hr />
   <div class="mb-3 d-flex justify-content-between flex-wrap">
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
-      <label for="selectType" class="form-label">Filter by status:</label>
+      <label for="selectType" class="form-label">Filter by type:</label>
       <select
         @change="loadDefaultCategories()"
         class="form-select"
@@ -28,7 +28,8 @@
         class="btn btn-success px-4 btn-addprj"
         @click="addDefaultCategory"
       >
-        <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Default Category
+        <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Create new Default
+        Category
       </button>
     </div>
   </div>
