@@ -9,6 +9,8 @@ import axios from "axios"
 import Toaster from "@meforma/vue-toaster"
 import Pagination from "v-pagination-3"
 import VueSocketIO from "vue-3-socket.io"
+import Datepicker from "vue3-date-time-picker"
+import "vue3-date-time-picker/dist/main.css"
 
 import FieldErrorMessage from "./components/global/FieldErrorMessage.vue"
 import ConfirmationDialog from "./components/global/ConfirmationDialog.vue"
@@ -22,6 +24,11 @@ let toastOptions = {
 const socketIO = new VueSocketIO({
   debug: true,
   connection: "http://localhost:8081",
+  vuex: {
+    store,
+    actionPrefix: "SOCKET_",
+    mutationPrefix: "SOCKET_",
+  },
 })
 
 const app = createApp(App)
@@ -31,6 +38,8 @@ const app = createApp(App)
   .use(socketIO)
 
 store.$socket = socketIO.io
+store.$toast = app.$toast
+store.$router = router
 
 axios.defaults.baseURL = "http://projetoDAD.test/api"
 app.config.globalProperties.$axios = axios
@@ -39,5 +48,6 @@ app.config.globalProperties.$serverUrl = "http://projetoDAD.test"
 app.component("field-error-message", FieldErrorMessage)
 app.component("confirmation-dialog", ConfirmationDialog)
 app.component("pagination", Pagination)
+app.component("Datepicker", Datepicker)
 
 app.mount("#app")

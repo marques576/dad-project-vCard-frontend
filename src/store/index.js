@@ -143,8 +143,9 @@ export default createStore({
       }
     },
     async SOCKET_userBlocked(context) {
-      this.$toast.success("VCard Account Blocked")
-      this.logout(context)
+      context.dispatch("logout")
+      this.$toast.error("VCard Account Blocked")
+      this.$router.push({ name: "Home" })
     },
     async refresh(context) {
       let userPromise = context.dispatch("loadLoggedInUser")
