@@ -8,7 +8,7 @@
   <div class="main-panel">
     <div class="row">
       <div
-        class="col-md-4 stretch-card grid-margin"
+        class="col-md-6 stretch-card grid-margin"
         style="text-decoration: none"
       >
         <div class="card bg-gradient-danger card-img-holder text-white">
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div
-        class="col-md-4 stretch-card grid-margin"
+        class="col-md-6 stretch-card grid-margin"
         style="text-decoration: none"
       >
         <div class="card bg-gradient-info card-img-holder text-white">
@@ -50,14 +50,14 @@
     </div>
     <div class="row">
       <div
-        class="col-md-4 stretch-card grid-margin"
+        class="col-md-6 stretch-card grid-margin"
         style="text-decoration: none"
       >
         <div class="card bg-gradient-success card-img-holder text-white">
           <div class="card-body">
             <h4 class="font-weight-normal mb-3">Last Transactions</h4>
 
-            <table
+            <table style="padding-left: 15%;"
               class="
                 table table-sm table-borderless
                 text-white
@@ -67,7 +67,7 @@
             >
               <tbody>
                 <tr
-                  v-for="transaction in transactions"
+                  v-for="transaction in transactions.slice(0,3)"
                   :key="transaction.id"
                 >
             
@@ -107,7 +107,7 @@
         </div>
       </div>
       <div
-        class="col-md-4 stretch-card grid-margin"
+        class="col-md-6 stretch-card grid-margin"
         style="text-decoration: none"
       >
         <div class="card bg-gradient-dark card-img-holder text-white">
@@ -348,6 +348,7 @@ h6 {
 .stretch-card > .card {
   width: 100%;
   min-width: 100%;
+  height: 225px !important;
 }
 
 .font-weight-normal {
