@@ -25,7 +25,7 @@
         ></field-error-message>
       </div>
 
-      <div class="mb-3">
+      <div v-if="!isDeleteMode" class="mb-3">
         <div v-if="operationType == 'update'">
           <div class="d-flex justify-content-center">
             <img
@@ -37,7 +37,7 @@
             />
           </div>
           <br />
-          <div class="d-flex justify-content-center">
+          <div v-if="!admin" class="d-flex justify-content-center">
             <input
               @change="onPhoto_url_change"
               class="form-control"
@@ -52,7 +52,7 @@
           <input
             type="text"
             class="form-control"
-            :placeholder="editingVCard.phone_number"
+            v-model="editingVCard.phone_number"
             disabled
           />
           <br />
@@ -65,6 +65,7 @@
           id="inputName"
           placeholder="Your Name"
           required
+          :disabled="admin"
           v-model="editingVCard.name"
           v-bind:class="{
             'is-invalid': v$.editingVCard.name.$error ?? false,
@@ -77,28 +78,29 @@
           :errors="errors"
           fieldName="name"
         ></field-error-message>
-      </div>
-
-      <div class="mb-3">
-        <label for="inputEmail" class="form-label">Email</label>
-        <input
-          type="text"
-          class="form-control"
-          id="inputEmail"
-          placeholder="youremail@mail.pt"
-          required
-          v-model="editingVCard.email"
-          v-bind:class="{
-            'is-invalid': v$.editingVCard.email.$error ?? false,
-          }"
-        />
-        <span v-if="v$.editingVCard.email.$error" style="color: red">
-          {{ v$.editingVCard.email.$errors[0].$message }}
-        </span>
-        <field-error-message
-          :errors="errors"
-          fieldName="email"
-        ></field-error-message>
+        <br />
+        <div class="mb-3">
+          <label for="inputEmail" class="form-label">Email</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputEmail"
+            placeholder="youremail@mail.pt"
+            required
+            :disabled="admin"
+            v-model="editingVCard.email"
+            v-bind:class="{
+              'is-invalid': v$.editingVCard.email.$error ?? false,
+            }"
+          />
+          <span v-if="v$.editingVCard.email.$error" style="color: red">
+            {{ v$.editingVCard.email.$errors[0].$message }}
+          </span>
+          <field-error-message
+            :errors="errors"
+            fieldName="email"
+          ></field-error-message>
+        </div>
       </div>
 
       <div v-if="operationType == 'update' && admin" class="mb-3">
@@ -248,14 +250,65 @@
         </div>
       </div>
 
+      <div v-if="isDeleteMode" class="mb-3">
+        <div class="d-flex justify-content-center">
+          <img
+            :src="photo_urlPreview"
+            width="200"
+            height="200"
+            class="rounded-circle"
+            alt="avatar image"
+          />
+        </div>
+        <label for="inputPasswordDelete" class="form-label">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="inputPasswordDelete"
+          required
+          v-model="passwordDelete"
+        />
+        <br />
+        <label for="inputCodeDelete" class="form-label">Code</label>
+        <input
+          type="password"
+          class="form-control"
+          id="inputCodeDelete"
+          required
+          v-model="codeDelete"
+        />
+      </div>
+
       <div
         v-if="operationType == 'update'"
         class="mb-3 d-flex justify-content-end"
       >
-        <button type="button" class="btn btn-primary px-5" @click="save">
+        <button
+          v-if="!isDeleteMode"
+          type="button"
+          class="btn btn-danger"
+          @click="toggleDelete"
+        >
+          Delete account
+        </button>
+        <div class="flex-grow-1"></div>
+        <button
+          v-if="!isDeleteMode"
+          type="button"
+          class="btn btn-primary"
+          @click="save"
+        >
           Save
         </button>
-        <button type="button" class="btn btn-light px-5" @click="cancel">
+        <button
+          v-if="isDeleteMode"
+          type="button"
+          class="btn btn-danger"
+          @click="remove"
+        >
+          Delete
+        </button>
+        <button type="button" class="btn btn-light" @click="cancel">
           Cancel
         </button>
       </div>
@@ -290,13 +343,16 @@ export default {
       type: Object,
     },
   },
-  emits: ["save", "cancel"],
+  emits: ["save", "cancel", "remove"],
   data() {
     return {
       v$: useVuelidate(),
       editingVCard: this.vcard,
       admin: this.$store.state.user && this.$store.state.user.type == "A",
       photo_urlPreview: null,
+      isDeleteMode: false,
+      codeDelete: "",
+      passwordDelete: "",
     }
   },
   validations() {
@@ -345,7 +401,20 @@ export default {
        }
     },
     cancel() {
-      this.$emit("cancel", this.editingVCard)
+      if (this.isDeleteMode) {
+        this.isDeleteMode = false
+      } else {
+        this.$emit("cancel", this.editingVCard)
+      }
+    },
+    remove() {
+      this.$emit("remove", {
+        password: this.passwordDelete,
+        code: this.codeDelete,
+      })
+    },
+    toggleDelete() {
+      this.isDeleteMode = !this.isDeleteMode
     },
     onPhoto_url_change(e) {
       const file = e.target.files[0]
