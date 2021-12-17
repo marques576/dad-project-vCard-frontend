@@ -29,8 +29,13 @@
         style="text-decoration: none"
       >
         <div class="card bg-gradient-info card-img-holder text-white">
-          <div class="card-group">
-            <div class="card" id="creditCard">
+             <img
+              src="../../assets/img/circle.svg"
+              class="card-img-absolute"
+              alt="circle-image"
+            />
+          <div class="card-group bg-gradient-info">
+            <div class="card bg-gradient-info" id="creditCard">
               <div class="logo">
                 <img
                   src="../../assets/img/Visa-Logo-PNG-Image.png"
@@ -276,7 +281,7 @@ h6 {
   word-wrap: break-word;
   background-color: #fff;
   background-clip: border-box;
-  border: 1px solid rgba(0, 0, 0, 0.125);
+  border: 1px solid rgba(0, 0, 0, 0);
   border-radius: 0.3125rem;
 }
 
@@ -467,7 +472,7 @@ h6 {
 }
 
 .card-group {
-  position: absolute;
+  position: relative;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -480,7 +485,7 @@ h6 {
   border-radius: 25px;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(30px);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  /* border: 2px solid rgba(255, 255, 255, 0.1); */
   box-shadow: 0 0 80px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 }
