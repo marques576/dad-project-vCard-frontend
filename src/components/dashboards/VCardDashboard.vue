@@ -120,6 +120,7 @@
                 d-flex
                 justify-content-left
               "
+              v-if="this.$store.getters.contacts.length"
             >
               <tbody>
                 <tr
@@ -132,6 +133,7 @@
                 </tr>
               </tbody>
             </table>
+            <h6 v-else>No contacts</h6>
           </div>
         </div>
       </div>
