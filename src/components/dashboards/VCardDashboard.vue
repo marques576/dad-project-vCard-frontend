@@ -321,7 +321,7 @@ h6 {
 }
 
 h1 {
-  font-size: 5.5rem;
+  font-size: 4.5rem;
 }
 
 .h2,
