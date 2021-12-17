@@ -62,7 +62,7 @@
             />
             <h4 class="font-weight-normal mb-3">Last Transactions</h4>
 
-            <table style="padding-left: 15%;"
+            <table style="padding-left: 0%;"
               class="
                 table table-sm table-borderless
                 text-white
@@ -251,7 +251,7 @@ h3,
 h4,
 h5,
 h6 {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
   font-weight: 500;
   line-height: 1.2;
 }
