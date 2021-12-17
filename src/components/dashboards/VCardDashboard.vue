@@ -67,9 +67,10 @@
             >
               <tbody>
                 <tr
-                  v-for="transaction in $store.state.transactions"
+                  v-for="transaction in transactions"
                   :key="transaction.id"
                 >
+            
                   <div style="color: #90ee90" v-if="transaction.type == 'C'">
                     <td>
                       <i
@@ -137,6 +138,7 @@ export default defineComponent({
     return {
       date: [],
       value: [],
+      transactions: [],
     }
   },
 
@@ -157,9 +159,20 @@ export default defineComponent({
           console.log(error)
         })
     },
+     loadTransactionsDesc() {
+      this.$axios
+        .get("vcards/"+ this.$store.state.user.id + "/transactions?order=desc")
+        .then((response) => {
+          this.transactions = response.data.data
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
   },
   mounted() {
     this.loadBalanceOverTime()
+    this.loadTransactionsDesc()
   },
 })
 </script>
