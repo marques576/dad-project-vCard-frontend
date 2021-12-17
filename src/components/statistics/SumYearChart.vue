@@ -22,9 +22,9 @@ export default defineComponent({
       datasets: [
         {
           label: 'Soma por Mês',
-          backgroundColor: 'rgb(75, 192, 192)',
+          backgroundColor: 'rgba(75, 192, 192,0.3)',
           data: this.data,
-          fill: false,
+          fill: true,
           borderColor: 'rgb(75, 192, 192)',
         }
       ]

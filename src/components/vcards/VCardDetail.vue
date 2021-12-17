@@ -165,6 +165,7 @@
           :errors="errors"
           fieldName="password"
         ></field-error-message>
+        <div>
         <label for="inputPasswordConfirmation" class="form-label"
           >Password Confirmation</label
         >
@@ -185,6 +186,7 @@
         >
           {{ v$.editingVCard.password_confirmation.$errors[0].$message }}
         </span>
+        </div>
       </div>
       <div v-if="operationType == 'insert'" class="mb-3">
         <label for="inputCode" class="form-label">Code</label>
@@ -208,6 +210,7 @@
           :errors="errors"
           fieldName="confirmation_code"
         ></field-error-message>
+        <div>
         <label for="inputCodeConfirmation" class="form-label"
           >Code Confirmation</label
         >
@@ -231,6 +234,7 @@
             v$.editingVCard.confirmation_code_confirmation.$errors[0].$message
           }}
         </span>
+        </div>
       </div>
       <div v-if="operationType == 'update' && admin" class="mb-3 checkBilled">
         <div class="form-check">
@@ -392,7 +396,9 @@ export default {
   methods: {
     save() {
       this.v$.$touch()
+        if (!this.v$.$error) {
       this.$emit("save", this.editingVCard)
+       }
     },
     cancel() {
       if (this.isDeleteMode) {

@@ -20,18 +20,29 @@ export default defineComponent({
        this.renderChart({
       labels: this.labels,
       options: {
-        
+        scales: {
+            xAxes: [{
+               gridLines: {
+                  display: false
+               }
+            }],
+            yAxes: [{
+               gridLines: {
+                  display: false
+               }
+            }]
+       }
     },
       datasets: [
         {
           label: 'Balance Over Time Per Month',
-          backgroundColor: 'rgb(75, 192, 192)',
+          backgroundColor: 'rgba(75, 192, 192,0.4)',
           data: this.data,
-          fill: false,
+          fill: true,
           borderColor: 'rgb(75, 192, 192)',
         }
       ],
-    }
+    },
     )
  }, 1000)
   }

@@ -4,10 +4,8 @@
       <h3 class="mt-4">Dashboard</h3>
     </div>
   </div>
-
-    <hr />
-
-<div class="main-panel">
+  <hr />
+  <div class="main-panel">
     <div class="row">
       <div
         class="col-md-4 stretch-card grid-margin"
@@ -20,9 +18,7 @@
               class="card-img-absolute"
               alt="circle-image"
             />
-            <h4 class="font-weight-normal mb-3">
-              Balance
-            </h4>
+            <h4 class="font-weight-normal mb-3">Balance</h4>
             <h1 class="mb-4">{{ $store.state.vcard.balance }} €</h1>
             <h6 class="card-text"></h6>
           </div>
@@ -32,19 +28,23 @@
         class="col-md-4 stretch-card grid-margin"
         style="text-decoration: none"
       >
-        <div class="card bg-gradient-info card-img-holder text-white" >
-          
-
-                              <div class="card-group" >
-                              <div class="card" id="creditCard">
-                              <div class="logo"><img src="../../assets/img/Visa-Logo-PNG-Image.png" alt="Visa"></div>
-                              <div class="chip"><img src="../../assets/img/chip.png" alt="chip"></div>
-                              <div class="number">{{$store.state.user.id}}</div>
-                              <div class="name">{{$store.state.user.name}}</div>
-                              <div class="ring"></div>
-                              </div>
-                              </div>
-          
+        <div class="card bg-gradient-info card-img-holder text-white">
+          <div class="card-group">
+            <div class="card" id="creditCard">
+              <div class="logo">
+                <img
+                  src="../../assets/img/Visa-Logo-PNG-Image.png"
+                  alt="Visa"
+                />
+              </div>
+              <div class="chip">
+                <img src="../../assets/img/chip.png" alt="chip" />
+              </div>
+              <div class="number">{{ $store.state.user.id }}</div>
+              <div class="name">{{ $store.state.user.name }}</div>
+              <div class="ring"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -55,22 +55,54 @@
       >
         <div class="card bg-gradient-success card-img-holder text-white">
           <div class="card-body">
-           <h4 class="font-weight-normal mb-3">
-              Last Transactions
-            </h4>
+            <h4 class="font-weight-normal mb-3">Last Transactions</h4>
+
+            <table
+              class="
+                table table-sm table-borderless
+                text-white
+                d-flex
+                justify-content-left
+              "
+            >
+              <tbody>
+                <tr
+                  v-for="transaction in transactions"
+                  :key="transaction.id"
+                >
             
+                  <div style="color: #90ee90" v-if="transaction.type == 'C'">
+                    <td>
+                      <i
+                        :class="[
+                          transaction.type == 'C'
+                            ? 'bi bi-arrow-down-circle-fill'
+                            : 'bi bi-arrow-up-circle-fill',
+                        ]"
+                      ></i>
+                    </td>
+                    <td>
+                      <h3>{{ transaction.value }}€</h3>
+                    </td>
+                  </div>
 
-            <table class="table table-sm table-borderless text-white d-flex justify-content-left">
-            <tbody>
-                <tr v-for="transaction in $store.state.transactions" :key="transaction.id">
-                  <td> <i :class="[transaction.type=='C' ? 'bi bi-arrow-down-circle-fill' : 'bi bi-arrow-up-circle-fill']"></i></td>
-                  <td><h3>{{transaction.value}}€</h3></td>
+                  <div style="color: #f47174" v-if="transaction.type == 'D'">
+                    <td>
+                      <i
+                        :class="[
+                          transaction.type == 'C'
+                            ? 'bi bi-arrow-down-circle-fill'
+                            : 'bi bi-arrow-up-circle-fill',
+                        ]"
+                      ></i>
+                    </td>
+                    <td>
+                      <h3>{{ transaction.value }}€</h3>
+                    </td>
+                  </div>
                 </tr>
-            </tbody>
-        </table>
-
-
-
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -80,34 +112,25 @@
       >
         <div class="card bg-gradient-dark card-img-holder text-white">
           <div class="card-body">
-         
-            <h4 class="font-weight-normal mb-3">
-              CONTACTS HERE
-            </h4>
-    
-              
-
+            <h4 class="font-weight-normal mb-3">CONTACTS HERE</h4>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
-  
-  
-   <BalanceOverTime height="50"
-      v-if="date && value"
-      v-bind:labels="date"
-      v-bind:data="value"
-    />
 
-  
+  <BalanceOverTime
+    height="50"
+    v-if="date && value"
+    v-bind:labels="date"
+    v-bind:data="value"
+  />
 </template>
 <script>
-import { defineComponent } from 'vue'
-import BalanceOverTime from './BalanceOverTime.vue'
+import { defineComponent } from "vue"
+import BalanceOverTime from "./BalanceOverTime.vue"
 export default defineComponent({
-  name: 'VCardDashboard',
+  name: "VCardDashboard",
   components: {
     BalanceOverTime,
   },
@@ -115,12 +138,12 @@ export default defineComponent({
     return {
       date: [],
       value: [],
+      transactions: [],
     }
   },
 
-methods: {
-
-loadBalanceOverTime() {
+  methods: {
+    loadBalanceOverTime() {
       this.$axios
         .get("statistics/balanceovertime")
         .then((response) => {
@@ -136,18 +159,25 @@ loadBalanceOverTime() {
           console.log(error)
         })
     },
-
-},
-mounted() {
-      this.loadBalanceOverTime()
+     loadTransactionsDesc() {
+      this.$axios
+        .get("vcards/"+ this.$store.state.user.id + "/transactions?order=desc")
+        .then((response) => {
+          this.transactions = response.data.data
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
+  },
+  mounted() {
+    this.loadBalanceOverTime()
+    this.loadTransactionsDesc()
+  },
 })
-
 </script>
 
 <style>
- 
-
 .main-panel {
   vertical-align: top;
   -ms-transform: translateY(0%);
@@ -210,8 +240,6 @@ h6 {
   font-size: 1rem;
 }
 
-
-
 .card {
   min-width: 0;
   word-wrap: break-word;
@@ -273,7 +301,7 @@ h6 {
   font-family: ubuntu-medium, sans-serif;
 }
 
-h1{
+h1 {
   font-size: 5.5rem;
 }
 
@@ -296,12 +324,10 @@ h6 {
   margin-bottom: 2.5rem;
 }
 
-
 .stretch-card > .card {
   width: 100%;
   min-width: 100%;
 }
-
 
 .font-weight-normal {
   font-family: ubuntu-regular, sans-serif;
@@ -408,95 +434,70 @@ h6 {
   height: 100%;
 }
 
+.card-group {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
+.card {
+  position: relative;
+  height: 270px;
+  width: 495px;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(30px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
 
+.logo img,
+.chip img,
+.number,
+.name,
+.from,
+.to,
+.ring {
+  position: absolute;
+  /* All items inside card should have absolute position */
+}
 
+.logo img {
+  top: 35px;
+  right: 40px;
+  width: 80px;
+  height: auto;
+  opacity: 0.8;
+}
 
+.chip img {
+  top: 120px;
+  left: 40px;
+  width: 50px;
+  height: auto;
+  opacity: 0.8;
+}
 
+.number,
+.name {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+  font-size: 1.5rem;
+}
 
+.number {
+  left: 40px;
+  bottom: 65px;
+  font-family: "Nunito", sans-serif;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-    .card-group {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-    
-    .card {
-        position: relative;
-        height: 270px;
-        width: 495px;
-        border-radius: 25px;
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(30px);
-        border: 2px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 0 80px rgba(0, 0, 0, 0.2);
-        overflow: hidden;
-    }
-    
-    .logo img,
-    .chip img,
-    .number,
-    .name,
-    .from,
-    .to,
-    .ring {
-        position: absolute;
-        /* All items inside card should have absolute position */
-    }
-    
-    .logo img {
-        top: 35px;
-        right: 40px;
-        width: 80px;
-        height: auto;
-        opacity: 0.8;
-    }
-    
-    .chip img {
-        top: 120px;
-        left: 40px;
-        width: 50px;
-        height: auto;
-        opacity: 0.8;
-    }
-    
-    .number,
-    .name
-     {
-        color: rgba(255, 255, 255, 0.8);
-        font-weight: 800;
-        letter-spacing: 2px;
-        text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
-        font-size: 1.5rem
-    }
-    
-    .number {
-        left: 40px;
-        bottom: 65px;
-        font-family: "Nunito", sans-serif;
-    }
-    
-    .name {
-        font-size: 1rem;
-        left: 40px;
-        bottom: 35px;
-    }
-    
-
-
-
-
+.name {
+  font-size: 1rem;
+  left: 40px;
+  bottom: 35px;
+}
 </style>

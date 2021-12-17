@@ -11,10 +11,9 @@
             <div class="card bg-gradient-danger card-img-holder text-white">
                 <div class="card-body">
                     <img src="../../assets/img/circle.svg" class="card-img-absolute" alt="circle-image" />
-                    <h4 class="font-weight-normal mb-3"><i class="bi bi-tag float-right"></i>
+                    <h4 class="font-weight-normal mb-3"><i class="bi bi-tag float-right corner-icons"></i>
                     </h4>
                     <h2 class="mb-5">Default Categories</h2>
-                    <h6 class="card-text"> </h6>
                 </div>
             </div>
         </router-link>
@@ -22,10 +21,9 @@
             <div class="card bg-gradient-info card-img-holder text-white">
                 <div class="card-body">
                     <img src="../../assets/img/circle.svg" class="card-img-absolute" alt="circle-image" />
-                    <h4 class="font-weight-normal mb-3"> <i class="bi bi-credit-card float-right"></i>
+                    <h4 class="font-weight-normal mb-3"> <i class="bi bi-credit-card float-right corner-icons"></i>
                     </h4>
                     <h2 class="mb-5">Vcards</h2>
-                    <h6 class="card-text"> </h6>
                 </div>
             </div>
         </router-link>
@@ -35,10 +33,9 @@
             <div class="card bg-gradient-success card-img-holder text-white">
                 <div class="card-body">
                     <img src="../../assets/img/circle.svg" class="card-img-absolute" alt="circle-image" />
-                    <h4 class="font-weight-normal mb-3"> <i class="bi bi-list-check float-right"></i>
+                    <h4 class="font-weight-normal mb-3"> <i class="bi bi-list-check float-right corner-icons"></i>
                     </h4>
                     <h2 class="mb-5">Administrators</h2>
-                    <h6 class="card-text"> </h6>
                 </div>
             </div>
         </router-link>
@@ -46,10 +43,9 @@
             <div class="card bg-gradient-dark card-img-holder text-white">
                 <div class="card-body">
                     <img src="../../assets/img/circle.svg" class="card-img-absolute" alt="circle-image" />
-                    <h4 class="font-weight-normal mb-3"><i class="bi bi-bar-chart-line float-right"></i>
+                    <h4 class="font-weight-normal mb-3"><i class="bi bi-bar-chart-line float-right corner-icons"></i>
                     </h4>
                     <h2 class="mb-5">Statistics</h2>
-                    <h6 class="card-text"> </h6>
                 </div>
             </div>
         </router-link>
@@ -68,6 +64,10 @@ export default {
   -ms-transform: translateY(50%);
   transform: translateY(50%);
         
+}
+
+.corner-icons{
+    font-size: 50px;
 }
 
 .row{
@@ -161,7 +161,7 @@ h6 {
 
 .mb-5 {
     margin-bottom: 3rem!important;
-    font-size: 3rem;
+    font-size: 2.5rem;
 }
 
 .font-weight-normal {

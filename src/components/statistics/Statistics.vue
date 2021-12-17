@@ -1,6 +1,6 @@
 <template>
   <h3 class="mt-5 mb-3">Statistics</h3>
-  <br />
+  <hr>
   <section
     id="counter"
     class="sec-padding"

@@ -68,6 +68,7 @@ export default {
         .catch((error) => {
           if (error.response.status == 422) {
             this.errors = error.response.data.errors
+            console.log(error)
             this.$toast.error('User #' + this.id + ' was not updated due to validation errors!')
           } else {
             this.$toast.error('User #' + this.id + ' was not updated due to unknown server error!')
