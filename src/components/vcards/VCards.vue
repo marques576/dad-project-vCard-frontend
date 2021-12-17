@@ -13,6 +13,11 @@
     :vcards="vCards"
     @toggleBlock="toggleBlockVCard"
     @edit="editVCard"
+<<<<<<< HEAD
+=======
+    @delete="deleteVCard"
+    @createTransaction="createTransaction"
+>>>>>>> samuel-transactions
   ></VCardsTable>
   <template class="paginator">
     <pagination
@@ -101,6 +106,14 @@ export default {
         name: "VCard",
         params: {
           id: vcard.phone_number,
+        },
+      })
+    },
+    createTransaction(vcard){
+      this.$router.push({
+        name: "Create Credit Transaction",
+        params: {
+          vcard: vcard.phone_number,
         },
       })
     },

@@ -1,8 +1,8 @@
 <template>
   <nav
     class="
-      navbar navbar-expand-md navbar-dark
-      bg-dark
+      navbar navbar-expand-md navbar-light
+      bg-white
       sticky-top
       flex-md-nowrap
       p-0
@@ -144,6 +144,7 @@
         id="sidebarMenu"
         class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
         v-if="user || windowWidth < 768"
+        style="height: 93%;"
       >
         <div class="position-sticky pt-3">
           <ul class="nav flex-column" v-show="user">
@@ -258,6 +259,85 @@
             </li>
           </ul>
 
+          <h6
+            class="
+              sidebar-heading
+              justify-content-between
+              align-items-center
+              px-3
+              mt-4
+              mb-1
+              text-muted
+              d-flex
+            "
+            v-if="!isLoading && userType == 'V'"
+          >
+            <span>My Contacts</span>
+            <router-link
+              class="link-secondary"
+              aria-label="Add a new contact"
+              :to="{ name: 'New Contact' }"
+              ><i class="bi bi-xs bi-plus-circle"></i>
+            </router-link>
+          </h6>
+          <ul class="nav flex-column mb-2" v-if="!isLoading && userType == 'V'">
+            <li
+              class="nav-item contact"
+              v-for="contact in this.$store.getters.contacts"
+              :key="contact.contact"
+              style="margin-top: 10px"
+              :class="{
+                active:
+                  $route.name === 'Contact' && $route.params.id == contact.id,
+              }"
+            >
+              <div class="d-flex">
+                <router-link
+                  class="
+                    nav-link
+                    w-100
+                    me-3
+                    d-flex
+                    align-items-center
+                    justify-content-center
+                    contact-title
+                  "
+                  :to="{ name: 'Contact', params: { id: contact.id } }"
+                >
+                  {{ contact.name }}
+                </router-link>
+                <router-link
+                  v-if="contact.contact != user.username"
+                  class="d-flex align-items-center justify-content-center"
+                  :to="{
+                    name: 'Send Money',
+                    params: {
+                      payment_type: 'VCARD',
+                      payment_reference: contact.contact,
+                    },
+                  }"
+                >
+                  <i class="bi bi-send"></i>
+                </router-link>
+                <div
+                  v-if="contact.contact != user.username"
+                  class="
+                    contacts-last-icon
+                    d-flex
+                    justify-content-center
+                    align-items-center
+                  "
+                >
+                  <i
+                    class="bi bi-chat-dots"
+                    style="cursor: pointer !important"
+                    @click="chatWithContact(contact.contact)"
+                  ></i>
+                </div>
+              </div>
+            </li>
+          </ul>
+
           <div class="d-block d-md-none">
             <h6
               class="
@@ -350,9 +430,144 @@
         </div>
       </nav>
 
-      <main v-if="!isLoading" :class="{}" class="col-md-9 ms-sm-auto col-lg-10 px-md-4" v-bind:style= "[!user ? {'margin-right': 'auto'} : {}]">
+      <main
+        v-if="!isLoading"
+        :class="{}"
+        class="col-md-9 ms-sm-auto col-lg-10 px-md-4"
+        v-bind:style="[!user ? { 'margin-right': 'auto' } : {}]"
+      >
         <router-view></router-view>
       </main>
+    </div>
+  </div>
+  <button
+    class="open-button"
+    v-if="!isLoading && user && user.type == 'V' && !chatOpened"
+    @click="openChat"
+  >
+    <i class="bi bi-chat" style="margin: 0"></i>
+    <span
+      class="totalUnreadMessages"
+      v-show="this.$store.state.chat.totalUnreadMessages > 0"
+      >{{ this.$store.state.chat.totalUnreadMessages }}</span
+    >
+  </button>
+  <div
+    class="chat-popup"
+    v-if="!isLoading && user && user.type == 'V' && chatOpened"
+    style="background-color: #fff7fa"
+  >
+    <div class="d-flex justify-content-between">
+      <h2 style="margin: 7px">Live Chat</h2>
+      <i
+        @click="closeChat"
+        style="color: red; cursor: pointer !important"
+        class="bi bi-x-lg"
+      ></i>
+    </div>
+    <div class="d-flex justify-content-between">
+      <ul
+        class="nav nav-tabs"
+        :style="[activeChat ? { 'overflow-y': 'auto', height: '40px' } : {}]"
+      >
+        <li
+          class="nav-item"
+          style="cursor: pointer"
+          v-for="(chat, correspondent) in this.$store.state.chat.chats"
+          :key="correspondent"
+          v-show="chat.opened"
+        >
+          <a
+            @click="this.$store.state.chat.activeChat = correspondent"
+            class="nav-link"
+            :class="{
+              active: correspondent == activeChat,
+            }"
+            aria-current="page"
+            >{{ chat.contactName ? chat.contactName : correspondent }}
+            <span
+              v-if="chat.unread > 0"
+              style="
+                width: 20px;
+                height: 20px;
+                display: inline-block;
+                color: white;
+                text-align: center;
+                border-radius: 50%;
+                border-width: 1px;
+                background-color: red;
+                margin-left: 5px;
+              "
+              >{{ chat.unread }}</span
+            ></a
+          >
+        </li>
+      </ul>
+      <i v-if="activeChat" class="bi bi-x-circle" @click="this.$store.commit('closeChat')" style="cursor: pointer !important;"></i>
+    </div>
+    <div class="chat-messages">
+      <ul
+        v-if="activeChat"
+        style="padding: 0; margin: 0; height: 100%; overflow-y: auto"
+        class="d-flex flex-column-reverse"
+      >
+        <li
+          class="d-flex flex-column-reverse"
+          v-for="(message, index) in this.$store.state.chat.chats[activeChat]
+            .messages"
+          :key="message"
+          style="margin-bottom: 5px"
+        >
+          <div :class="{ 'align-self-end': message.from == user.username }">
+            <span
+              v-if="
+                this.$store.state.chat.chats[activeChat].messages[index + 1]
+                  ? this.$store.state.chat.chats[activeChat].messages[index + 1]
+                      .from != message.from
+                  : true
+              "
+              style="display: inherit; font-size: 12px"
+              :class="{ 'text-end': message.from == user.username }"
+              >{{
+                message.from == user.username
+                  ? "Me"
+                  : message.contactName
+                  ? message.contactName
+                  : message.from
+              }}</span
+            >
+            <span
+              class="message-text"
+              :class="{ 'bg-info': message.from == user.username }"
+              >{{ message.text }}</span
+            >
+          </div>
+        </li>
+      </ul>
+      <div v-else style="text-align: center">
+        <h4>No active chats</h4>
+      </div>
+    </div>
+    <div
+      :style="[
+        activeChat
+          ? { height: '40px' }
+          : { height: '40px', 'margin-top': '58px' },
+      ]"
+      class="d-flex justify-content-between align-items-center"
+    >
+      <input
+        type="text"
+        v-model="chatMessage"
+        class="chat-message-input"
+        style="padding: 15px"
+        @keyup.enter="sendMessage(activeChat)"
+      />
+      <i
+        @click="sendMessage(activeChat)"
+        class="bi bi-send"
+        style="margin-right: 20px; color: green; cursor: pointer !important"
+      ></i>
     </div>
   </div>
 </template>
@@ -364,6 +579,8 @@ export default {
     return {
       isLoading: true,
       windowWidth: window.innerWidth,
+      chatOpened: false,
+      chatMessage: "",
     }
   },
   computed: {
@@ -390,6 +607,47 @@ export default {
         ? this.$serverUrl + "/storage/fotos/" + urlPhoto
         : "img/avatar-none.png"
     },
+    activeChat() {
+      return this.$store.state.chat.activeChat
+    },
+    activeChatUnreadMessages() {
+      if (this.activeChat)
+        return this.$store.state.chat.chats[this.activeChat].unread
+      return 0
+    },
+  },
+  watch: {
+    activeChatUnreadMessages() {
+      if (this.chatOpened) {
+        if (this.activeChatUnreadMessages > 0) {
+          this.$store.state.chat.totalUnreadMessages -=
+            this.$store.state.chat.chats[this.activeChat].unread
+          this.$store.state.chat.chats[this.activeChat].unread = 0
+        }
+      }
+    },
+    activeChat(newVal, oldVal) {
+      if ( this.activeChat &&
+        this.chatOpened &&
+        newVal != oldVal &&
+        this.$store.state.chat.chats[this.activeChat].unread > 0
+      ) {
+        this.$store.state.chat.totalUnreadMessages -=
+          this.$store.state.chat.chats[this.activeChat].unread
+        this.$store.state.chat.chats[this.activeChat].unread = 0
+      }
+    },
+    chatOpened(newVal) {
+      if (
+        this.activeChat &&
+        newVal &&
+        this.$store.state.chat.chats[this.activeChat].unread > 0
+      ) {
+        this.$store.state.chat.totalUnreadMessages -=
+          this.$store.state.chat.chats[this.activeChat].unread
+        this.$store.state.chat.chats[this.activeChat].unread = 0
+      }
+    },
   },
   methods: {
     refresh() {
@@ -411,11 +669,41 @@ export default {
     onResize() {
       this.windowWidth = window.innerWidth
     },
+    openChat() {
+      this.chatOpened = true
+    },
+    closeChat() {
+      this.chatOpened = false
+    },
+    sendMessage(receiver) {
+      if (this.activeChat && this.chatMessage.length > 0) {
+        let message = {
+          from: this.user.username,
+          to: receiver,
+          text: this.chatMessage,
+        }
+        this.$socket.emit("newMessage", message)
+        this.$store.commit("insertMessage", { message: message, fromMe: true })
+        this.chatMessage = ""
+      }
+    },
+    chatWithContact(contact) {
+      if (!this.$store.state.chat.chats[contact]) {
+        this.$store.commit("insertChat", contact)
+      }
+      this.$store.state.chat.activeChat = contact
+      if (!this.$store.state.chat.chats[contact].opened) {
+        this.$store.state.chat.chats[contact].opened = true
+      }
+      if (!this.chatOpened) {
+        this.chatOpened = true
+      }
+    },
   },
   sockets: {
     newTransaction(transaction) {
       this.$toast.success(
-        "You received " + transaction.value + "€ from " + transaction.vcard
+        "You received " + transaction.value + "€ from " + (transaction.vcard == this.user.username ? "an admin" : transaction.vcard)
       )
     },
   },
@@ -441,6 +729,95 @@ export default {
 <style lang="css">
 @import "./assets/css/dashboard.css";
 
+.bi.bi-chat::before {
+  vertical-align: 0;
+}
+
+.totalUnreadMessages {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  background-color: red;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.message-text {
+  border-radius: 15px;
+  background-color: lightblue;
+  display: table;
+  padding: 10px;
+  max-width: 200px;
+  word-break: break-all;
+}
+
+.open-button {
+  background-color: rgb(0, 120, 150);
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+.chat-popup {
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  background-color: white;
+  z-index: 9;
+  width: 400px;
+  height: 500px;
+}
+
+.chat-messages {
+  height: 320px;
+  width: calc(100% - 40px);
+  margin: 20px;
+}
+
+.chat-message-input {
+  width: 85%;
+  margin-left: 5px;
+  height: 80%;
+  border-radius: 15px;
+  border-width: 0;
+  background-color: rgb(224, 224, 224);
+}
+
+.contact {
+  border-radius: 60px;
+  width: 90%;
+  align-self: center;
+  background-color: #ebebeb;
+}
+.contact.active {
+  background-color: #d8d8d8;
+}
+.contact-title {
+  margin: 0 !important;
+}
+.contacts-last-icon {
+  margin-right: 10px;
+}
+.navbar-brand {
+  box-shadow: none;
+  background-color: transparent;
+}
+.sidebar {
+  padding: 0;
+  top: inherit;
+  bottom: inherit;
+  height: 100%;
+}
 .avatar-img {
   margin-right: 0.6rem;
   width: 2.2rem;

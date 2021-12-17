@@ -9,6 +9,8 @@ export default createStore({
     transactions: [],
     paymentTypes: [],
     categories: [],
+    contacts: [],
+    chat: { activeChat: "", totalUnreadMessages: 0, chats: {} }
   },
   mutations: {
     resetUser(state) {
@@ -42,8 +44,72 @@ export default createStore({
       state.transactions = transations
     },
     resetTransactions(state) {
-      state.transations = null
+      state.transactions = null
     },
+    setContacts(state, contacts) {
+      state.contacts = contacts
+    },
+    resetContacts(state) {
+      state.contacts = null
+    },
+    insertContact(state, newContact) {
+      state.contacts.push(newContact)
+    },
+    updateContact(state, updateContact) {
+      let idx = state.contacts.findIndex((t) => t.id === updateContact.id)
+      if (idx >= 0) {
+        state.contacts[idx] = updateContact
+        if (state.chat.chats[updateContact.contact]) {
+          state.chat.chats[updateContact.contact].contactName = updateContact.name
+          state.chat.chats[updateContact.contact].messages.forEach(message => {
+            message.contactName = updateContact.name
+          });
+        }
+      }
+    },
+    deleteContact(state, deleteContact) {
+      let idx = state.contacts.findIndex((t) => t.id === deleteContact.id)
+      if (idx >= 0) {
+        state.contacts.splice(idx, 1)
+        if (state.chat.chats[deleteContact.contact]) {
+          state.chat.chats[deleteContact.contact].contactName = null
+          state.chat.chats[deleteContact.contact].messages.forEach(message => {
+            message.contactName = null
+          });
+        }
+      }
+    },
+    insertChat(state, receiver) {
+      if (!state.chat.chats[receiver]) {
+        let contact = state.contacts.find((t) => t.contact == receiver)
+        state.chat.chats[receiver] = { unread: 0, opened: true, contactName: contact ? contact.name : null, messages: [] }
+        if (state.chat.activeChat === '') {
+          state.chat.activeChat = receiver
+        }
+      }
+    },
+    insertMessage(state, { message, fromMe }) {
+      let receiver = fromMe ? message.to : message.from
+      if (!state.chat.chats[receiver]) {
+        this.commit("insertChat", receiver)
+      }
+      message.contactName = state.chat.chats[receiver].contactName
+      state.chat.chats[receiver].messages.unshift(message)
+      if (!fromMe) {
+        state.chat.chats[receiver].unread += 1
+        state.chat.totalUnreadMessages += 1
+      }
+    },
+    closeChat(state) {
+      state.chat.chats[state.chat.activeChat].opened = false
+      let activeChat = ""
+      Object.keys(state.chat.chats).forEach(key => {
+        if (key != state.chat.activeChat && state.chat.chats[key].opened) {
+          activeChat = key
+        }
+      })
+      state.chat.activeChat = activeChat
+    }
   },
   getters: {
     paymentTypes: (state) => {
@@ -51,6 +117,9 @@ export default createStore({
     },
     categories: (state) => {
       return state.categories
+    },
+    contacts: (state) => {
+      return state.contacts
     },
   },
   actions: {
@@ -108,18 +177,6 @@ export default createStore({
         throw error
       }
     },
-    async loadTransactions(context) {
-      try {
-        let response = await axios.get(
-          "vcards/" + context.state.user.username + "/transactions"
-        )
-        context.commit("setTransactions", response.data.data)
-        return response.data.data
-      } catch (error) {
-        context.commit("resetTransactions", null)
-        throw error
-      }
-    },
     async loadCategories(context) {
       try {
         let response = await axios.get(
@@ -128,7 +185,19 @@ export default createStore({
         context.commit("setCategories", response.data.data)
         return response.data.data
       } catch (error) {
-        context.commit("resetCategories", null)
+        context.commit("resetCategories")
+        throw error
+      }
+    },
+    async loadContacts(context) {
+      try {
+        let response = await axios.get(
+          "vcards/" + context.state.user.username + "/contacts"
+        )
+        context.commit("setContacts", response.data.data)
+        return response.data.data
+      } catch (error) {
+        context.commit("resetContacts")
         throw error
       }
     },
@@ -147,6 +216,34 @@ export default createStore({
       this.$toast.error("VCard Account Blocked")
       this.$router.push({ name: "Home" })
     },
+    async insertContact(context, contact) {
+      let response = await axios.post("contacts", contact)
+
+      if (response.status == 201) {
+        context.commit('insertContact', response.data.data)
+      }
+
+      return response.data.data
+    },
+    async updateContact(context, contact) {
+      let response = await axios.put("contacts/" + contact.id, contact)
+
+      if (response.status == 200)
+        context.commit('updateContact', response.data.data)
+
+      return response.data.data
+    },
+    async deleteContact(context, contact) {
+      let response = await axios.delete("contacts/" + contact.id)
+
+      if (response.status == 200)
+        context.commit('deleteContact', response.data.data)
+
+      return response.data.data
+    },
+    async SOCKET_newMessage(context, message) {
+      context.commit('insertMessage', { message: message, fromMe: false })
+    },
     async refresh(context) {
       let userPromise = context.dispatch("loadLoggedInUser")
       let paymentTypesPromise = context.dispatch("loadPaymentTypes")
@@ -158,10 +255,12 @@ export default createStore({
         let vcardPromise = context.dispatch("loadVcard")
         let categoriesPromise = context.dispatch("loadCategories")
         let transactionsPromise = context.dispatch("loadTransactions")
+        let contactsPromise = context.dispatch("loadContacts")
 
         await categoriesPromise
         await vcardPromise
         await transactionsPromise
+        await contactsPromise
       }
     },
   },

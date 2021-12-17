@@ -34,6 +34,9 @@
           v-if="showEditButton || showDeleteButton || showBlocked"
         >
           <div class="d-flex justify-content-end">
+            <button class="btn btn-xs btn-light" @click="createTransaction(vcard)">
+              <i class="bi bi-xs bi-send"></i>
+            </button>
             <button
               class="btn btn-xs btn-light"
               @click="toggleBlockClick(vcard)"
@@ -103,7 +106,7 @@ export default {
       default: true,
     },
   },
-  emits: ["edit", "toggleBlock"],
+  emits: ["edit", "delete", "toggleBlock", "createTransaction"],
   methods: {
     isBlocked(vcard) {
       if (!this.showBlocked) return ""
@@ -118,6 +121,9 @@ export default {
     editClick(vcard) {
       this.$emit("edit", vcard)
     },
+    createTransaction(vcard) {
+      this.$emit("createTransaction", vcard)
+    }
   },
 }
 </script>
