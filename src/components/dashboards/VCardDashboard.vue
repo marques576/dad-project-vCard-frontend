@@ -55,6 +55,11 @@
       >
         <div class="card bg-gradient-success card-img-holder text-white">
           <div class="card-body">
+            <img
+              src="../../assets/img/circle.svg"
+              class="card-img-absolute"
+              alt="circle-image"
+            />
             <h4 class="font-weight-normal mb-3">Last Transactions</h4>
 
             <table style="padding-left: 15%;"
@@ -112,6 +117,11 @@
       >
         <div class="card bg-gradient-dark card-img-holder text-white">
           <div class="card-body">
+            <img
+              src="../../assets/img/circle.svg"
+              class="card-img-absolute"
+              alt="circle-image"
+            />
             <h4 class="font-weight-normal mb-3">Contacts</h4>
             <table
               class="
