@@ -7,7 +7,7 @@
   <hr />
  <div class="main-panel">
     <div class="row">
-        <router-link class="col-md-4 stretch-card grid-margin" to="defaultCategories" tag="div" style="text-decoration: none;" >
+        <router-link class="col-md-6 stretch-card grid-margin" to="defaultCategories" tag="div" style="text-decoration: none;" >
             <div class="card bg-gradient-danger card-img-holder text-white">
                 <div class="card-body">
                     <img src="../../assets/img/circle.svg" class="card-img-absolute" alt="circle-image" />
@@ -17,7 +17,7 @@
                 </div>
             </div>
         </router-link>
-        <router-link class="col-md-4 stretch-card grid-margin" to="vcards" tag="div" style="text-decoration: none;" >
+        <router-link class="col-md-6 stretch-card grid-margin" to="vcards" tag="div" style="text-decoration: none;" >
             <div class="card bg-gradient-info card-img-holder text-white">
                 <div class="card-body">
                     <img src="../../assets/img/circle.svg" class="card-img-absolute" alt="circle-image" />
@@ -29,7 +29,7 @@
         </router-link>
     </div>
     <div class="row">
-          <router-link class="col-md-4 stretch-card grid-margin" to="users" tag="div" style="text-decoration: none;" >
+          <router-link class="col-md-6 stretch-card grid-margin" to="users" tag="div" style="text-decoration: none;" >
             <div class="card bg-gradient-success card-img-holder text-white">
                 <div class="card-body">
                     <img src="../../assets/img/circle.svg" class="card-img-absolute" alt="circle-image" />
@@ -39,7 +39,7 @@
                 </div>
             </div>
         </router-link>
-        <router-link class="col-md-4 stretch-card grid-margin" to="statistics" tag="div" style="text-decoration: none;" >
+        <router-link class="col-md-6 stretch-card grid-margin" to="statistics" tag="div" style="text-decoration: none;" >
             <div class="card bg-gradient-dark card-img-holder text-white">
                 <div class="card-body">
                     <img src="../../assets/img/circle.svg" class="card-img-absolute" alt="circle-image" />
@@ -126,12 +126,12 @@ h6 {
     font-size: 1rem
 }
 
-.col-md-4 {
+/* .col-md-6 {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 33.33333%;
     flex: 0 0 33.33333%;
     max-width: 33.33333%
-}
+} */
 
 .card {
     min-width: 0;
