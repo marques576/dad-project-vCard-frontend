@@ -112,7 +112,26 @@
       >
         <div class="card bg-gradient-dark card-img-holder text-white">
           <div class="card-body">
-            <h4 class="font-weight-normal mb-3">CONTACTS HERE</h4>
+            <h4 class="font-weight-normal mb-3">Contacts</h4>
+            <table
+              class="
+                table table-sm table-borderless
+                text-white
+                d-flex
+                justify-content-left
+              "
+            >
+              <tbody>
+                <tr
+                  v-for="contact in this.$store.getters.contacts"
+                  :key="contact.contact"
+                >
+                    <td>
+                      <h3>{{contact.name}}</h3>
+                    </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

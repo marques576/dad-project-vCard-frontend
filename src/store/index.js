@@ -54,6 +54,12 @@ export default createStore({
     },
     insertContact(state, newContact) {
       state.contacts.push(newContact)
+      if (state.chat.chats[newContact.contact]) {
+        state.chat.chats[newContact.contact].contactName = newContact.name
+        state.chat.chats[newContact.contact].messages.forEach(message => {
+          message.contactName = newContact.name
+        });
+      }
     },
     updateContact(state, updateContact) {
       let idx = state.contacts.findIndex((t) => t.id === updateContact.id)

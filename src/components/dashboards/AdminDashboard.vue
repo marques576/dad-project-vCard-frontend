@@ -161,7 +161,7 @@ h6 {
 
 .mb-5 {
     margin-bottom: 3rem!important;
-    font-size: 2.5rem;
+    font-size: 2.3rem;
 }
 
 .font-weight-normal {

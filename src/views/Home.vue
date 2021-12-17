@@ -19,5 +19,10 @@
 export default {
   name: "Home",
   components: {},
+  beforeMount() {
+    if (this.$store.state.user){
+      this.$router.push({name: 'Dashboard'})
+    }
+  },
 }
 </script>

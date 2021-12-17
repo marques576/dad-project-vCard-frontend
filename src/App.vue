@@ -10,7 +10,11 @@
     "
   >
     <div class="container-fluid">
-      <router-link class="navbar-brand col-md-3 col-lg-2 me-0 px-3" tag="a" to="Dashboard">
+      <router-link
+        class="navbar-brand col-md-3 col-lg-2 me-0 px-3"
+        tag="a"
+        to="Dashboard"
+      >
         <img
           src="./assets/logo.png"
           alt=""
@@ -144,7 +148,7 @@
         id="sidebarMenu"
         class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
         v-if="user || windowWidth < 768"
-        style="height: 93%;"
+        style="height: 93%"
       >
         <div class="position-sticky pt-3">
           <ul class="nav flex-column" v-show="user">
@@ -168,12 +172,16 @@
                 Transactions
               </router-link>
             </li>
-            <li class="nav-item 
+            <li
+              class="
+                nav-item
                 d-flex
                 justify-content-between
                 align-items-center
-                pe-3"
-                 v-if="userType == 'A'">
+                pe-3
+              "
+              v-if="userType == 'A'"
+            >
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'DefaultCategories' }"
@@ -182,7 +190,7 @@
                 <i class="bi bi-tag"></i>
                 Default Categories
               </router-link>
-                <router-link
+              <router-link
                 class="link-secondary"
                 :to="{ name: 'NewDefaultCategory' }"
                 ><i class="bi bi-xs bi-plus-circle"></i>
@@ -397,6 +405,18 @@
                 >
                   <li>
                     <router-link
+                      v-if="userType == 'V'"
+                      class="dropdown-item"
+                      :class="{
+                        active:
+                          $route.name == 'VCard' &&
+                          $route.params.phone_number == userId,
+                      }"
+                      :to="{ name: 'VCard', params: { id: userId } }"
+                      ><i class="bi bi-person-square"></i>Profile
+                    </router-link>
+                    <router-link
+                      v-if="userType == 'A'"
                       class="dropdown-item"
                       :class="{
                         active:
@@ -404,6 +424,15 @@
                       }"
                       :to="{ name: 'User', params: { id: userId } }"
                       ><i class="bi bi-person-square"></i>Profile
+                    </router-link>
+                  </li>
+                  <li v-if="userType == 'V'">
+                    <router-link
+                      class="dropdown-item"
+                      :class="{ active: $route.name === 'ChangeCode' }"
+                      :to="{ name: 'ChangeCode' }"
+                    >
+                      <i class="bi bi-key-fill"></i>Change Security Code
                     </router-link>
                   </li>
                   <li>
@@ -503,7 +532,12 @@
           >
         </li>
       </ul>
-      <i v-if="activeChat" class="bi bi-x-circle" @click="this.$store.commit('closeChat')" style="cursor: pointer !important;"></i>
+      <i
+        v-if="activeChat"
+        class="bi bi-x-circle"
+        @click="this.$store.commit('closeChat')"
+        style="cursor: pointer !important"
+      ></i>
     </div>
     <div class="chat-messages">
       <ul
@@ -627,7 +661,8 @@ export default {
       }
     },
     activeChat(newVal, oldVal) {
-      if ( this.activeChat &&
+      if (
+        this.activeChat &&
         this.chatOpened &&
         newVal != oldVal &&
         this.$store.state.chat.chats[this.activeChat].unread > 0
@@ -703,7 +738,12 @@ export default {
   sockets: {
     newTransaction(transaction) {
       this.$toast.success(
-        "You received " + transaction.value + "€ from " + (transaction.vcard == this.user.username ? "an admin" : transaction.vcard)
+        "You received " +
+          transaction.value +
+          "€ from " +
+          (transaction.vcard == this.user.username
+            ? "an admin"
+            : transaction.vcard)
       )
     },
   },
