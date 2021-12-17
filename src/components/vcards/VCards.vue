@@ -13,11 +13,7 @@
     :vcards="vCards"
     @toggleBlock="toggleBlockVCard"
     @edit="editVCard"
-<<<<<<< HEAD
-=======
-    @delete="deleteVCard"
     @createTransaction="createTransaction"
->>>>>>> samuel-transactions
   ></VCardsTable>
   <template class="paginator">
     <pagination
