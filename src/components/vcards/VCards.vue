@@ -8,30 +8,7 @@
     </div>
   </div>
   <hr />
-  <div class="mb-3 d-flex justify-content-between flex-wrap">
-    <!-- <div class="mx-2 mt-2 flex-grow-1 filter-div">
-      <label for="selectStatus" class="form-label">Filter by type:</label>
-      <select
-        class="form-select"
-        phone_number="selectType"
-        v-model="filterByType"
-      >
-        <option :value="null"></option>
-        <option value="D">Deposits</option>
-        <option value="C">Credits</option>
-      </select>
-    </div>
-    <div class="mx-2 mt-2 flex-grow-1 filter-div">
-      <label for="selectCategory" class="form-label">Filter by category:</label>
-      <select
-        class="form-select"
-        phone_number="selectOwner"
-        v-model="filterByCategory"
-      >
-        <option :value="null"></option>
-      </select>
-    </div> -->
-  </div>
+  <div class="mb-3 d-flex justify-content-between flex-wrap"></div>
   <VCardsTable
     :vcards="vCards"
     @toggleBlock="toggleBlockVCard"
@@ -58,8 +35,6 @@ export default {
   },
   data() {
     return {
-      // filterByType: null,
-      // filterByCategory: null,
       vCards: [],
       page: 1,
       paginationData: null,
@@ -92,6 +67,9 @@ export default {
           blocked: vcard.blocked ? 0 : 1,
         })
         .then((response) => {
+          if (vcard.blocked == 0) {
+            this.$socket.emit("userBlocked", vcard.phone_number)
+          }
           let receivedVCard = response.data.data
           let phone_numberIndex = this.vCards.findIndex(
             (t) => t.phone_number == receivedVCard.phone_number

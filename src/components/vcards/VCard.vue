@@ -108,6 +108,9 @@ export default {
                 response.data.data.phone_number +
                 " was updated successfully."
             )
+            if (this.vcard.blocked == 1) {
+              this.$socket.emit("userBlocked", this.vcard.phone_number)
+            }
             this.$store.dispatch("loadLoggedInUser")
             this.$router.back()
           })
