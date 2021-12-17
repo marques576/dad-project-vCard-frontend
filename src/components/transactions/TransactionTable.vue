@@ -3,13 +3,13 @@
     <thead>
       <tr>
         <th v-if="showId">#</th>
-        <th v-if="showDateTime">Date</th>
+        <th v-if="showDateTime" style="cursor: pointer;" @click="changeOrderDate">Date <i v-show="orderBy == 'date'" class="bi" :class="{'bi-caret-down-fill': order == 'desc', 'bi-caret-up-fill': order == 'asc'}"></i></th>
         <th v-if="showType">Type</th>
         <th v-if="showOldBalance">Old Balance</th>
         <th v-if="showNewBalance">New Balance</th>
         <th v-if="showPaymentType">Payment Type</th>
         <th v-if="showPaymentReference">Payment Reference</th>
-        <th v-if="showValue">Value</th>
+        <th v-if="showValue" style="cursor: pointer;" @click="changeOrderValue">Value <i v-show="orderBy == 'value'" class="bi" :class="{'bi-caret-down-fill': order == 'desc', 'bi-caret-up-fill': order == 'asc'}"></i></th>
         <th v-if="showEditButton || showDeleteButton"></th>
       </tr>
     </thead>
@@ -88,6 +88,12 @@ export default {
   components: {
     TransactionEdit,
   },
+  data() {
+    return {
+      orderBy: 'date',
+      order: 'desc'
+    }
+  },
   props: {
     transactions: {
       type: Array,
@@ -142,8 +148,26 @@ export default {
       default: false,
     },
   },
-  emits: ["updateDescription", "updateCategory", "delete"],
+  emits: ["updateDescription", "updateCategory", "delete", "changeOrder"],
   methods: {
+    changeOrderValue(){
+      if (this.orderBy == 'value'){
+        this.order = this.order == 'desc' ? 'asc' : 'desc'
+      } else {
+        this.orderBy = 'value'
+        this.order = 'desc'
+      }
+      this.changeOrder(this.order, this.orderBy)
+    },
+    changeOrderDate(){
+      if (this.orderBy == 'date'){
+        this.order = this.order == 'desc' ? 'asc' : 'desc'
+      } else {
+        this.orderBy = 'date'
+        this.order = 'desc'
+      }
+      this.changeOrder(this.order, this.orderBy)
+    },
     editClick(project) {
       this.$emit("edit", project)
     },
@@ -156,6 +180,9 @@ export default {
     updateCategory(id, category_id) {
       this.$emit("updateCategory", id, category_id)
     },
+    changeOrder(order, orderBy){
+      this.$emit("changeOrder", order, orderBy)
+    }
   },
 }
 </script>

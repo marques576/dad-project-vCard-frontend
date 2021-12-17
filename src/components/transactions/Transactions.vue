@@ -11,16 +11,16 @@
   <div class="mb-3 d-flex justify-content-between flex-wrap">
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectStatus" class="form-label">Filter by type:</label>
-      <select @change="loadTransactions(); page=1;" class="form-select" id="selectType" v-model="filterByType">
-        <option :value="null"></option>
+      <select @change="refresh" class="form-select" id="selectType" v-model="filterByType">
+        <option :value="null">All</option>
         <option value="D">Deposits</option>
         <option value="C">Credits</option>
       </select>
     </div>
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectCategory" class="form-label">Filter by category:</label>
-      <select @change="loadTransactions(); page=1;" class="form-select" id="selectOwner" v-model="filterByCategory">
-        <option :value="null"></option>
+      <select @change="refresh" class="form-select" id="selectOwner" v-model="filterByCategory">
+        <option :value="null">All</option>
         <option
           v-for="category in this.$store.getters.categories"
           :key="category.id"
@@ -31,12 +31,23 @@
       </select>
     </div>
   </div>
+  <div class="mb-3 d-flex justify-content-around">
+    <div class="mt-2 mx-2 flex-grow-1">
+      <label>From: </label>
+      <Datepicker lang="pt" @cleared="refresh" v-model="dateFrom" :maxDate="new Date()" /> 
+    </div>
+    <div class="mt-2 mx-2 flex-grow-1">
+      <label>To: </label>
+      <Datepicker @cleared="refresh" v-model="dateTo" :maxDate="new Date()" /> 
+    </div>
+  </div>
   <transaction-table
     :transactions="transactions"
     :showId="true"
     :showDates="true"
     @updateDescription="updateTransactionDescription"
     @updateCategory="updateTransactionCategory"
+    @changeOrder="changeOrder"
   ></transaction-table>
   <template class="paginator">
     <pagination
@@ -62,8 +73,20 @@ export default {
       transactions: [],
       filterByType: null,
       filterByCategory: null,
+      dateFrom: null,
+      dateTo: null,
+      order: 'desc',
+      orderBy: 'date',
       page: 1,
       paginationData: null,
+    }
+  },
+  watch: {
+    dateTo(){
+      this.refresh();
+    },
+    dateFrom(){
+      this.refresh();
     }
   },
   computed: {
@@ -77,13 +100,28 @@ export default {
     },
   },
   methods: {
+    changeOrder(order, orderBy){
+      this.order = order
+      this.orderBy = orderBy
+      this.refresh()
+    },
+    refresh(){
+      this.loadTransactions()
+      this.page = 1
+    },
     loadTransactions() {
-      let query = "vcards/" + this.$store.state.user.id + "/transactions?page=" + this.page + "&order=desc"
+      let query = "vcards/" + this.$store.state.user.id + "/transactions?page=" + this.page + "&order=" + this.order + "&orderBy=" + this.orderBy
       if (this.filterByCategory){
         query += "&category=" + this.filterByCategory
       }
       if (this.filterByType){
         query += "&type=" + this.filterByType 
+      }
+      if (this.dateFrom){
+        query += "&from=" + this.dateFrom.toISOString().split('T')[0] + ' ' + this.dateFrom.toTimeString().split(' ')[0];
+      }
+      if (this.dateTo){
+        query += "&to=" + this.dateTo.toISOString().split('T')[0] + ' ' + this.dateTo.toTimeString().split(' ')[0];
       }
       this.$axios
         .get(query)

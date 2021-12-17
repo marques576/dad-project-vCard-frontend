@@ -9,6 +9,8 @@ import axios from "axios"
 import Toaster from "@meforma/vue-toaster"
 import Pagination from 'v-pagination-3'
 import VueSocketIO from 'vue-3-socket.io'
+import Datepicker from 'vue3-date-time-picker';
+import 'vue3-date-time-picker/dist/main.css'
 
 import FieldErrorMessage from "./components/global/FieldErrorMessage.vue"
 import ConfirmationDialog from "./components/global/ConfirmationDialog.vue"
@@ -40,5 +42,6 @@ app.config.globalProperties.$serverUrl = "http://projetoDAD.test"
 app.component('field-error-message', FieldErrorMessage)
 app.component('confirmation-dialog', ConfirmationDialog)
 app.component('pagination', Pagination)
+app.component('Datepicker', Datepicker)
 
 app.mount("#app")
