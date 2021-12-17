@@ -3,7 +3,6 @@
     <thead>
       <tr>
         <th v-if="showId">#</th>
-        <th>VCard</th>
         <th>Type</th>
         <th>Name</th>
         <th v-if="showEditButton || showDeleteButton"></th>
@@ -15,7 +14,6 @@
         :key="defaultCategory.id"
       >
         <td v-if="showId">{{ defaultCategory.id }}</td>
-        <td>{{ defaultCategory.vcard }}</td>
         <td>{{ defaultCategory.type }}</td>
         <td>{{ defaultCategory.name }}</td>
         <td class="text-end" v-if="showEditButton || showDeleteButton">
