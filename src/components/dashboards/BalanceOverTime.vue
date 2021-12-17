@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import { Line } from 'vue3-chart-v2'
 
 export default defineComponent({
-  name: 'SumYearChart',
+  name: 'BalanceOvertTime',
   extends: Line,
   props: {
     labels: {
@@ -19,16 +19,20 @@ export default defineComponent({
    setTimeout(()=>{
        this.renderChart({
       labels: this.labels,
+      options: {
+        
+    },
       datasets: [
         {
-          label: 'Soma por Mês',
+          label: 'Balance Over Time Per Month',
           backgroundColor: 'rgb(75, 192, 192)',
           data: this.data,
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
         }
-      ]
-    })
+      ],
+    }
+    )
  }, 1000)
   }
 })

@@ -21,8 +21,13 @@ export default defineComponent({
       labels: this.labels,
       datasets: [
         {
-          backgroundColor: ['green', 'orange', 'blue', 'brown', 'red', 'purple'],
-          data: this.data
+          backgroundColor: ['rgba(253, 1, 0,0.7)', 
+                            'rgba(247, 105, 21,0.7)', 
+                            'rgba(238, 222, 4,0.7)', 
+                            'rgba(160, 214, 54,0.7)', 
+                            'rgba(47, 162, 54,0.7)', 
+                            'rgba(51, 62, 212,0.7)'],
+          data: this.data,
         }
       ]
     })

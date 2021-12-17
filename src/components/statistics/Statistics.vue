@@ -11,29 +11,29 @@
         <div class="col-md-3">
           <div class="count">
             <span class="fa fa-smile-o"></span>
-            <p class="number">{{ counters.balance }}€</p>
+            <p class="counterNumber">{{ counters.balance }}€</p>
             <h4>Cash Inside the Platform</h4>
           </div>
         </div>
         <div class="col-md-3">
           <div class="count">
             <span class="fa fa-smile-o"></span>
-            <p class="number">{{ counters.vcards }}</p>
+            <p class="counterNumber">{{ counters.vcards }}</p>
             <h4>Vcard</h4>
           </div>
         </div>
         <div class="col-md-3">
           <div class="count">
             <span class="fa fa-smile-o"></span>
-            <p class="number">{{ counters.average }}€</p>
+            <p class="counterNumber">{{ counters.average }}€</p>
             <h4>Average Transfer</h4>
           </div>
         </div>
         <div class="col-md-3">
           <div class="count">
             <span class="fa fa-smile-o"></span>
-            <p class="number">{{ counters.transactionCount }}</p>
-            <h4>Number of Transactions</h4>
+            <p class="counterNumber">{{ counters.transactionCount }}</p>
+            <h4>counterNumber of Transactions</h4>
           </div>
         </div>
       </div>
@@ -50,28 +50,28 @@
         <div class="col-md-3">
           <div class="count">
             <span class="fa fa-smile-o"></span>
-            <p class="number">{{ counters.value }}€</p>
+            <p class="counterNumber">{{ counters.value }}€</p>
             <h4>Cash movimented</h4>
           </div>
         </div>
         <div class="col-md-3">
           <div class="count">
             <span class="fa fa-smile-o"></span>
-            <p class="number">{{ counters.numTransactions }}</p>
-            <h4>Number of transactions</h4>
+            <p class="counterNumber">{{ counters.numTransactions }}</p>
+            <h4>counterNumber of transactions</h4>
           </div>
         </div>
         <div class="col-md-3">
           <div class="count">
             <span class="fa fa-smile-o"></span>
-            <p class="number">{{ counters.avgBalance }}€</p>
+            <p class="counterNumber">{{ counters.avgBalance }}€</p>
             <h4>Average Balance</h4>
           </div>
         </div>
         <div class="col-md-3">
           <div class="count">
             <span class="fa fa-smile-o"></span>
-            <p class="number">{{ counters.highestTransaction }}€</p>
+            <p class="counterNumber">{{ counters.highestTransaction }}€</p>
             <h4>Highest Transaction</h4>
           </div>
         </div>
@@ -246,6 +246,7 @@ export default defineComponent({
 
 <style scoped>
 #counter {
+  border-radius: 20px;
   background-color: black;
   color: #ffffff;
   display: block;
@@ -259,6 +260,7 @@ export default defineComponent({
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   text-align: center;
+  border-radius: 20px;
 }
 
 .count h4 {
@@ -273,7 +275,7 @@ export default defineComponent({
   color: #fff;
 }
 
-#counter .number {
+#counter .counterNumber {
   font-size: 30px;
   font-weight: 700;
   margin: 0;

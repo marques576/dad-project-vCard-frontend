@@ -2,6 +2,7 @@
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
     <h3 class="mt-5 mb-3">Create a new administrator account</h3>
     <hr />
+    <div style="width: 50%; margin: auto">
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
         <div class="mb-3">
@@ -40,15 +41,16 @@
             />
           </div>
         </div>
-      </div>
-    </div>
-    <div class="mb-3 d-flex justify-content-end">
+         <div class="mb-3 d-flex justify-content-end">
       <button type="button" class="btn btn-primary px-5" @click="save">
         Save
       </button>
       <button type="button" class="btn btn-light px-5" @click="cancel">
         Cancel
       </button>
+    </div>
+      </div>
+    </div>
     </div>
   </form>
 </template>

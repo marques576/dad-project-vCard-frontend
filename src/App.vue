@@ -10,15 +10,15 @@
     "
   >
     <div class="container-fluid">
-      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"
-        ><img
+      <router-link class="navbar-brand col-md-3 col-lg-2 me-0 px-3" tag="a" to="Dashboard">
+        <img
           src="./assets/logo.png"
           alt=""
           width="30"
           height="26"
           class="d-inline-block align-text-top"
         />
-        VCards</a
+        VCards</router-link
       >
       <button
         id="buttonSidebarExpandId"
@@ -63,6 +63,8 @@
               aria-expanded="false"
             >
               <img
+                width="35"
+                height="35"
                 :src="userPhotoUrl"
                 class="rounded-circle z-depth-0 avatar-img"
                 alt="avatar image"
@@ -165,7 +167,12 @@
                 Transactions
               </router-link>
             </li>
-            <li class="nav-item" v-if="userType == 'A'">
+            <li class="nav-item 
+                d-flex
+                justify-content-between
+                align-items-center
+                pe-3"
+                 v-if="userType == 'A'">
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'DefaultCategories' }"
@@ -173,6 +180,11 @@
               >
                 <i class="bi bi-tag"></i>
                 Default Categories
+              </router-link>
+                <router-link
+                class="link-secondary"
+                :to="{ name: 'NewDefaultCategory' }"
+                ><i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
 
