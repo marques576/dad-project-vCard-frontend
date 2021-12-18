@@ -186,7 +186,7 @@ export default createStore({
     async loadCategories(context) {
       try {
         let response = await axios.get(
-          "vcards/" + context.state.user.username + "/categories"
+          "vcards/" + context.state.user.username + "/categories/all"
         )
         context.commit("setCategories", response.data.data)
         return response.data.data

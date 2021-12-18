@@ -11,7 +11,7 @@
           >
             <option :value="null">None</option>
             <option
-              v-for="category in this.$store.getters.categories"
+              v-for="category in filtered_categories"
               :key="category.id"
               :value="category.id"
             >
@@ -53,6 +53,11 @@ export default {
   data() {
     return {
       editTransaction: this.transaction,
+    }
+  },
+  computed: {
+    filtered_categories(){
+      return this.$store.getters.categories.filter((c) => c.type == this.transaction.type)
     }
   },
   methods: {

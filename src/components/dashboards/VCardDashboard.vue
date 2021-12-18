@@ -206,6 +206,11 @@ export default defineComponent({
         })
     },
   },
+  sockets: {
+    newTransaction() {
+      this.loadTransactionsDesc()
+    },
+  },
   mounted() {
     this.loadBalanceOverTime()
     this.loadTransactionsDesc()

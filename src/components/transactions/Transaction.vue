@@ -72,9 +72,8 @@
         id="inputCategory"
         v-model="transaction.category_id"
       >
-        <option :value="null">None</option>
         <option
-          v-for="category in this.$store.getters.categories"
+          v-for="category in filtered_categories"
           :key="category.id"
           :value="category.id"
         >
@@ -149,6 +148,9 @@ export default {
       pt = pt.filter((type) => type.code != 'VCARD')
     }
     return pt
+   },
+   filtered_categories(){
+     return this.$store.getters.categories.filter((c) => c.type == 'D')
    } 
   },
   props: {
@@ -182,7 +184,6 @@ export default {
         payment_type: this.payment_type
           ? this.payment_type
           : this.$store.getters.paymentTypes[0].code,
-        category_id: null,
         payment_reference: this.payment_reference,
       }
     },
