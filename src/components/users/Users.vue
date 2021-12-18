@@ -52,6 +52,7 @@ export default {
     deleteUser (user) {
       this.$axios.delete('administrators/' + user.id)
         .then(() => {
+          this.$socket.emit("deletedAdministrator", user.email)
           this.loadUsers()
         })
         .catch((error) => {

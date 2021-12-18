@@ -49,7 +49,7 @@
 
         </td>
         <td class="text-end align-middle">
-          <div class="d-flex">
+          <div class="d-flex" v-if="user.email != this.$store.state.user.username">
             <button
               class="btn btn-xs btn-light"
               v-if="showDeleteButton"
@@ -110,7 +110,7 @@ export default {
       this.$emit('edit', user)
     },
      deleteClick (user) {
-      this.$emit('delete', user)
+        this.$emit('delete', user)
     },
   }
 }

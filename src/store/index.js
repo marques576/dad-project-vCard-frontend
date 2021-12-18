@@ -218,8 +218,13 @@ export default createStore({
       }
     },
     async SOCKET_userBlocked(context) {
-      context.dispatch("logout")
+      await context.dispatch("logout")
       this.$toast.error("VCard Account Blocked")
+      this.$router.push({ name: "Home" })
+    },
+    async SOCKET_deletedAdministrator(context) {
+      await context.dispatch("logout")
+      this.$toast.error("Your Administrator Account has been deleted")
       this.$router.push({ name: "Home" })
     },
     async insertContact(context, contact) {
