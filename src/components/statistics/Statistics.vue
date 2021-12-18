@@ -230,7 +230,7 @@ export default defineComponent({
     },
   },
 
-  mounted() {
+  created() {
     this.loadCounters()
     this.loadYears()
     this.filterYear()
