@@ -260,12 +260,12 @@ export default createStore({
       if (this.state.user && this.state.user.type == "V") {
         let vcardPromise = context.dispatch("loadVcard")
         let categoriesPromise = context.dispatch("loadCategories")
-        let transactionsPromise = context.dispatch("loadTransactions")
+        //let transactionsPromise = context.dispatch("loadTransactions")
         let contactsPromise = context.dispatch("loadContacts")
 
         await categoriesPromise
         await vcardPromise
-        await transactionsPromise
+        //await transactionsPromise
         await contactsPromise
       }
     },
