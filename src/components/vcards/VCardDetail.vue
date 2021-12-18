@@ -371,7 +371,7 @@ export default {
         confirmation_code: { required },
         confirmation_code_confirmation: {
           required,
-          sameAs: sameAs("confirmation_code"),
+          sameAs: sameAs(this.editingVCard.confirmation_code),
         },
         blocked: { required },
       },

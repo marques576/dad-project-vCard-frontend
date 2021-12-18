@@ -102,7 +102,7 @@ export default {
       codes: {
         oldcode: { required },
         code: { required },
-        code_confirmation: { required, sameAs: sameAs("code") },
+        code_confirmation: { required, sameAs: sameAs(this.codes.code) },
       },
     }
   },
