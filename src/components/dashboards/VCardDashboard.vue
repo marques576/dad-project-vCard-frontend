@@ -209,6 +209,7 @@ export default defineComponent({
   sockets: {
     newTransaction() {
       this.loadTransactionsDesc()
+      this.$store.dispatch("loadVcard") 
     },
   },
   mounted() {
