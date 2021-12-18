@@ -356,13 +356,12 @@ export default {
     }
   },
   validations() {
-    return {
+    if(this.operationType == "insert"){
+           return {
       editingVCard: {
         phone_number: { required },
         name: { required },
         email: { required, email },
-        balance: { required },
-        max_debit: { required },
         password: { required },
         password_confirmation: {
           required,
@@ -373,6 +372,16 @@ export default {
           required,
           sameAs: sameAs(this.editingVCard.confirmation_code),
         },
+      },
+    }
+    }
+         return {
+      editingVCard: {
+        phone_number: { required },
+        name: { required },
+        email: { required, email },
+        balance: { required },
+        max_debit: { required },
         blocked: { required },
       },
     }
@@ -428,8 +437,7 @@ export default {
             "Content-Type": "multipart/form-data",
           },
         })
-        .then((response) => {
-          console.log(response)
+        .then(() => {
           this.$toast.success("Photo was updated successfully.")
           this.$store.dispatch("loadLoggedInUser")
         })

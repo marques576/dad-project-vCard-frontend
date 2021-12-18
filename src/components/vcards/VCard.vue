@@ -75,8 +75,6 @@ export default {
     },
     save() {
       if (this.operation == "insert") {
-        console.log(this.vcard)
-
         this.$axios
           .post("vcards", this.vcard)
           .then((response) => {
