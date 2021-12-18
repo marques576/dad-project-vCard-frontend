@@ -15,6 +15,9 @@ import "vue3-date-time-picker/dist/main.css"
 import FieldErrorMessage from "./components/global/FieldErrorMessage.vue"
 import ConfirmationDialog from "./components/global/ConfirmationDialog.vue"
 
+const apiDomain = process.env.VUE_APP_API_DOMAIN
+const wsConnection = process.env.VUE_APP_WS_CONNECTION
+
 let toastOptions = {
   position: "top",
   timeout: 3000,
@@ -23,7 +26,7 @@ let toastOptions = {
 
 const socketIO = new VueSocketIO({
   debug: true,
-  connection: "http://localhost:8081",
+  connection: wsConnection,
   vuex: {
     store,
     actionPrefix: "SOCKET_",
@@ -41,9 +44,9 @@ store.$socket = socketIO.io
 store.$toast = app.$toast
 store.$router = router
 
-axios.defaults.baseURL = "http://projetoDAD.test/api"
+axios.defaults.baseURL = `${apiDomain}/api`
 app.config.globalProperties.$axios = axios
-app.config.globalProperties.$serverUrl = "http://projetoDAD.test"
+app.config.globalProperties.$serverUrl = apiDomain
 
 app.component("field-error-message", FieldErrorMessage)
 app.component("confirmation-dialog", ConfirmationDialog)
